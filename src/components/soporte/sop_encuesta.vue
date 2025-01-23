@@ -1,10 +1,13 @@
 <template>
-  <h5>ing soporte</h5>
+  <h1>soporte  encuesta</h1>
 </template>
 
 <script>
-export default {};
+export default {
+
+}
 </script>
 
 <style>
+
 </style>

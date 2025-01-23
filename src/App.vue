@@ -1,5 +1,5 @@
 <script>
-import { RouterLink, RouterView } from "vue-router";
+
 import navbar from "./components/navbar.vue";
 export default {
   components: { navbar },
@@ -8,22 +8,11 @@ export default {
 
 <template>
   <div>
+  <br>
     <navbar> </navbar>
-
-    <div class="vertical-menu">
-      <router-link to="/" class="active">Inicio</router-link>
-      <router-link to="/acerca">Acerca</router-link>
-      <router-link to="/servicios">Servicios</router-link>
-      <router-link to="/portafolio">Portafolio</router-link>
-      <router-link to="/contacto">Contacto</router-link>
-    </div>
-    <div class="row">
-      <div class="col-6">xxxx</div>
-      <div class="col-6">yyyy</div>
-    </div>
+<!--     <br>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink>
-
+    <RouterLink to="/about">About</RouterLink> -->
     <RouterView />
   </div>
 </template>
