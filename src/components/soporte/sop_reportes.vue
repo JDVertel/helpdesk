@@ -1,5 +1,11 @@
 <template>
     <h1>soporte reportes </h1>
+
+
+    
+
+     
+  
   </template>
   
   <script>
