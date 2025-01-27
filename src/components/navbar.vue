@@ -51,10 +51,10 @@
               <li class="nav-item">
                 <RouterLink to="/sop_encuesta" >+ Encuesta</RouterLink>
               </li>
-              <li class="nav-item">
+          <!--     <li class="nav-item">
                 <RouterLink to="/sop_sugerencia" >Sugerencias Helpdesk</RouterLink>
               </li>
-           
+            -->
                 <!-- ------------------------------------------- -->
 
                 <li class="nav-item">
