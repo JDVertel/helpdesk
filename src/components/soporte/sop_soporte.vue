@@ -82,12 +82,13 @@
         <h4 class="display-6 center">Sala</h4>
         <br />
         <div class="table-responsive">
-          
           <table class="table table-striped table-sm">
             <thead>
               <tr>
                 <th scope="col">Hora</th>
+                <th scope="col">Canal</th>
                 <th scope="col">Oficina</th>
+                <th scope="col">funcionario</th>
                 <th scope="col">Descripcion</th>
                 <th scope="col">Cerrar</th>
               </tr>
@@ -98,24 +99,30 @@
                 <td>Mark</td>
                 <td>Otto</td>
                 <td>@mdo</td>
+                <td>Otto</td>
+                <td>@mdo</td>
               </tr>
               <tr>
                 <th scope="row">2</th>
                 <td>Jacob</td>
                 <td>Thornton</td>
                 <td>@fat</td>
+                <td>Otto</td>
+                <td>@mdo</td>
               </tr>
               <tr>
                 <th scope="row">3</th>
                 <td colspan="2">Larry the Bird</td>
                 <td>@twitter</td>
+                <td>Otto</td>
+                <td>@mdo</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div
-        class="tab-pane fade show active"
+        class="tab-pane fade"
         id="home-tab-pane"
         role="tabpanel"
         aria-labelledby="home-tab"
@@ -124,7 +131,6 @@
         <h4 class="display-6 center">Pendientes</h4>
         <br />
         <div class="table-responsive">
-          
           <table class="table table-striped table-sm">
             <thead>
               <tr>

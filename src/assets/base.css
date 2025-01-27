@@ -10,3 +10,12 @@ align-content: center;
 flex-direction: column;
 justify-content: center;
 }
+
+.centerA {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  justify-content: center;
+  }
+  

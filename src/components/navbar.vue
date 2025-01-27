@@ -35,7 +35,7 @@
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               <!-- ------------------------------------------- -->
               <li class="nav-item">
-                <RouterLink to="/" >Home</RouterLink>
+                <RouterLink to="/">Home</RouterLink>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#"
@@ -43,33 +43,30 @@
                 >
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_soporte" >+ Soporte</RouterLink>
+                <RouterLink to="/sop_soporte">+ Soporte</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_reportes" >Reportes</RouterLink>
+                <RouterLink to="/sop_reportes">Reportes</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_encuesta" >+ Encuesta</RouterLink>
+                <RouterLink to="/sop_encuesta">+ Encuesta</RouterLink>
               </li>
-          <!--     <li class="nav-item">
-                <RouterLink to="/sop_sugerencia" >Sugerencias Helpdesk</RouterLink>
-              </li>
-            -->
-                <!-- ------------------------------------------- -->
 
-                <li class="nav-item">
+              <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#"
                   ><strong>Soporte Remoto</strong></a
                 >
+                <!-- --------------------------------------------------- -->
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">+ Solicitud</a>
+                <RouterLink to="/sr_solicitud">+ Solicitud</RouterLink>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Reportes</a>
+                <RouterLink to="/sr_reporte">Reportes</RouterLink>
               </li>
-                <li class="nav-link active" aria-current="page" href="#"
-                  ><strong>Administracion</strong>
+
+              <li class="nav-link active" aria-current="page" href="#">
+                <strong>Administracion</strong>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Proyectos</a>
@@ -128,7 +125,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">Estadisticos Encuestas</a>
               </li>
-           
+
               <!-- ------------------------------------------- -->
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#"
@@ -160,9 +157,7 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-export default {
- 
-};
+export default {};
 </script>
 
 <style>
