@@ -145,7 +145,16 @@
                 <th>1</th>
                 <td>Mark</td>
                 <td>Otto</td>
-                <td>@mdo</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    cerrar
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th scope="row">2</th>
@@ -183,15 +192,6 @@
         <div class="container">
           <div class="row fila">
             <div class="col-12 col-md-4">
-              <input
-                type="time"
-                class="form-control m-2 campos"
-                id="exampleFormControlInput1"
-                placeholder="Hora"
-                v-model="hora"
-              />
-            </div>
-            <div class="col-12 col-md-4">
               <select
                 class="form-select m-2 campos"
                 aria-label="Default select example"
@@ -219,94 +219,6 @@
                 id="exampleFormControlInput1"
                 placeholder="Descripcion de la solicitud"
                 v-model="desc_solicitud"
-              />
-            </div>
-            <div class="col-12">
-              <textarea
-                type="text"
-                class="form-control m-2 campos"
-                id="exampleFormControlInput1"
-                placeholder="Descripcion de la solucion"
-                v-model="desc_solucion"
-              />
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select m-2 campos"
-                aria-label="Default select example"
-                v-model="clasesoporte"
-              >
-                <option value="0">Clasificacion del Soporte</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select m-2 campos"
-                aria-label="Default select example"
-                v-model="moduloimpactado"
-              >
-                <option value="0">Modulo impactado</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <input
-                type="number"
-                class="form-control m-2 campos"
-                id="exampleFormControlInput1"
-                placeholder="Tiempo del soporte en  minutos"
-                v-model="tiemposoporte"
-              />
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select m-2 campos"
-                aria-label="Default select example"
-                v-model="impacto"
-              >
-                <option value="0">Impacto</option>
-                <option value="1">Baja</option>
-                <option value="2">Media</option>
-                <option value="3">Alta</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select m-2 campos"
-                aria-label="Default select example"
-                v-model="urgencia"
-              >
-                <option value="0">Urgencia</option>
-                <option value="1">Baja</option>
-                <option value="2">Media</option>
-                <option value="3">Alta</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select m-2 campos"
-                aria-label="Default select example"
-                v-model="prioridad"
-              >
-                <option value="0">Prioridad</option>
-                <option value="1">Baja</option>
-                <option value="2">Media</option>
-                <option value="3">Alta</option>
-              </select>
-            </div>
-
-            <div class="col-12">
-              <textarea
-                type="text"
-                class="form-control m-2 campos"
-                id="exampleFormControlInput1"
-                placeholder="Sugerencias"
-                v-model="sugerencias"
               />
             </div>
           </div>
@@ -359,6 +271,121 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+            Oficina: <br />
+            Descripcion:
+          </p>
+          <hr />
+          <div class="row">
+            <div class="col-6">
+              <select
+                class="form-select m-2 campos"
+                aria-label="Default select example"
+                v-model="moduloimpactado"
+              >
+                <option value="0">Modulo impactado</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+
+            <div class="col-6">
+              <select
+                class="form-select m-2 campos"
+                aria-label="Default select example"
+                v-model="clasesoporte"
+              >
+                <option value="0">Clasificacion del Soporte</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12">
+            <textarea
+              type="text"
+              class="form-control m-2 campos"
+              id="exampleFormControlInput1"
+              placeholder="Descripcion de la solucion"
+              v-model="desc_solucion"
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <select
+                class="form-select m-2 campos"
+                aria-label="Default select example"
+                v-model="impacto"
+              >
+                <option value="0">Impacto</option>
+                <option value="1">Baja</option>
+                <option value="2">Media</option>
+                <option value="3">Alta</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <select
+                class="form-select m-2 campos"
+                aria-label="Default select example"
+                v-model="urgencia"
+              >
+                <option value="0">Urgencia</option>
+                <option value="1">Baja</option>
+                <option value="2">Media</option>
+                <option value="3">Alta</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <select
+                class="form-select m-2 campos"
+                aria-label="Default select example"
+                v-model="prioridad"
+              >
+                <option value="0">Prioridad</option>
+                <option value="1">Baja</option>
+                <option value="2">Media</option>
+                <option value="3">Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <textarea
+              type="text"
+              class="form-control m-2 campos"
+              id="exampleFormControlInput1"
+              placeholder="Sugerencias"
+              v-model="sugerencias"
+            />
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-sm btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

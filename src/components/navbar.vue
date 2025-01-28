@@ -35,21 +35,23 @@
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               <!-- ------------------------------------------- -->
               <li class="nav-item">
-                <RouterLink to="/">Home</RouterLink>
+                <a class="nav-link" href="/">Home</a>
+                
               </li>
               <li class="nav-item">
+                
                 <a class="nav-link active" aria-current="page" href="#"
                   ><strong>Soporte en Sitio</strong></a
                 >
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_soporte">+ Soporte</RouterLink>
+                <a class="nav-link" href="/sop_soporte">Soportes</a>
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_reportes">Reportes</RouterLink>
+                <a class="nav-link" href="/sop_reportes">Reportes</a>
               </li>
               <li class="nav-item">
-                <RouterLink to="/sop_encuesta">+ Encuesta</RouterLink>
+                <a class="nav-link" href="/sop_encuesta">Encuestas</a>
               </li>
 
               <li class="nav-item">
@@ -59,25 +61,26 @@
                 <!-- --------------------------------------------------- -->
               </li>
               <li class="nav-item">
-                <RouterLink to="/sr_solicitud">+ Solicitud</RouterLink>
+                <a class="nav-link" href="/sr_solicitud">+ Solicitud</a>
               </li>
               <li class="nav-item">
-                <RouterLink to="/sr_reporte">Reportes</RouterLink>
+                <a class="nav-link" href="/sr_reportes">Reportes</a>
+               
               </li>
 
               <li class="nav-link active" aria-current="page" href="#">
                 <strong>Administracion</strong>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Proyectos</a>
+                <a class="nav-link" href="/admin_proyectos">Proyectos</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Usuarios</a>
+                <a class="nav-link" href="/admin_usuarios">Usuarios</a>
               </li>
-              <li class="nav-item dropdown">
+<!--               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
-                  href="#"
+                  href="admin_parametros"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
@@ -96,9 +99,12 @@
                   </li>
                   <li><a class="dropdown-item" href="#">Seguridad</a></li>
                 </ul>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link" href="/admin_parametros">Parametros</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Informes</a>
+                <a class="nav-link" href="/admin_informes">Informes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">+ Encuestas</a>
