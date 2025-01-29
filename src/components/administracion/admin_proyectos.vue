@@ -29,7 +29,7 @@
         + Proyecto
       </button>
     </li>
-    <!--     <li class="nav-item" role="presentation">
+    <li class="nav-item" role="presentation">
       <button
         class="nav-link"
         id="contact-tab"
@@ -40,10 +40,10 @@
         aria-controls="contact-tab-pane"
         aria-selected="false"
       >
-        Contact
+        + Sedes
       </button>
     </li>
-    <li class="nav-item" role="presentation">
+  <!--       <li class="nav-item" role="presentation">
       <button
         class="nav-link"
         id="disabled-tab"
@@ -67,13 +67,14 @@
       aria-labelledby="home-tab"
       tabindex="0"
     >
+    <br>
+    <h6>Proyectos gestionado en HelpDesk</h6>
       <table class="table table-striped table sm">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th>Nombre</th>
+            <th>Sedes</th>
+            <th>Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -81,19 +82,8 @@
             <th scope="row">1</th>
             <td>Mark</td>
             <td>Otto</td>
-            <td>@mdo</td>
           </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+        
         </tbody>
       </table>
     </div>
@@ -156,16 +146,38 @@
         </div>
       </div>
     </div>
-    <!--   <div
+    <div
       class="tab-pane fade"
       id="contact-tab-pane"
       role="tabpanel"
       aria-labelledby="contact-tab"
       tabindex="0"
     >
-      ...
-    </div>
-    <div
+     <h1>Sedes </h1>
+     <br>
+     <div class="row">
+      <div class="col-6">     <div class="mb-3">
+
+<select class="form-select form-select-sm" aria-label="Small select example">
+<option selected>--Seleccione Proyecto--</option>
+<option value="1">One</option>
+<option value="2">Two</option>
+<option value="3">Three</option>
+</select>
+</div></div>
+      <div class="col-6"><div class="mb-3">
+  <input type="text" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder="Nombre de la sede">
+</div></div>
+     </div>
+
+
+<div class="mb-3">
+  
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Descripcion o detalle de la sede"></textarea>
+</div>
+<button type="button" class="btn btn-primary btn-sm">Guardar</button>
+</div>
+    <!--   <div
       class="tab-pane fade"
       id="disabled-tab-pane"
       role="tabpanel"
