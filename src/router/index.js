@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import("../components/soporte/sop_reportes.vue"),
     },
     {
+      path: "/sop_pruebas",
+      name: "sop_pruebas",
+      component: () => import("../components/soporte/sop_pruebas.vue"),
+    },
+    {
       path: "/sop_encuesta",
       name: "sop_encuesta",
       component: () => import("../components/soporte/sop_encuesta.vue"),
@@ -63,6 +68,11 @@ const router = createRouter({
       path: "/admin_parametros",
       name: "admin_parametros",
       component: () => import("../components/administracion/admin_parametros.vue"),
+    },
+    {
+      path: "/admin_pruebas",
+      name: "admin_pruebas",
+      component: () => import("../components/administracion/admin_pruebas.vue"),
     },
     {
       path: "/admin_informes",

@@ -45,28 +45,22 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/sop_soporte">Soportes</a>
+                <a class="nav-link" href="/sop_soporte">Mis Soportes</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/sr_solicitud">Nueva Solicitud</a>
+              </li>
+          
               <li class="nav-item">
                 <a class="nav-link" href="/sop_reportes">Reportes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/sop_encuesta">Encuestas</a>
               </li>
-
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#"
-                  ><strong>Soporte Remoto</strong></a
-                >
-                <!-- --------------------------------------------------- -->
+                <a class="nav-link" href="/sop_pruebas">Pruebas</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/sr_solicitud">+ Solicitud</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/sr_reportes">Reportes</a>
-               
-              </li>
+          
 
               <li class="nav-link active" aria-current="page" href="#">
                 <strong>Administracion</strong>
@@ -77,29 +71,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="/admin_usuarios">Usuarios</a>
               </li>
-<!--               <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="admin_parametros"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  parametros
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="#">Tipos de soporte</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Modulos evaluados</a>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-                  <li><a class="dropdown-item" href="#">Seguridad</a></li>
-                </ul>
-              </li> -->
+
               <li class="nav-item">
                 <a class="nav-link" href="/admin_parametros">Parametros</a>
               </li>
@@ -108,6 +80,9 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">+ Encuestas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin_pruebas">Pruebas</a>
               </li>
               <hr class="dropdown-divider" />
               <li class="nav-item">
