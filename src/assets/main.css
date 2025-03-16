@@ -20,5 +20,43 @@ a,
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
+/* 
+.cardpqrs{
+  padding: 5px !important;
+
+  height: 220px;
+  border-radius: 0px;
+} */
+.peticiones{
+  background-color: rgb(164, 164, 189);
+}
+.quejas{
+  background-color: rgb(44, 216, 113);
+}
+.reclamos{
+  background-color: rgb(181, 62, 149);
+}
+.sugerencias{
+  background-color: rgb(229, 213, 38);
+}
 
 
+.contenedor-cards {
+  display: flex;
+  flex-wrap: wrap; /* Para que las tarjetas se envuelvan en varias filas */
+  flex-direction: row;
+}
+
+.cardpqrs {
+  flex-grow: 1;
+  flex-basis: 100%; /* Ajusta el ancho inicial */
+  margin: 10px; /* Espacio entre tarjetas */
+  min-height: 10rem;
+  max-height: 15rem; /* Ajusta la altura máxima */
+  font-size: .9rem;
+  padding: 2px !important;
+
+}
+.card-body{
+  padding: 2px !important;
+}

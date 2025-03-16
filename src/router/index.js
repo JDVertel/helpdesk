@@ -80,6 +80,32 @@ const router = createRouter({
       component: () => import("../components/administracion/admin_informes.vue"),
     },
     /* --------------------clientes-------------------------- */
+
+    {
+      path: "/cliente_pqrs",
+      name: "cliente_pqrs",
+      component: () => import("../components/clientes/cliente_pqrs.vue"),
+    },
+
+
+    /* -----------------------------Funcionarios ----------*/
+    {
+      path: "/fun_pqrs",
+      name: "fun_pqrs",
+      component: () => import("../components/funcionarios/fun_pqrs.vue"),
+    },
+
+    {
+      path: "/fun_newsoporte",
+      name: "fun_newsoporte",
+      component: () => import("../components/funcionarios/fun_newsoporte.vue"),
+    },
+
+    {
+      path: "/fun_params",
+      name: "fun_params",
+      component: () => import("../components/funcionarios/fun_params.vue"),
+    },
   ],
 });
 

@@ -41,7 +41,7 @@
               <li class="nav-item">
                 
                 <a class="nav-link active" aria-current="page" href="#"
-                  ><strong>Soporte en Sitio</strong></a
+                  ><strong>Equipo de Soporte</strong></a
                 >
               </li>
               <li class="nav-item">
@@ -85,14 +85,32 @@
                 <a class="nav-link" href="/admin_pruebas">Pruebas</a>
               </li>
               <hr class="dropdown-divider" />
+                       <!-- ------------------------------------------- -->
               <li class="nav-item">
-                <!-- ------------------------------------------- -->
+       
+                <a class="nav-link active" aria-current="page" href="#"
+                  ><strong>Funcionarios</strong></a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/fun_newsoporte">Soportes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/fun_pqrs">PQRS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/fun_params">Parametros</a>
+              </li>
+            
+              <!-- ----------------------funcionarioss -->
+              <li class="nav-item">
+       
                 <a class="nav-link active" aria-current="page" href="#"
                   ><strong>Clientes</strong></a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">+ Solicitud</a>
+                <a class="nav-link" href="/cliente_pqrs">Resumen PQRS</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Informes de soportes</a>
