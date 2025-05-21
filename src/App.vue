@@ -7,7 +7,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="apk">
   <br>
     <navbar> </navbar>
 <!--     <br>
@@ -18,26 +18,6 @@ export default {
 </template>
 
 <style scoped>
-.vertical-menu {
-  width: 200px; /* Ancho del menú */
-  background-color: #f9f9f9; /* Color de fondo */
-  border: 1px solid #ccc; /* Borde */
-}
 
-.vertical-menu a {
-  display: block; /* Hacer que los enlaces aparezcan uno debajo del otro */
-  color: black; /* Color del texto */
-  padding: 12px; /* Espaciado interno */
-  text-decoration: none; /* Quitar subrayado */
-}
-
-.vertical-menu a:hover {
-  background-color: #ddd; /* Color de fondo al pasar el mouse */
-}
-
-.vertical-menu a.active {
-  background-color: #04aa6d; /* Color para el enlace activo */
-  color: white; /* Color del texto activo */
-}
 </style>
 

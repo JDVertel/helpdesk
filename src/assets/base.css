@@ -1,14 +1,23 @@
+:root {
+  --morado-principal: #7c3aed;
+  --morado-oscuro: #5b21b6;
+  --morado-claro: #c4b5fd;
+  --blanco: #ffffff;
+  --gris-claro: #ffffff;
+  --gris: #e5e7eb;
+}
+
 .center {
   align-content: center;
   text-align: center;
 }
 
 .centerB {
-display: flex;
-align-items: center;
-align-content: center;
-flex-direction: column;
-justify-content: center;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .centerA {
@@ -17,5 +26,126 @@ justify-content: center;
   align-content: center;
   flex-direction: row;
   justify-content: center;
-  }
-  
+}
+
+.formulario {
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  padding: 2px;
+  margin: 2px;
+}
+.comb_A {
+  background-color: rgb(140, 242, 111);
+}
+
+.comb_B {
+  background-color: rgb(234, 186, 123);
+}
+
+
+
+.logo {
+width: 270px;
+height: auto;
+margin-bottom: 20px;
+}
+body {
+  background: var(--gris-claro);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+h1 {
+  color: var(--morado-principal);
+  margin-bottom: 0.5em;
+}
+
+h4 {
+  color: var(--morado-oscuro);
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+p {
+  color: var(--morado-oscuro);
+  margin-bottom: 1em;
+  font-size: 1em;
+}
+
+input[type="text"], input[type="number"],input[type="email"],input[type="password"] , input[type="date"]{
+  width: 100%;
+  padding: 0.3em;
+  margin: 0.5em 0;
+  border: 1.0px solid var(--morado-claro);
+  border-radius: 3px;
+  background: var(--gris);
+  font-size: 0.9em;
+  color: var(--morado-oscuro);
+  outline: none;
+  transition: border-color 0.2s;
+}
+input[type="password"] {
+  width: 100%;
+  padding: 0.3em;
+  margin: 0.5em 0;
+  border: 1.0px solid var(--morado-claro);
+  border-radius: 3px;
+  background: var(--gris);
+  font-size: 0.9em;
+  color: var(--morado-oscuro);
+  outline: none;
+  transition: border-color 0.2s;
+}
+input[type="date"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus {
+  border-color: var(--morado-principal);
+}
+
+.buttonLogin {
+  width: 95%;
+  padding: 0.8em 0;
+  background: var(--morado-principal);
+  color: var(--blanco);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1em;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+}
+
+.buttonLogin:hover {
+  background: var(--morado-oscuro);
+}
+
+
+.app {
+  padding: 1px !important;
+  margin: 1px !important;
+}
+.navbar {
+  background: linear-gradient(to top, var(--morado-principal),var(--morado-oscuro)) !important; /* Morado suave */
+}
+.offcanvas {
+  width: 160px !important; /* Ajusta el ancho a tu preferencia */
+  background: linear-gradient(to top, var(--gris),  var(--morado-oscuro)) !important;
+  color: #fff !important;
+}
+/* Ajusta el color de los enlaces al pasar el mouse */
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+  color: #e0e0e0 !important;
+}
+
+.loginc{
+  max-width: 200px;
+  margin: 0 auto;
+}

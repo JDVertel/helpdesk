@@ -60,3 +60,6 @@ a,
 .card-body{
   padding: 2px !important;
 }
+hr{
+  margin: 0.2rem;
+}
