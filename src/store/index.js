@@ -8,10 +8,17 @@ export default createStore({
         encuestas: [],
         comunasBarrios: [],
         datosips: [],
-        encuestasFiltradas: []
+        encuestasFiltradas: [],
+        agendas: [],
+        token: null,
+        uid: null,
     },
 
     actions: {
+        /* ----------------------------------------AUTH------------------------------------- */
+
+
+
         /* ---------------------------------------POST------------------------------------- */
         createNewRegister: async ({ commit }, entradasE) => {
             try {
@@ -19,8 +26,8 @@ export default createStore({
                     bd,
                     idEncuesta,
                     idUsuario,
-                    departamento,
-                    municipio,
+                    eps,
+                    regimen,
                     fecha,
                     nombre1,
                     nombre2,
@@ -42,8 +49,8 @@ export default createStore({
                 const DataToSaveE = {
                     idEncuesta,
                     idUsuario,
-                    departamento,
-                    municipio,
+                    eps,
+                    regimen,
                     fecha,
                     nombre1,
                     nombre2,
@@ -78,18 +85,22 @@ export default createStore({
             }
         },
 
+
         createUser: async ({ commit }, entradasU) => {
             try {
                 const {
-                    bd, nombres, documento, cargo, password, estado
+                    bd, nombres, documento, email,cargo, password, estado, rol, grupo
                 } = entradasU;
 
                 const DataToSaveE = {
                     nombres,
                     documento,
+                    email,
                     cargo,
                     password,
                     estado,
+                    rol,
+                    grupo
                 };
 
                 const Ruta = `/${bd}.json`;
@@ -126,6 +137,27 @@ export default createStore({
                 throw error; // Re-lanzar para que el componente pueda manejarlo
             }
         },
+        addreserva: async ({ commit }, entradasr) => {
+            try {
+                const {
+                    bd, fecha, grupo
+                } = entradasr;
+
+                const DataToSaver = {
+                    fecha, grupo
+                };
+
+                const Ruta = `/${bd}.json`;
+                // Llamada al servicio (asumiendo que firebase_api está importado y configurado)
+                const { data } = await firebase_api.post(Ruta, DataToSaver);
+                return data; // Retornar la respuesta si se necesita
+
+            } catch (error) {
+                console.error('Error en Action_createDataEmpresa:', error);
+                // Opcional: manejar error, por ejemplo con commit a una mutación de error
+                throw error; // Re-lanzar para que el componente pueda manejarlo
+            }
+        },
 
 
         /* ---------------------------------------GET------------------------------------- */
@@ -152,6 +184,9 @@ export default createStore({
                 throw error;
             }
         },
+
+
+
 
         getRegister: async ({ commit }, id) => {
             try {
@@ -247,6 +282,35 @@ export default createStore({
             }
         },
 
+        getAgendas: async ({ commit }) => {
+            try {
+                const { data } = await firebase_api.get('/agendas.json');
+                const agendas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+                commit('setAgendas', agendas);
+                return agendas;
+            } catch (error) {
+                console.error('Error en Action_getAllUsers:', error);
+                throw error;
+            }
+        },
+
+        getTomamuestras: async ({ commit }) => {
+            try {
+                const { data } = await firebase_api.get('/agendas.json');
+                const agendas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+                commit('setAgendas', agendas);
+                return agendas;
+            } catch (error) {
+                console.error('Error en Action_getAllUsers:', error);
+                throw error;
+            }
+        },
 
         /* ---------------------------------------DELETE------------------------------------- */
 
@@ -305,7 +369,14 @@ export default createStore({
                 console.error('Error en Action_updateUser:', error);
                 throw error;
             }
-        }
+        },
+        login({ commit }, { token, uid }) {
+            commit('setToken', token);
+            commit('setUid', uid);
+        },
+        logout({ commit }) {
+            commit('clearAuth');
+          }
 
     },
     mutations: {
@@ -326,7 +397,21 @@ export default createStore({
         },
         setEncuestasfiltradas(state, encuestasf) {
             state.encuestasFiltradas = encuestasf;
-        }
+        },
+        setAgendas(state, agendas) {
+            state.agendas = agendas;
+        },
+
+        setToken(state, token) {
+            state.token = token;
+        },
+        setUid(state, uid) {
+            state.uid = uid;
+        },
+        clearAuth(state) {
+            state.token = null;
+            state.uid = null;
+          }
 
 
     },

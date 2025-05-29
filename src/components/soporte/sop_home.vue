@@ -19,21 +19,6 @@
       <li class="nav-item" role="presentation">
         <button
           class="nav-link active"
-          id="wait-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#wait-tab-pane"
-          type="button"
-          role="tab"
-          aria-controls="wait-tab-pane"
-          aria-selected="true"
-        >
-          + Registro
-        </button>
-      </li>
-
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
           id="contact-tab"
           data-bs-toggle="tab"
           data-bs-target="#contact-tab-pane"
@@ -45,10 +30,73 @@
           Historial
         </button>
       </li>
+
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="wait-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#wait-tab-pane"
+          type="button"
+          role="tab"
+          aria-controls="wait-tab-pane"
+          aria-selected="true"
+        >
+          + Registro
+        </button>
+      </li>
     </ul>
     <div class="tab-content" id="myTabContent">
       <div
         class="tab-pane fade show active"
+        id="contact-tab-pane"
+        role="tabpanel"
+        aria-labelledby="contact-tab"
+        tabindex="0"
+      >
+        <h3 class="display-6 center">Demandas Inducidas</h3>
+        <br />
+        <div class="table-responsive">
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Paciente</th>
+                <th scope="col">TipoActividad</th>
+                <th scope="col">Poblacion Riesgo</th>
+                <th scope="col">Agendar</th>
+                <th scope="col">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <tr v-for="(encuesta, index) in getFilteredRegisters" :key="index">
+                <td>{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}</td>
+                <td>{{ encuesta.tipoActividad }}</td>
+                <td>{{ encuesta.poblacionRiesgo }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    @click="Agendar(encuesta.id)"
+                  >
+                    <i class="bi bi-calendar2-check"></i> Agendar
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="removeRegEncuesta(encuesta.id)"
+                  >
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
         id="wait-tab-pane"
         role="tabpanel"
         aria-labelledby="wait-tab"
@@ -76,45 +124,6 @@
           </tbody>
         </table>
       </div>
-
-      <div
-        class="tab-pane fade"
-        id="contact-tab-pane"
-        role="tabpanel"
-        aria-labelledby="contact-tab"
-        tabindex="0"
-      >
-        <h3 class="display-6 center">Historial</h3>
-        <br />
-        <div class="table-responsive">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Paciente</th>
-                <th scope="col">TipoActividad</th>
-                <th scope="col">Poblacion Riesgo</th>
-                <th scope="col">Eliminar</th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              <tr v-for="(encuesta, index) in getFilteredRegisters" :key="index">
-                <td>{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}</td>
-                <td>{{ encuesta.tipoActividad }}</td>
-                <td>{{ encuesta.poblacionRiesgo }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="removeRegEncuesta(encuesta.id)"
-                  >
-                    <i class="bi bi-x-circle"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -136,6 +145,9 @@ export default {
       this.removeRegEnc(id);
       alert("Registro eliminado exitosamente.");
       this.getAllRegisters(1);
+    },
+    Agendar() {
+      this.$router.push("/sop_agendamiento");
     },
   },
 

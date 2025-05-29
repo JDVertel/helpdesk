@@ -1,23 +1,47 @@
 <script>
+import Navbar from "./components/navbar.vue";
 
-import navbar from "./components/navbar.vue";
 export default {
-  components: { navbar },
-};
+  components: {
+    Navbar,
+  },
+  data() {
+    return {
+      isLoggedIn: !!localStorage.getItem("token") // estado reactivo inicial
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.isLoggedIn = false; // actualizar reactivo para ocultar navbar
+    },
+    login(token) {
+      localStorage.setItem("token", token);
+      this.isLoggedIn = true; // actualizar reactivo para mostrar navbar
+    }
+  },
+ 
+
+    
+  
+}
 </script>
 
 <template>
-  <div class="apk">
-  <br>
-    <navbar> </navbar>
-<!--     <br>
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink> -->
-    <RouterView />
+  <div id="app">
+    <Navbar v-if="$route.name !== 'login' || $route.name !== ''"></Navbar>
+
+    <router-view />
   </div>
 </template>
 
-<style scoped>
 
+<style>
+html,
+body,
+#app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 </style>
-

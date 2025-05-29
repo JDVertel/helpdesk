@@ -1,9 +1,9 @@
-// Import the functions you need from the SDKs you need
+// Importa las funciones necesarias de Firebase
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-
-
+import { getFirestore } from "firebase/firestore";       // Importa Firestore
+import { getStorage } from "firebase/storage"; 
+import { getAuth } from 'firebase/auth';   
+// Configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBNONgNVG8dJX-A52EAa_53RMvq3jO-Njg",
     authDomain: "extramuraleseb.firebaseapp.com",
@@ -14,8 +14,18 @@ const firebaseConfig = {
     appId: "1:820740673971:web:4658893d8b911182153bc6",
     measurementId: "G-DNDD5STTWP"
 };
-  
 
-// Initialize Firebase
+// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+
+// Exporta los servicios que usarás
+export const db = getFirestore(app); // Si usas Firestore
+export const storage = getStorage(app); // Si usas Storage
+export const auth = getAuth(app);
+
+// Puedes exportar el app principal si lo necesitas en algún lugar
+export default app;
+
+
+

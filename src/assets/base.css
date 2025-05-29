@@ -44,11 +44,7 @@
 
 
 
-.logo {
-width: 270px;
-height: auto;
-margin-bottom: 20px;
-}
+
 body {
   background: var(--gris-claro);
   font-family: 'Segoe UI', Arial, sans-serif;
@@ -148,4 +144,31 @@ input[type="password"]:focus {
 .loginc{
   max-width: 200px;
   margin: 0 auto;
+}
+
+.loginform {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+
+
+.buttonLogin {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.buttonGoogle {
+  background-color: #db4437;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
