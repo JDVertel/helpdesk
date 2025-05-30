@@ -20,16 +20,16 @@ export default {
       this.isLoggedIn = true; // actualizar reactivo para mostrar navbar
     }
   },
- 
 
-    
-  
+
+
+
 }
 </script>
 
 <template>
   <div id="app">
-    <Navbar v-if="$route.name !== 'login' || $route.name !== ''"></Navbar>
+    <Navbar v-if="$route.name !== 'login'"></Navbar>
 
     <router-view />
   </div>
@@ -40,8 +40,8 @@ export default {
 html,
 body,
 #app {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 </style>

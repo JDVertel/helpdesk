@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="container">
-  
+
       <img :src="logo" alt="Logo Extramuralapp" class="logo" />
       <p class="text-center">Facilitando la salud, mejorando vidas</p>
       <div></div>
     </div>
 
     <footer>
-      <p>Propiedad de BigDataManagements.SAS Todos los Derechos Reservados</p>
+      <p>By BigDataManagements.SAS</p>
     </footer>
   </div>
 </template>
@@ -25,4 +25,10 @@ export default {
 </script>
 
 <style>
+.logo {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* Opcional: elimina el espacio debajo de la imagen */
+}
 </style>

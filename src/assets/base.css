@@ -42,17 +42,12 @@
   background-color: rgb(234, 186, 123);
 }
 
-
-
-
 body {
   background: var(--gris-claro);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
-
-
 
 h1 {
   color: var(--morado-principal);
@@ -71,11 +66,15 @@ p {
   font-size: 1em;
 }
 
-input[type="text"], input[type="number"],input[type="email"],input[type="password"] , input[type="date"]{
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
   width: 100%;
   padding: 0.3em;
   margin: 0.5em 0;
-  border: 1.0px solid var(--morado-claro);
+  border: 1px solid var(--morado-claro);
   border-radius: 3px;
   background: var(--gris);
   font-size: 0.9em;
@@ -87,7 +86,7 @@ input[type="password"] {
   width: 100%;
   padding: 0.3em;
   margin: 0.5em 0;
-  border: 1.0px solid var(--morado-claro);
+  border: 1px solid var(--morado-claro);
   border-radius: 3px;
   background: var(--gris);
   font-size: 0.9em;
@@ -122,17 +121,24 @@ input[type="password"]:focus {
   background: var(--morado-oscuro);
 }
 
-
 .app {
   padding: 1px !important;
   margin: 1px !important;
 }
 .navbar {
-  background: linear-gradient(to top, var(--morado-principal),var(--morado-oscuro)) !important; /* Morado suave */
+  background: linear-gradient(
+    to top,
+    var(--morado-principal),
+    var(--morado-oscuro)
+  ) !important; /* Morado suave */
 }
 .offcanvas {
   width: 160px !important; /* Ajusta el ancho a tu preferencia */
-  background: linear-gradient(to top, var(--gris),  var(--morado-oscuro)) !important;
+  background: linear-gradient(
+    to top,
+    var(--gris),
+    var(--morado-oscuro)
+  ) !important;
   color: #fff !important;
 }
 /* Ajusta el color de los enlaces al pasar el mouse */
@@ -141,7 +147,7 @@ input[type="password"]:focus {
   color: #e0e0e0 !important;
 }
 
-.loginc{
+.loginc {
   max-width: 200px;
   margin: 0 auto;
 }
@@ -150,10 +156,8 @@ input[type="password"]:focus {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 80vh;
 }
-
-
 
 .buttonLogin {
   background-color: #007bff;
@@ -171,4 +175,27 @@ input[type="password"]:focus {
   padding: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+footer {
+  position: fixed;
+  /* Fija el footer en la parte inferior de la ventana */
+  bottom: 0;
+  /* Posición en la parte inferior */
+  left: 0;
+  /* Alineado al borde izquierdo */
+  width: 100%;
+  /* Ocupa todo el ancho de la pantalla */
+  background-color: #e9dede;
+  /* Color de fondo (puedes cambiarlo) */
+  color: white;
+  /* Color del texto */
+  padding: 3px 0;
+  /* Espaciado interno */
+  text-align: center;
+  /* Centrar contenido */
+  z-index: 1000;
+  /* Para que esté encima de otros elementos */
+  box-sizing: border-box;
+  /* Para que el padding no aumente el ancho */
 }

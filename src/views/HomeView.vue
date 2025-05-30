@@ -1,15 +1,16 @@
 <template>
-<div>
-    <div class="container">
-<h1>Home</h1>
+    <div>
+        <div class="container">
+            <h1>Home</h1>
+            {{ token }}
+            {{ uid }}
+        </div>
 
+        <footer>
+            <p class="fs-6 lh-1"> By BigDataManagements.SAS
+                Todos los Derechos Reservados</p>
+        </footer>
     </div>
-
-    <footer>
-        <p> Propiedad de BigDataManagements.SAS
-            Todos los Derechos Reservados</p>
-    </footer>
-</div>
 </template>
 
 <script>
@@ -20,10 +21,8 @@ import {
 import {
     auth
 } from "@/api/firebase";
-import {
-    mapActions,
-    mapState
-} from "vuex";
+import { mapState } from "vuex";
+
 
 export default {
     data() {
@@ -33,7 +32,6 @@ export default {
         };
     },
     methods: {
-        /*   ...mapActions([""]); */
         async logoutUser() {
             try {
                 // Cerrar sesión con Firebase
@@ -47,6 +45,9 @@ export default {
             } catch (error) {
                 console.error("Error al cerrar sesión:", error.message);
             }
+        },
+        computed: {
+            ...mapState(["token", "uid"])
         }
 
     },
@@ -54,27 +55,4 @@ export default {
 };
 </script>
 
-<style>
-footer {
-    position: fixed;
-    /* Fija el footer en la parte inferior de la ventana */
-    bottom: 0;
-    /* Posición en la parte inferior */
-    left: 0;
-    /* Alineado al borde izquierdo */
-    width: 100%;
-    /* Ocupa todo el ancho de la pantalla */
-    background-color: #ececec;
-    /* Color de fondo (puedes cambiarlo) */
-    color: white;
-    /* Color del texto */
-    padding: 15px 0;
-    /* Espaciado interno */
-    text-align: center;
-    /* Centrar contenido */
-    z-index: 1000;
-    /* Para que esté encima de otros elementos */
-    box-sizing: border-box;
-    /* Para que el padding no aumente el ancho */
-}
-</style>
+<style></style>
