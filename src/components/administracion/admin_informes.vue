@@ -1,6 +1,6 @@
 <template>
-<div class="container">
-    <h1>admin informes</h1>
+<div class="container-fluid">
+    <h1>Admin Informes</h1>
     <h5>Seleccione el rango de fechas a mostrar</h5>
     <div class="row">
         <div class="col-6 col-md-4">

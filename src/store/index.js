@@ -1,7 +1,10 @@
 import firebase_api from "@/api/ApiFirebase.js";
-import { createStore } from 'vuex'  // para Vue 3 y Vuex 4
-// Para Vue 2: import Vuex from 'vuex'; import Vue from 'vue'; Vue.use(Vuex);
-
+import { createStore } from 'vuex'
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+const db = getFirestore();
+const auth = getAuth();
+import router from '../router/index.js'; // Asegúrate de que la ruta sea correcta
 export default createStore({
     state: {
         usuarios: [],
@@ -12,12 +15,13 @@ export default createStore({
         agendas: [],
         token: null,
         uid: null,
+        userData: {},
+        user: null,
     },
+
 
     actions: {
         /* ----------------------------------------AUTH------------------------------------- */
-
-
 
         /* ---------------------------------------POST------------------------------------- */
         createNewRegister: async ({ commit }, entradasE) => {
@@ -89,7 +93,7 @@ export default createStore({
         createUser: async ({ commit }, entradasU) => {
             try {
                 const {
-                    bd, nombres, documento, email,cargo, password, estado, rol, grupo
+                    bd, nombres, documento, email, cargo, password, estado, rol, grupo
                 } = entradasU;
 
                 const DataToSaveE = {
@@ -374,9 +378,39 @@ export default createStore({
             commit('setToken', token);
             commit('setUid', uid);
         },
-        logout({ commit }) {
-            commit('clearAuth');
-          }
+
+        async userLogout({ commit }) {
+            return auth.signOut()  // Usa la instancia importada[4][5]
+                .then(() => {
+                    commit('CLEAR_ALL_STATE');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    commit('clearAuth');
+                    commit('clearUserData');
+                    router.push('/login');
+
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                });
+        },
+        async fetchUserDataByUid({ commit }, uid) {
+            try {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    commit("setUserData", docSnap.data());
+                } else {
+                    console.log("No existe documento para este UID");
+                    commit("clearUserData");
+                }
+            } catch (error) {
+                console.error("Error al obtener datos de Firestore:", error);
+                commit("clearUserData");
+            }
+        },
+
 
     },
     mutations: {
@@ -411,8 +445,21 @@ export default createStore({
         clearAuth(state) {
             state.token = null;
             state.uid = null;
-          }
+        },
+        /*  */
+        setUserData(state, data) {
+            state.userData = data;
+        },
+        clearUserData(state) {
+            state.userData = null;
+        },
+        CLEAR_ALL_STATE(state) {
+            state.accessToken = null;
+            state.userData = {};
+        }
 
-
+    },
+    getters: {
+        getUserData: (state) => state.userData,
     },
 }) 

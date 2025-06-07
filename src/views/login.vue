@@ -65,7 +65,6 @@ export default {
           this.password
         );
         const user = userCredential.user;
-
         const token = await user.getIdToken();
         const uid = user.uid;
 
@@ -111,7 +110,7 @@ export default {
   mounted() {
     const token = localStorage.getItem("token");
     if (token) {
-      this.$router.push("/");
+      this.$router.push("/homeViews");
     }
   },
 };

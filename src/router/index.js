@@ -7,6 +7,7 @@ const routes = [
     path: "/",
     name: "home",
     component: () => import("../views/dashboard.vue"),
+    meta: { hideNavbar: true }
   },
   /* Rutas equipo */
 
@@ -86,6 +87,7 @@ const routes = [
     path: "/login",
     name: "login",
     component: () => import("../views/login.vue"),
+    meta: { hideNavbar: true }
   },
   {
     path: "/registrousuarios",
@@ -98,6 +100,7 @@ const routes = [
     path: "/logout",
     name: "logout",
     component: () => import("../views/logout.vue"),
+    meta: { hideNavbar: true }
   },
   /* Ruta catch-all para redirigir rutas no definidas */
   {

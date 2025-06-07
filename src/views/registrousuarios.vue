@@ -1,6 +1,6 @@
 <template>
 <div>
-  <p v-if="message" :class="messageType">{{ message }}</p>
+    <p v-if="message" :class="messageType">{{ message }}</p>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Gestionar</button>
@@ -12,7 +12,7 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <h1>Listado de usuarios del sistema</h1>
-      <!--       {{ this.users }} -->
+            <!--       {{ this.users }} -->
             <table class="table">
                 <thead>
                     <tr>
@@ -30,7 +30,7 @@
                         <td>{{user.cargo}}</td>
                         <td>{{user.grupo}}</td>
                         <td> <button class="btn btn-warning btn-sm" @click="resetPassword(user.email)"><i class="bi bi-key-fill"></i></button>
-                           </td>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -80,7 +80,7 @@
                 <button type="submit" :disabled="loading" class="btn btn-warning btn-sm">
                     {{ loading ? "Creando..." : "Crear Usuario y Enviar Enlace de Contraseña" }}
                 </button>
-               
+
             </form>
 
         </div>
@@ -126,10 +126,11 @@ export default {
             message: "",
             messageType: "",
             users: [],
+            ips: 1,
         };
     },
     methods: {
-
+        //crear el usuario en la bd 
         async createUserByAdmin() {
             if (!this.userEmail || !this.nombre || !this.rol || !this.numDocumento || !this.grupo || !this.cargo) {
                 this.message = "Por favor, completa todos los campos obligatorios.";
@@ -157,6 +158,7 @@ export default {
 
                 // Guardar datos adicionales en Firestore
                 await setDoc(doc(db, "users", user.uid), {
+                    ips: this.ips,
                     email: this.userEmail,
                     nombre: this.nombre,
                     numDocumento: this.numDocumento,
@@ -184,7 +186,7 @@ export default {
                 this.loading = false;
             }
         },
-        /*  */
+        /*  resetear pasword */
         async resetPassword(email) {
             try {
                 await sendPasswordResetEmail(auth, email);
@@ -197,7 +199,7 @@ export default {
             }
         },
 
- 
+        /* listar todos lo usuarios */
         async listAllUsers(nextPageToken) {
             // Listar usuarios en lotes de 1000
             const listUsersResult = await getAuth().listUsers(1000, nextPageToken);
@@ -211,7 +213,7 @@ export default {
                 await listAllUsers(listUsersResult.pageToken);
             }
         },
-
+        //consultar los datos del usuario
         async fetchUsers() {
             try {
                 const usersCol = collection(db, "users");

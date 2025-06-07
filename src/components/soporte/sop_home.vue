@@ -114,9 +114,9 @@
           <tbody>
             <tr>
               <td>
-                <a class="btn btn-primary btn-sm" href="/sop_encuesta">
+                <RouterLink class="btn btn-primary btn-sm" to="/sop_encuesta">
                   <i class="bi bi-check-square"></i>
-                </a>
+                </RouterLink>
               </td>
               <td>Extramural</td>
               <td>15/12/2025</td>

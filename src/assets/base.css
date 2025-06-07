@@ -199,3 +199,49 @@ footer {
   box-sizing: border-box;
   /* Para que el padding no aumente el ancho */
 }
+/* Ajuste para que los elementos ocupen todo el ancho y tengan padding uniforme */
+.offcanvas-body ul.navbar-nav {
+  width: 100%;
+  padding-left: 0;
+}
+
+.offcanvas-body ul.navbar-nav>li.nav-item {
+  width: 100%;
+}
+
+/* Estilo común para enlaces y botón logout */
+.offcanvas-body ul.navbar-nav>li.nav-item>a.nav-link,
+.offcanvas-body ul.navbar-nav>li.nav-item>button.logout-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #212529;
+  /* Color texto nav-link */
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
+  text-align: left;
+}
+
+/* Hover para enlaces y botón */
+.offcanvas-body ul.navbar-nav>li.nav-item>a.nav-link:hover,
+.offcanvas-body ul.navbar-nav>li.nav-item>button.logout-btn:hover {
+  background-color: #e9ecef;
+  color: #0d6efd;
+}
+
+/* Opcional: que el botón logout no tenga outline al hacer foco */
+.logout-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.blanco {
+  color: #e9ecef !important;
+}
