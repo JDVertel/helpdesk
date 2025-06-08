@@ -43,6 +43,12 @@ const routes = [
     component: () => import("../components/soporte/sop_profesional.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/sop_caracterizacion",
+    name: "sop_caracterizacion",
+    component: () => import("../components/soporte/sop_caracterizacion.vue"),
+    meta: { requiresAuth: true },
+  },
   /* Admin */
   {
     path: "/admin_encuestas",

@@ -14,6 +14,7 @@
             class="form-control"
             id="email"
             placeholder="Ingresa tu email"
+              autocomplete="username"
             required
           />
         </div>
@@ -25,6 +26,7 @@
             class="form-control"
             id="password"
             placeholder="Ingresa tu contraseña"
+             autocomplete="current-password"
             required
           />
         </div>

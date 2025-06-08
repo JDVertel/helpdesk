@@ -167,7 +167,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Guardar Demanda inducida</button>
+                <button type="submit" class="btn btn-primary" v-if="userData">Guardar Demanda inducida</button>
             </form>
         </div>
     </div>
@@ -298,7 +298,9 @@ export default {
                 this.ListtipoActividad.length === 0 ||
                 this.ListpoblacionRiesgo.length === 0 ||
                 !this.desplazamiento ||
-                !this.requiereRemision
+                !this.requiereRemision ||
+                !this.userData.numDocumento 
+             
             ) {
                 alert("Por favor, complete todos los campos obligatorios.");
                 return;
@@ -306,7 +308,7 @@ export default {
 
             const registro = {
                 idEncuesta: 1,
-                idUsuario: 1,
+                idEncuestador: this.userData.numDocumento,
                 bd: "Encuesta",
                 fecha: moment().format("YYYY-MM-DD"),
                 eps: this.eps,
@@ -391,7 +393,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["contador", "comunasBarrios"]),
+        ...mapState(["contador", "comunasBarrios","userData"]),
     },
     mounted() {
         this.getAllComunaBarrios();

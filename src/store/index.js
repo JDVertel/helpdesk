@@ -29,7 +29,7 @@ export default createStore({
                 const {
                     bd,
                     idEncuesta,
-                    idUsuario,
+                    idEncuestador,
                     eps,
                     regimen,
                     fecha,
@@ -52,7 +52,7 @@ export default createStore({
 
                 const DataToSaveE = {
                     idEncuesta,
-                    idUsuario,
+                    idEncuestador,
                     eps,
                     regimen,
                     fecha,
@@ -221,6 +221,32 @@ export default createStore({
             }
         },
 
+        getAllRegistersByFecha: async ({ commit }, { idUsuario, fecha }) => {
+            console.log("datos que entran", idUsuario, fecha);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar por idEncuestador y fecha recibidos como parámetros
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.idEncuestador === idUsuario &&
+                    encuesta.fecha === fecha // Verifica que el formato de fecha coincida
+                );
+
+                commit('setEncuestas', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en Action_getAllRegistersByFecha:', error);
+                throw error;
+            }
+        },
+        
+        
+
+
         GetAllRegistersbyRange: async ({ commit }, rango) => {
             try {
                 const { fechaInicio, fechaFin } = rango;
@@ -286,37 +312,38 @@ export default createStore({
             }
         },
 
-        getAgendas: async ({ commit }) => {
+
+
+
+
+/* agendamiento listado de agendas grupo*/
+        getListAgendas: async ({ commit }, fecha) => {
+            console.log("fecha que entra", fecha);
             try {
-                const { data } = await firebase_api.get('/agendas.json');
-                const agendas = Object.entries(data).map(([key, value]) => ({
+                // La fecha debe ir entre comillas para la consulta REST
+                const fechaQuery = `"${fecha}"`;
+                const url = `/agendas.json?orderBy="fecha"&startAt=${fechaQuery}`;
+
+                const { data } = await firebase_api.get(url);
+
+                // Convertir resultado a arreglo
+                const agendas = data ? Object.entries(data).map(([key, value]) => ({
                     id: key,
                     ...value
-                }));
+                })) : [];
+
                 commit('setAgendas', agendas);
                 return agendas;
+
             } catch (error) {
-                console.error('Error en Action_getAllUsers:', error);
+                console.error('Error en getListagendas:', error);
                 throw error;
             }
         },
 
-        getTomamuestras: async ({ commit }) => {
-            try {
-                const { data } = await firebase_api.get('/agendas.json');
-                const agendas = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    ...value
-                }));
-                commit('setAgendas', agendas);
-                return agendas;
-            } catch (error) {
-                console.error('Error en Action_getAllUsers:', error);
-                throw error;
-            }
-        },
 
-        /* ---------------------------------------DELETE------------------------------------- */
+
+      /* ---------------------------------------DELETE------------------------------------- */
 
         deleteComunaBarrio: async ({ commit }, id) => {
             try {

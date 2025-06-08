@@ -4,6 +4,9 @@
 
     <hr />
     {{ fechaActual }}
+    {{ userData }}
+    <hr>
+    {{ encuestas }}
     <div class="row">
       <div class="col-6 center">
         <h6 class="display-6">{{ totalRegisters }}</h6>
@@ -139,12 +142,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getAllRegisters", "removeRegEnc"]),
+    ...mapActions(["getAllRegistersByFecha", "removeRegEnc"]),
 
     removeRegEncuesta(id) {
       this.removeRegEnc(id);
       alert("Registro eliminado exitosamente.");
-      this.getAllRegisters(1);
+      this.getAllRegistersByFecha(this.userData.numDocumento, this.fechaActual);
     },
     Agendar() {
       this.$router.push("/sop_agendamiento");
@@ -152,7 +155,10 @@ export default {
   },
 
   computed: {
-    ...mapState(["encuestas"]),
+    ...mapState(["encuestas", "userData"]),
+    documento() {
+      return this.userData.numDocumento;
+    },
 
     totalRegisters() {
       return this.encuestas.length;
@@ -167,8 +173,9 @@ export default {
     },
   },
   mounted() {
-    this.getAllRegisters(1);
+
     this.fechaActual = moment().format("YYYY-MM-DD");
+    this.getAllRegistersByFecha({ idUsuario: this.userData.numDocumento, fecha: this.fechaActual });
   },
 };
 </script>

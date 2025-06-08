@@ -1,16 +1,16 @@
 <template>
     <div>
       <div class="container">
-        <h1>Home</h1>
+        <h1>Bienvenido</h1>
       </div>
-  
+  <hr>
       <p v-if="getUserData">
         Nombre: {{ getUserData.nombre }} <br />
         Cargo: {{ getUserData.cargo }} <br />
         Rol: {{ getUserData.rol }} <br />
         Grupo: {{ getUserData.grupo }} <br />
       </p>
-      <p v-else>No hay datos disponibles</p>
+      <p v-else>Cargando...</p>
   
       <footer>
         <p>Propiedad de BigDataManagements.SAS Todos los Derechos Reservados</p>
@@ -20,8 +20,6 @@
   
   <script>
   import logo from "../assets/images/logo_extramurapp.png";
-/*   import { signOut } from "firebase/auth";
-  import { auth } from "@/api/firebase"; */
   import { mapActions, mapGetters } from "vuex";
   
   export default {
@@ -34,22 +32,7 @@
     },
     methods: {
       ...mapActions(["fetchUserDataByUid"]),
-  /* 
-      async logoutUser() {
-        try {
-          await signOut(auth);
-          // Eliminar solo token y uid
-          localStorage.removeItem("token");
-          localStorage.removeItem("uid");
-          // Limpiar store (elige solo uno según tu flujo)
-          this.$store.commit("RESET_STATE");
-          // O bien, si logout ya limpia el estado, solo dispatch
-          // await this.logout();
-          this.$router.push("/logout");
-        } catch (error) {
-          console.error("Error al cerrar sesión:", error.message);
-        }
-      }, */
+
     },
     computed: {
       ...mapGetters(["getUserData"]),
