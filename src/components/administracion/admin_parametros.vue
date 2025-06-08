@@ -8,8 +8,8 @@
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                 Comunas - Barrios
             </button>
-            <button class="nav-link disabled" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
-                Poblacion Riesgos
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+                EPS
             </button>
             <button class="nav-link disabled" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">
                 Tipo Actividades
@@ -19,16 +19,16 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <br />
-            <h6>Opciones disponibles para las encuestas</h6>
+            <h6>Opciones disponibles para las encuestas Comunas/Barrios </h6>
             <br />
             <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                     <input type="number" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder="Comuna" v-model="comuna" />
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <input type="text" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder="Barrio" v-model="barrio" />
                 </div>
-                <div class="col-12">
+                <div class="col-4">
                     <button type="button" class="btn btn-warning btn-sm" @click="saveComunaBarrio">
                         + Guardar
                     </button>
@@ -65,41 +65,30 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder="Nombre de la nueva oficina" />
+                            <input type="text" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder="Nombre de la Eps"  v-model="epsname"/>
                         </div>
                     </div>
                     <div class="col-6">
-                        <button type="button" class="btn btn-warning btn-sm">Guardar</button>
+                        <button type="button" class="btn btn-warning btn-sm" @click="saveEps">Guardar</button>
                     </div>
                 </div>
                 <hr />
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Proyecto</th>
-                            <th>Sede</th>
-                            <th>Oficina</th>
-                            <th>Estado</th>
+                            <th>Nombre de EPS</th>
+                            <th>Opciones</th>
+  
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                        <tr v-for="(ot, index) in epss" :key="ot.id || index">
+                            <td>{{ ot.eps }}</td>
+                            <td>          <button class="btn btn-danger btn-sm" @click="EpsDelete(ot.id)" aria-label="Eliminar EPS" type="button">
+                                <i class="bi bi-trash"></i>
+                            </button></td>
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                     
                     </tbody>
                 </table>
             </div>
@@ -115,7 +104,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <button type="button" class="btn btn-primary btn-sm">Guardar</button>
+                    <button type="button" class="btn btn-primary btn-sm" @click="saveEps">Guardar</button>
                 </div>
             </div>
             <hr />
@@ -158,13 +147,14 @@ export default {
         return {
             comuna: "",
             barrio: "",
+            epsname:"",
         };
     },
     computed: {
-        ...mapState(["comunasBarrios"]),
+        ...mapState(["comunasBarrios","epss"]),
     },
     methods: {
-        ...mapActions(["getAllComunaBarrios", "crearComunaBarrio", "deleteComunaBarrio"]),
+        ...mapActions(["getAllComunaBarrios", "crearComunaBarrio", "deleteComunaBarrio","crearEps", "getAllEps", "deleteEps"]),
 
         saveComunaBarrio() {
             let data = {
@@ -184,9 +174,30 @@ export default {
             this.getAllComunaBarrios();
             this.clearform();
         },
+
+        saveEps() {
+            let data = {
+                eps: this.epsname,
+                bd: "eps",
+            };
+            if (this.epsname === "") {
+                alert("Por favor, complete todos los campos.");
+                return;
+            }
+
+            this.crearEps(data);
+
+            alert("EPS creado exitosamente.");
+
+            this.getAllEps();
+            this.clearformeps();
+        },
         clearform() {
             this.comuna = "";
             this.barrio = "";
+        },
+        clearformeps() {
+            this.epsname = "";
         },
 
         async deleteBarrio(index) {
@@ -194,9 +205,15 @@ export default {
             alert("Comuna y barrio eliminados exitosamente.");
             this.getAllComunaBarrios();
         },
+        async EpsDelete(index) {
+            await this.deleteEps(index);
+            alert("EPS eliminado exitosamente.");
+            this.getAllEps();
+        },
     },
     mounted() {
         this.getAllComunaBarrios();
+        this.getAllEps();
     },
 };
 </script>

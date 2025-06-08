@@ -245,3 +245,15 @@ footer {
 .blanco {
   color: #e9ecef !important;
 }
+.form-floating label {
+  position: absolute;
+  top: -2px;
+  left: 0.5rem;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.8rem !important;
+  max-width: 100%;
+  /* overflow: clip; */ /* Puedes eliminar o cambiar esta línea */
+  white-space: normal; /* Permite que el texto pase a otro renglón */
+  /* text-overflow: ellipsis; */ /* Elimina esta línea */
+}

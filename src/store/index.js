@@ -17,6 +17,8 @@ export default createStore({
         uid: null,
         userData: {},
         user: null,
+        epss: [],
+        accessToken: null, // Para manejar el token de acceso
     },
 
 
@@ -141,6 +143,28 @@ export default createStore({
                 throw error; // Re-lanzar para que el componente pueda manejarlo
             }
         },
+        crearEps: async ({ commit }, entradaseps) => {
+            try {
+                const {
+                    bd, eps
+                } = entradaseps;
+
+                const DataToSaveC = {
+                    eps
+                };
+
+                const Ruta = `/${bd}.json`;
+                // Llamada al servicio (asumiendo que firebase_api está importado y configurado)
+                const { data } = await firebase_api.post(Ruta, DataToSaveC);
+                return data; // Retornar la respuesta si se necesita
+
+            } catch (error) {
+                console.error('Error en Action_createDataEmpresa:', error);
+                // Opcional: manejar error, por ejemplo con commit a una mutación de error
+                throw error; // Re-lanzar para que el componente pueda manejarlo
+            }
+        },
+
         addreserva: async ({ commit }, entradasr) => {
             try {
                 const {
@@ -300,7 +324,21 @@ export default createStore({
                 throw error;
             }
         },
-
+        
+        getAllEps: async ({ commit }) => {
+            try {
+                const { data } = await firebase_api.get('/eps.json');
+                const eps = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+                commit('setEps', eps);
+                return eps;
+            } catch (error) {
+                console.error('Error en Action_getAllEps:', error);
+                throw error;
+            }
+        },
 
         getdataips: async ({ commit }, id) => {
             try {
@@ -355,7 +393,16 @@ export default createStore({
                 throw error;
             }
         },
-
+        deleteEps: async ({ commit }, id) => {
+            try {
+                if (!id) throw new Error('ID inválido para eliminar');
+                const { data } = await firebase_api.delete(`/eps/${id}.json`);
+                return data;
+            } catch (error) {
+                console.error('Error en Action deleteComunaBarrio:', error);
+                throw error;
+            }
+        },
         deleteUser: async ({ commit }, id) => {
             try {
                 const { data } = await firebase_api.delete(`/usuarios/${id}.json`);
@@ -451,6 +498,9 @@ export default createStore({
 
         setComunasBarrios(state, comunasBarrios) {
             state.comunasBarrios = comunasBarrios;
+        },
+        setEps(state, eps) {
+            state.epss = eps;
         },
 
         setdatosips(state, datosips) {

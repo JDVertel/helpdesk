@@ -70,7 +70,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-md-6">
-                <h6><i class="bi bi-people-fill"></i> Visita Medica</h6>
+                <h6><i class="bi bi-people-fill"></i> Visita Medica y Enfermeria</h6>
                 <hr />
                 <div class="row mb-4">
                     <div class="col-6">
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6" v-if="dateConsulta !== ''">
-                <p>Agenda del dia Visita medica</p>
+                <p>Agenda del dia Visita medica y enfermeria</p>
                 <table class="table table-sm">
                     <thead>
                         <tr>

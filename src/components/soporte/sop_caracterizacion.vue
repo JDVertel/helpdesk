@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <h1 class="text-center">Caracterización de la visita</h1>
     <div class="row">
+      <hr />
       <h4>Visita</h4>
       <div class="col-6">
         <select class="form-select" aria-label="Default select example" v-model="visita">
@@ -27,76 +28,105 @@
     <br />
 
     <div class="row">
-      <hr>
+      <hr />
       <h4>Vivienda</h4>
       <div class="col-6">
-        <select
-          class="form-select"
-          aria-label="Default select example"
-          v-model="tipovivienda"
-        >
-          <option selected value="">Seleccione</option>
-          <option value="propia">propia</option>
-          <option value="arriendo">arriendo</option>
-          <option value="familiar">familiar</option>
-        </select>
+        <div class="form-floating mb-3">
+          <select
+            id="tipoVivienda"
+            class="form-select"
+            v-model="tipovivienda"
+            aria-label="Tipo de vivienda"
+          >
+            <option value="" selected>Seleccione tipo de vivienda</option>
+            <option value="propia">Vivienda propia</option>
+            <option value="arriendo">Arriendo</option>
+            <option value="familiar">Familiar</option>
+          </select>
+          <label for="tipoVivienda">Tipo de vivienda</label>
+        </div>
+
         <br />
-        <p><strong>Estado Actual</strong></p>
+        <p>Estado Actual</p>
         <div>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            v-model="EstActual_Iluminacion"
-          >
-            <option selected value="">Iluminacion</option>
-            <option value="Bueno">Bueno</option>
-            <option value="Regular">Regular</option>
-            <option value="Malo">Malo</option>
-          </select>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            v-model="EstActual_Ventilacion"
-          >
-            <option selected value="">Ventilacion</option>
-            <option value="Bueno">Bueno</option>
-            <option value="Regular">Regular</option>
-            <option value="Malo">Malo</option>
-          </select>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            v-model="EstActual_Paredes"
-          >
-            <option selected value="">Paredes</option>
-            <option value="Bueno">Bueno</option>
-            <option value="Regular">Regular</option>
-            <option value="Malo">Malo</option>
-          </select>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            v-model="EstActual_Pisos"
-          >
-            <option selected value="">Pisos</option>
-            <option value="Bueno">Bueno</option>
-            <option value="Regular">Regular</option>
-            <option value="Malo">Malo</option>
-          </select>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            v-model="EstActual_Techo"
-          >
-            <option selected value="">Techo</option>
-            <option value="Bueno">Bueno</option>
-            <option value="Regular">Regular</option>
-            <option value="Malo">Malo</option>
-          </select>
+          <div class="form-floating">
+            <select
+              class="form-select"
+              id="iluminacionSelect"
+              v-model="EstActual_Iluminacion"
+              aria-label="Iluminacion"
+            >
+              <option value="" selected>Seleccione</option>
+              <option value="Bueno">Bueno</option>
+              <option value="Regular">Regular</option>
+              <option value="Malo">Malo</option>
+            </select>
+            <label for="iluminacionSelect">Iluminación</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="selectVentilacion"
+              v-model="EstActual_Ventilacion"
+              aria-label="Ventilacion"
+            >
+              <option value="" selected>Seleccione</option>
+              <option value="Bueno">Bueno</option>
+              <option value="Regular">Regular</option>
+              <option value="Malo">Malo</option>
+            </select>
+            <label for="selectVentilacion">Ventilación</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="selectParedes"
+              v-model="EstActual_Paredes"
+              aria-label="Paredes"
+            >
+              <option value="" selected>Seleccione</option>
+              <option value="Bueno">Bueno</option>
+              <option value="Regular">Regular</option>
+              <option value="Malo">Malo</option>
+            </select>
+            <label for="selectParedes">Paredes</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="selectPisos"
+              v-model="EstActual_Pisos"
+              aria-label="Pisos"
+            >
+              <option value="" selected>Seleccione</option>
+              <option value="Bueno">Bueno</option>
+              <option value="Regular">Regular</option>
+              <option value="Malo">Malo</option>
+            </select>
+            <label for="selectPisos">Pisos</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="selectTecho"
+              v-model="EstActual_Techo"
+              aria-label="Techo"
+            >
+              <option value="" selected>Seleccione</option>
+              <option value="Bueno">Bueno</option>
+              <option value="Regular">Regular</option>
+              <option value="Malo">Malo</option>
+            </select>
+            <label for="selectTecho">Techo</label>
+          </div>
         </div>
       </div>
       <div class="col-6">
-        <p><strong>Servicios Publicos</strong></p>
+        <p>Servicios Publicos</p>
         <div class="form-check" v-for="opcion in opcionesServPublicos" :key="opcion.id">
           <input
             class="form-check-input"
@@ -116,9 +146,10 @@
 
   <br />
   <div class="row">
-    <hr>
+    <hr />
     <h4>Factores de Riesgo</h4>
-    <div class="col-6">  <p><strong>Entorno</strong></p>
+    <div class="col-6">
+      <p>Entorno</p>
       <div class="form-check" v-for="opcionr in factoresRiesgo" :key="opcionr.id">
         <input
           class="form-check-input"
@@ -130,12 +161,16 @@
         <label class="form-check-label" :for="'check-' + opcionr.id">
           {{ opcionr.texto }}
         </label>
-        
       </div>
-      {{ seleccionadosFactoresRiesgo }}</div>
+      {{ seleccionadosFactoresRiesgo }}
+    </div>
     <div class="col-6">
-      <p><strong>Presencia de Animales</strong></p>
-      <div class="form-check" v-for="opcion in OpcionesPresenciaAnimales" :key="opcion.id">
+      <p>Presencia de Animales</p>
+      <div
+        class="form-check"
+        v-for="opcion in OpcionesPresenciaAnimales"
+        :key="opcion.id"
+      >
         <input
           class="form-check-input"
           type="checkbox"
@@ -149,16 +184,213 @@
       </div>
       {{ seleccionadosPresenciaAnimales }}
     </div>
-
   </div>
 
   <br />
   <div class="row">
-    <hr>
+    <hr />
     <h4>Grupo Familiar</h4>
+    <div class="row">
+      <div class="col"></div>
+      <button
+        class="btn btn-warning btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+      >
+        + Agregar
+      </button>
+    </div>
+    <!-- inicio modal -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Agregar miembro del grupo familiar
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-6">
+                <label for="nombres" class="form-label">Nombres</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombres"
+                  v-model="nuevoMiembro.nombres"
+                />
+              </div>
+              <div class="col-6">
+                <label for="apellidos" class="form-label">Apellidos</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="apellidos"
+                  v-model="nuevoMiembro.apellidos"
+                />
+              </div>
+              <div class="col-6">
+                <label for="parentesco" class="form-label">Parentesco</label>
+                <select
+                  class="form-select"
+                  id="parentesco"
+                  v-model="nuevoMiembro.parentesco"
+                >
+                  <option
+                    :value="parentesco"
+                    v-for="(parentesco, index) in parentescos"
+                    :key="index"
+                  >
+                    {{ parentesco }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="tipodoc" class="form-label">Tipo de Documento</label>
+                <select class="form-select" id="tipodoc" v-model="nuevoMiembro.tipodoc">
+                  <option value="">Seleccione</option>
+                  <option value="RC">Registro Civil</option>
+                  <option value="TI">Tarjeta de Identidad</option>
+                  <option value="CC">Cédula de Ciudadanía</option>
+                  <option value="CE">Cédula de Extranjería</option>
+                  <option value="NV">Certificado nacido vivo</option>
+                  <option value="PA">Pasaporte</option>
+                  <option value="PE">Permiso Especial de Permanencia</option>
+                  <option value="MS">Menos sin identificacion</option>
+                  <option value="AS">Adulto sin identificacion</option>
+                  <option value="PT">Permiso por proteccion temporal</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="numeroDocumento" class="form-label"
+                  >Numero de documento</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="numeroDocumento"
+                  v-model="nuevoMiembro.numeroDocumento"
+                />
+              </div>
+              <div class="col-6">
+                <label for="fnacimiento" class="form-label">Fnacimiento</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fnacimiento"
+                  v-model="nuevoMiembro.fnacimiento"
+                />
+              </div>
+              <div class="col-6">
+                <label for="genero" class="form-label">Género</label>
+                <select class="form-select" id="genero" v-model="nuevoMiembro.genero">
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                </select>
+              </div>
+
+              <div class="col-6">
+                <label for="eps" class="form-label">Eps</label>
+                <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
+                  <option :value="eps" v-for="(eps, index) in epss" :key="index">
+                    {{ eps }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="regimen" class="form-label">Regimen</label>
+                <select class="form-select" id="regimen" v-model="nuevoMiembro.regimen">
+                  <option value="Subsididiado">Subsididiado</option>
+                  <option value="Contributivo">Contributivo</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="cursodevida" class="form-label">Curso de vida</label>
+                <select
+                  class="form-select"
+                  id="cursodevida"
+                  v-model="nuevoMiembro.cursoVida"
+                >
+                  <option value="primera infancia">primera infancia</option>
+                  <option value="infancia">infancia</option>
+                  <option value="adolescencia">adolescencia</option>
+                  <option value="juventud">juventud</option>
+                  <option value="adultez">adultez</option>
+                  <option value="vejez">vejez</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="ocupacion" class="form-label">Ocupacion</label>
+                <select
+                  class="form-select"
+                  id="ocupacion"
+                  v-model="nuevoMiembro.ocupacion"
+                >
+                  <option value="menor de edad">Menor de edad</option>
+                  <option value="emplead@">Emplead@</option>
+                  <option value="estudiante">Estudiante</option>
+                  <option value="ama de casa">Ama de casa</option>
+                  <option value="pensionad@">Pensionad@</option>
+                  <option value="independiente">Independiente</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="viveenvivienda" class="form-label">Vive en vivienda</label>
+                <select
+                  class="form-select"
+                  id="viveenvivienda"
+                  v-model="nuevoMiembro.viveEnVivienda"
+                >
+                  <option value="si">Si</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- fin modal -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Parentesco</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>Otto</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <br />
   <div class="row">
+    <hr />
     <h4>Antecedentes personales</h4>
     <div class="form-check" v-for="opcion in opcionesAntecedentes" :key="opcion.id">
       <input
@@ -172,76 +404,259 @@
         {{ opcion.texto }}
       </label>
     </div>
+    <br />
     {{ seleccionadosAntecedentes }}
   </div>
   <br />
   <div class="row">
+    <hr />
     <h4>Riesgos</h4>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-check" v-for="opcion in OpcionesRiesgos" :key="opcion.id">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :id="'check-' + opcion.id"
+            :value="opcion.valor"
+            v-model="seleccionadosRiesgos"
+          />
+          <label class="form-check-label" :for="'check-' + opcion.id">
+            {{ opcion.texto }}
+          </label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="col">
+
+      
+        <!-- Segunda pregunta seleccionado sedentarismo -->
+        <div v-if="seleccionadosRiesgos.includes('sedentarismo')" >
+            <label for="Pregunta2">
+            Ejercicios:  Cantidad semanal de actividad fisica (90min X act):</label
+            >
+       
+          <input
+            type="number"
+            id="Pregunta2"
+            v-model="detalleSedentarismo"
+            class="form-control"
+            placeholder="# Cantidad"
+          />
+        </div>
+        <!-- Segunda pregunta seleccionado alcohol-->
+        <div v-if="seleccionadosRiesgos.includes('consumeAlcohol')" >
+            <label for="Pregunta3"
+              >Alcohol:
+              Frecuencia de consumo:</label
+            >
+
+
+          <select class="form-select" id="Pregunta3" v-model="detalleConsumoAlcohol">
+            <option value="Frecuentemente">frecuentemente</option>
+            <option value="Ocasionalmente">ocasionalmente</option>
+          </select>
+        </div>
+        <!-- Segunda pregunta seleccionado cigarrillos -->
+        <div v-if="seleccionadosRiesgos.includes('consumeCigarrillo')" >
+          
+            <label for="segundaPregunta">
+                Cigarrillo: frecuencia Diaria</label>
+
+          <input
+            type="number"
+            id="segundaPregunta"
+            v-model="detalleConsumoCigarrillo"
+            class="form-control"
+            placeholder="Escriba aquí..."
+          />
+        </div>
+        <!-- Segunda pregunta seleccionado alimentacion poco saludable -->
+        <div
+          v-if="seleccionadosRiesgos.includes('alimentacionPocoSaludable')"
+        >
+            <label for="segundaPregunta">Consumo de frutas y verduras: Consumo minimo diaria 5 porciones </label>
+          <input
+            type="text"
+            id="segundaPregunta"
+            v-model="AlimentacionPocoSaludable"
+            class="form-control"
+            placeholder="Escriba aquí..."
+          />
+        </div>
+    </div>
+      </div>
+      {{ seleccionadosRiesgos }}
+    </div>
   </div>
+
   <br />
   <div class="row">
+    <hr />
     <h4>Tamizaje</h4>
     <div class="row">
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="peso" placeholder="">
-        <label for="floatingInput">Peso (Libras)</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="talla" placeholder="">
-        <label for="floatingInput">Talla</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="imc" placeholder="">
-        <label for="floatingInput">IMC</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="clasificacionImc" placeholder="">
-        <label for="floatingInput">Clasificacion IMC</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="tensionSistolica" placeholder="">
-        <label for="floatingInput">Tension Sistolica</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="tensionDiastolica" placeholder="">
-        <label for="floatingInput">Tension Diastolica</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="perimetroAbdominal" placeholder="">
-        <label for="floatingInput">Perimetro Abdominal</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="perimetroBranquial" placeholder="">
-        <label for="floatingInput">Perimetro Branquial</label>
-      </div></div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput1"
+            v-model="peso"
+            placeholder=""
+          />
+          <label for="floatingInput1">Peso (Kl)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput2"
+            v-model="talla"
+            placeholder=""
+          />
+          <label for="floatingInput2">Talla (Cm)</label>
+        </div>
+      </div>
 
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="oximetria" placeholder="">
-        <label for="floatingInput">Oximetria</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="temperatura" placeholder="">
-        <label for="floatingInput">Temperatura</label>
-      </div></div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput3"
+            v-model="tensionSistolica"
+            placeholder=""
+          />
+          <label for="floatingInput3">Tension Sistolica (mmHg)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput4"
+            v-model="tensionDiastolica"
+            placeholder=""
+          />
+          <label for="floatingInput4">Tension Diastolica (mmHg)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput5"
+            v-model="perimetroAbdominal"
+            placeholder=""
+          />
+          <label for="floatingInput5">Perimetro Abdominal (cm)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput6"
+            v-model="perimetroBranquial"
+            placeholder=""
+          />
+          <label for="floatingInput6">Perimetro Branquial (cm)</label>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput7"
+            v-model="oximetria"
+            placeholder=""
+          />
+          <label for="floatingInput7">Oximetria (%)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput8"
+            v-model="temperatura"
+            placeholder=""
+          />
+          <label for="floatingInput8">Temperatura (°C)</label>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="form-floating mb-3">
+              <input
+                type="number"
+                class="form-control"
+                id="floatingInput9"
+                v-model="imc"
+                placeholder=""
+              />
+              <label for="floatingInput9">IMC</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating mb-3">
+              <input
+                type="number"
+                class="form-control"
+                id="floatingInput10"
+                v-model="clasificacionImc"
+                placeholder=""
+              />
+              <label for="floatingInput10">Clasificacion IMC (listado)</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <br />
   <div class="row">
+    <hr />
     <h4>Tamizaje Visual</h4>
     <div class="row">
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="Oizquierdo" placeholder="">
-        <label for="floatingInput">Ojo Izquierdo</label>
-      </div></div>
-      <div class="col-6"><div class="form-floating mb-3">
-        <input type="number" class="form-control" id="floatingInput" v-model="Oderecho" placeholder="">
-        <label for="floatingInput">Ojo Derecho</label>
-      </div></div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput"
+            v-model="Oizquierdo"
+            placeholder=""
+          />
+          <label for="floatingInput">Ojo Izquierdo ( fracción de Snellen)</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <input
+            type="number"
+            class="form-control"
+            id="floatingInput"
+            v-model="Oderecho"
+            placeholder=""
+          />
+          <label for="floatingInput">Ojo Derecho ( fracción de Snellen)</label>
+        </div>
+      </div>
     </div>
-   
   </div>
   <br />
   <div class="row">
+    <hr />
     <h4>Esquema vacunal</h4>
     <select class="form-select" aria-label="Default select example" v-model="Evacunal">
       <option selected value="">Seleccione</option>
@@ -257,12 +672,27 @@ export default {
   data() {
     return {
       visita: "",
+      tipovisita: "",
       tipovivienda: "",
       EstActual_Iluminacion: "",
       EstActual_Ventilacion: "",
       EstActual_Paredes: "",
       EstActual_Pisos: "",
       EstActual_Techo: "",
+      peso: "",
+      talla: "",
+      tensionSistolica: "",
+      tensionDiastolica: "",
+      perimetroAbdominal: "",
+      perimetroBranquial: "",
+      oximetria: "",
+      temperatura: "",
+      imc: "",
+      clasificacionImc: "",
+      Oizquierdo: "",
+      Oderecho: "",
+      Evacunal: "",
+
       seleccionadosServPublic: [],
       opcionesServPublicos: [
         {
@@ -432,6 +862,105 @@ export default {
           texto: "Otros",
         },
       ],
+      nuevoMiembro: {
+        nombres: "",
+        apellidos: "",
+        parentesco: "",
+        tipodoc: "",
+        numeroDocumento: "",
+        fnacimiento: "",
+        genero: "",
+        genero: "",
+        eps: "",
+        regimen: "",
+        cursoVida: "",
+        ocupacion: "",
+        viveEnVivienda: "",
+      },
+
+      parentescos: [
+        "Abuel@",
+        "Ahij@",
+        "Bisabuel@",
+        "Bisniet@",
+        "Cuñad@",
+        "Herman@",
+        "Hij@",
+        "Madre",
+        "Niet@",
+        "Nuera",
+        "Prim@",
+        "Sobrin@",
+        "Suegr@",
+        "Ti@",
+        "yern@",
+      ],
+      epss: [
+        "Sura",
+        "Sanitas",
+        "Coomeva",
+        "Compensar",
+        "Cafesalud",
+        "Salud Total",
+        "Nueva EPS",
+        "Medimás",
+        "Famisanar",
+        "Coosalud",
+      ],
+      OpcionesRiesgos: [
+        {
+          id: 32,
+          valor: "sedentarismo",
+          texto: "Sedentarismo",
+        },
+        {
+          id: 33,
+          valor: "alimentacionPocoSaludable",
+          texto: "Alimentacion poco saludable",
+        },
+        {
+          id: 34,
+          valor: "consumeAlcohol",
+          texto: "Consume alcohol frecuentemente",
+        },
+        {
+          id: 35,
+          valor: "consumeCigarrillo",
+          texto: "Consume cigarrillo",
+        },
+        {
+          id: 36,
+          valor: "sintomaticoRespiratorio",
+          texto: "Sntomatico respiratorio",
+        },
+        {
+          id: 37,
+          valor: "sintomaticoPiel",
+          texto: "Sintomatico de piel",
+        },
+        {
+          id: 38,
+          valor: "contactoPacienteTBC",
+          texto: "Contacto con paciente TBC",
+        },
+        {
+          id: 39,
+          valor: "consumoSustanciaPsicoactivas",
+          texto: "Consumo de sustancia psicoactivas",
+        },
+        {
+          id: 40,
+          valor: "hacinamiento",
+          texto: "Hacinamiento",
+        },
+
+        {
+          id: 41,
+          valor: "violenciaIntraFamiliar",
+          texto: "Violencia intrafamiliar",
+        },
+      ],
+      seleccionadosRiesgos: [],
     };
   },
   methods: {},
