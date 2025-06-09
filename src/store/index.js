@@ -19,6 +19,9 @@ export default createStore({
         user: null,
         epss: [],
         accessToken: null, // Para manejar el token de acceso
+        cantEncuestas: 0,
+        encuestasToday: [] // Para manejar la cantidad de encuestas diarias
+        // Puedes agregar más estados según sea necesario
     },
 
 
@@ -30,6 +33,8 @@ export default createStore({
             try {
                 const {
                     bd,
+                    estado,
+                    visita,
                     idEncuesta,
                     idEncuestador,
                     eps,
@@ -53,6 +58,8 @@ export default createStore({
                 } = entradasE;
 
                 const DataToSaveE = {
+                    estado,
+                    visita,
                     idEncuesta,
                     idEncuestador,
                     eps,
@@ -260,13 +267,60 @@ export default createStore({
                     encuesta.fecha === fecha // Verifica que el formato de fecha coincida
                 );
 
-                commit('setEncuestas', encuestasFiltradas);
+                commit('setEncuestasToday', encuestasFiltradas);
                 return encuestasFiltradas;
             } catch (error) {
-                console.error('Error en Action_getAllRegistersByFecha:', error);
+                console.error('Error en Action_setEncuestasToday:', error);
                 throw error;
             }
         },
+        
+        getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
+            console.log("datos que entran", idUsuario);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar por idEncuestador y visita = false
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.idEncuestador === idUsuario &&
+                    encuesta.visita === false
+                );
+
+                commit('setEncuestas', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en getAllRegistersByFechaStatus:', error);
+                throw error;
+            }
+        },
+
+        getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
+            console.log("datos que entran", idUsuario);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar por idEncuestador
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.idEncuestador === idUsuario
+                );
+
+                const cantidad = encuestasFiltradas.length;
+                commit('setcantEncuestas', cantidad);
+                return cantidad;
+            } catch (error) {
+                console.error('Error en getAllRegistersByIduser:', error);
+                throw error;
+            }
+        },
+        
         
         
 
@@ -533,6 +587,12 @@ export default createStore({
         CLEAR_ALL_STATE(state) {
             state.accessToken = null;
             state.userData = {};
+        },
+        setcantEncuestas(state, cantidad) {
+            state.cantEncuestas = cantidad;
+        },
+        setEncuestasToday(state, encuestas) {
+            state.encuestasToday = encuestas;
         }
 
     },

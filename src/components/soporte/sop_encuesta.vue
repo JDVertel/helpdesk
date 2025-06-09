@@ -170,6 +170,7 @@
                 <button type="submit" class="btn btn-primary" v-if="userData">Guardar Demanda inducida</button>
             </form>
         </div>
+        <br>
     </div>
 </div>
 </template>
@@ -299,14 +300,16 @@ export default {
                 this.ListpoblacionRiesgo.length === 0 ||
                 !this.desplazamiento ||
                 !this.requiereRemision ||
-                !this.userData.numDocumento 
-             
+                !this.userData.numDocumento
+
             ) {
                 alert("Por favor, complete todos los campos obligatorios.");
                 return;
             }
 
             const registro = {
+                estado: "encuesta",
+                visita: false,
                 idEncuesta: 1,
                 idEncuestador: this.userData.numDocumento,
                 bd: "Encuesta",
@@ -393,7 +396,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["contador", "comunasBarrios","userData"]),
+        ...mapState(["contador", "comunasBarrios", "userData"]),
     },
     mounted() {
         this.getAllComunaBarrios();

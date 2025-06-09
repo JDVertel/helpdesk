@@ -1,18 +1,19 @@
 <template>
 <div>
-    <h1 class="display-6 center">Programa de Gestion Extramural</h1>
+    <h1 class="display-6 center">Encuestador</h1>
 
-    <!--     {{ fechaActual }}
+ <!--    {{ fechaActual }}
+    <hr>
     {{ userData }} -->
-     {{ encuestas}}
+    <!--    {{ encuestas}} -->
 
     <div class="row">
         <div class="col-6 center">
-            <h6 class="display-6">{{ totalRegisters }}</h6>
+            <h6 class="display-6">{{ cantEncuestas }}</h6>
             <p>Totales</p>
         </div>
         <div class="col-6 center">
-            <h6 class="display-6">{{ getFilteredRegistersCount }}</h6>
+            <h6 class="display-6">{{ encuestasToday.length }}</h6>
             <p>Diarias</p>
         </div>
     </div>
@@ -23,35 +24,40 @@
                 Historial
             </button>
         </li>
-
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="wait-tab" data-bs-toggle="tab" data-bs-target="#wait-tab-pane" type="button" role="tab" aria-controls="wait-tab-pane" aria-selected="true">
+            <button class="nav-link" id="today-tab" data-bs-toggle="tab" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="wait-tab-pane" aria-selected="true">
+                Diarias
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="wait-tab" data-bs-toggle="tab" data-bs-target="#wait-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">
                 + Registro
             </button>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-            <h3 class="display-6 center">Demandas Inducidas</h3>
+            <h5>Encuestas Pendientes x visita</h5>
             <br />
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th scope="col">Paciente</th>
-                            <th scope="col">TipoActividad</th>
-                            <th scope="col">Poblacion Riesgo</th>
-                            <th scope="col">Opciones</th>
+                            <th scope="col">Detalle</th>
+                           
+                            <th scope="col">
+                                Opciones
+                            </th>
 
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <tr v-for="(encuesta, index) in getFilteredRegisters" :key="index">
-                            <td>{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}</td>
-                            <td>{{ encuesta.tipoActividad }}</td>
-                            <td>{{ encuesta.poblacionRiesgo }}</td>
+                        <tr v-for="(encuesta, index) in encuestas" :key="index">
+                            <td>Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }} <hr>
+                            Actividades:{{ encuesta.tipoActividad }} <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
+                       
                             <td>
-                                <div class="row">
+                              
 
                                     <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)">
                                             <i class="bi bi-calendar2-check"></i>
@@ -60,12 +66,6 @@
                                             <i class="bi bi-pencil"></i>
                                         </button></div>
 
-                                    <div class="col-4"> <button type="button" class="btn btn-danger btn-sm" @click="removeRegEncuesta(encuesta.id)">
-                                            <i class="bi bi-x-circle"></i>
-                                        </button></div>
-
-                                </div>
-
                             </td>
 
                         </tr>
@@ -73,6 +73,39 @@
                 </table>
             </div>
         </div>
+        <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
+            <h5>Encuestas Diarias</h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Detalle</th>
+                            
+                           
+                            <th scope="col">
+                                Opciones
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr v-for="(encuesta, index) in this.encuestasToday" :key="index">
+                            <td>Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} <hr> Actividades:{{ encuesta.tipoActividad }} <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
+                       
+                            <td>
+
+                                    <div class="col-4"> <button type="button" class="btn btn-danger btn-sm" @click="removeRegEncuesta(encuesta.id)">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button></div>
+
+                           
+
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  </div>
         <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
             <h5>Encuestas Activas</h5>
             <table class="table">
@@ -114,16 +147,25 @@ export default {
     },
 
     methods: {
-        ...mapActions(["getAllRegistersByFecha", "removeRegEnc"]),
+        ...mapActions(["removeRegEnc", "getAllRegistersByFechaStatus", "getAllRegistersByIduser", "getAllRegistersByFecha"]),
 
         removeRegEncuesta(id) {
             this.removeRegEnc(id);
             alert("Registro eliminado exitosamente.");
-            this.getAllRegistersByFecha(this.userData.numDocumento, this.fechaActual);
+            this.getAllRegistersByFecha({
+            idUsuario: this.userData.numDocumento,
+            fecha: this.fechaActual
+        });
+        this.getAllRegistersByFechaStatus({
+            idUsuario: this.userData.numDocumento
+        });
+        this.getAllRegistersByIduser({
+            idUsuario: this.userData.numDocumento
+        });
         },
         Agendar() {
             this.$router.push("/sop_agendamiento");
-      },
+        },
         Caracterizar(id) {
             this.$router.push({
                 name: "sop_caracterizacion",
@@ -135,7 +177,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["encuestas", "userData"]),
+        ...mapState(["encuestas", "userData", "cantEncuestas","encuestasToday"]),
         documento() {
             return this.userData.numDocumento;
         },
@@ -144,13 +186,7 @@ export default {
             return this.encuestas.length;
         },
 
-        getFilteredRegisters() {
-            return this.encuestas.filter((encuesta) => encuesta.fecha === this.fechaActual);
-        },
-
-        getFilteredRegistersCount() {
-            return this.getFilteredRegisters.length;
-        },
+ 
     },
     mounted() {
 
@@ -159,6 +195,13 @@ export default {
             idUsuario: this.userData.numDocumento,
             fecha: this.fechaActual
         });
+        this.getAllRegistersByFechaStatus({
+            idUsuario: this.userData.numDocumento
+        });
+        this.getAllRegistersByIduser({
+            idUsuario: this.userData.numDocumento
+        });
+       
     },
 };
 </script>
