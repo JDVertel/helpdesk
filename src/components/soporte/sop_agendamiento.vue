@@ -142,6 +142,7 @@ import {
 export default {
     data: () => {
         return {
+            idEncuesta: "",
             fechaActual: "",
             idgrupo: "",
             dateConsulta: "",
@@ -161,6 +162,8 @@ export default {
         },
     },
     mounted() {
+        this.idEncuesta = this.$route.params.idEncuesta;
+        console.log(this.idEncuesta);
         this.fechaActual = moment().format('YYYY-MM-DD');
         this.getListAgendas(this.fechaActual);
         /*     this.getTomamuestras(); */

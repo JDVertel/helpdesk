@@ -33,8 +33,10 @@ export default createStore({
             try {
                 const {
                     bd,
-                    estado,
-                    visita,
+                    status_encuesta,
+                    status_tomamuestras,
+                    status_caracterizacion,
+                    status_visita,
                     idEncuesta,
                     idEncuestador,
                     eps,
@@ -58,8 +60,10 @@ export default createStore({
                 } = entradasE;
 
                 const DataToSaveE = {
-                    estado,
-                    visita,
+                    status_encuesta,
+                    status_tomamuestras,
+                    status_caracterizacion,
+                    status_visita,
                     idEncuesta,
                     idEncuestador,
                     eps,
@@ -220,15 +224,17 @@ export default createStore({
             }
         },
 
-
-
-
-        getRegister: async ({ commit }, id) => {
+        getAllEpss: async ({ commit }) => {
             try {
-                const { data } = await firebase_api.get(`/Encuesta/${id}.json`);
-                return data;
+                const { data } = await firebase_api.get('/eps.json');
+                const eps = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+                commit('setEps', eps);
+                return eps;
             } catch (error) {
-                console.error('Error en Action_getRegister:', error);
+                console.error('Error en Action_getAllEps:', error);
                 throw error;
             }
         },
@@ -274,7 +280,7 @@ export default createStore({
                 throw error;
             }
         },
-        
+
         getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
             console.log("datos que entran", idUsuario);
             try {
@@ -320,9 +326,9 @@ export default createStore({
                 throw error;
             }
         },
-        
-        
-        
+
+
+
 
 
         GetAllRegistersbyRange: async ({ commit }, rango) => {
@@ -378,7 +384,7 @@ export default createStore({
                 throw error;
             }
         },
-        
+
         getAllEps: async ({ commit }) => {
             try {
                 const { data } = await firebase_api.get('/eps.json');
@@ -408,9 +414,9 @@ export default createStore({
 
 
 
-/* agendamiento listado de agendas grupo*/
+        /* agendamiento listado de agendas grupo*/
         getListAgendas: async ({ commit }, fecha) => {
-            console.log("fecha que entra", fecha);
+            console.log("consultando agendas desde:", fecha);
             try {
                 // La fecha debe ir entre comillas para la consulta REST
                 const fechaQuery = `"${fecha}"`;
@@ -435,7 +441,7 @@ export default createStore({
 
 
 
-      /* ---------------------------------------DELETE------------------------------------- */
+        /* ---------------------------------------DELETE------------------------------------- */
 
         deleteComunaBarrio: async ({ commit }, id) => {
             try {
@@ -593,10 +599,14 @@ export default createStore({
         },
         setEncuestasToday(state, encuestas) {
             state.encuestasToday = encuestas;
+        },
+        setEps(state, eps) {
+            state.epss = eps;
         }
 
     },
     getters: {
         getUserData: (state) => state.userData,
+        getAllEpss: (state) => state.epss,
     },
 }) 

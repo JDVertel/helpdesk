@@ -257,3 +257,8 @@ footer {
   white-space: normal; /* Permite que el texto pase a otro renglón */
   /* text-overflow: ellipsis; */ /* Elimina esta línea */
 }
+.horizontal{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -84,12 +84,15 @@
 
                     <div class="col-12 col-md-3 mb-3">
                         <label for="barrioVeredacomuna" class="form-label">Barrio-vereda/comuna</label>
-                        <select id="barrioVeredacomuna" v-model="barrioVeredacomuna" class="form-select" required>
-                            <option value="">Seleccione</option>
-                            <option :value="option" v-for="(option, index) in comunasBarrios" :key="index">
-                                {{ option.barrio }} ({{ option.comuna }})
-                            </option>
-                        </select>
+                        <div class="horizontal">
+                            <select id="barrioVeredacomuna" v-model="barrioVeredacomuna" class="form-select" required>
+                                <option value="">Seleccione</option>
+                                <option :value="option" v-for="(option, index) in comunasBarrios" :key="index">
+                                    {{ option.barrio }} ({{ option.comuna }})
+                                </option>
+                            </select>
+                            <button class="btn btn-warning btn-sm" @click="updateBarrios"><i class="bi bi-arrow-repeat"></i></button>
+                        </div>
                     </div>
 
                     <div class="col-12 col-md-3 mb-3">
@@ -308,8 +311,10 @@ export default {
             }
 
             const registro = {
-                estado: "encuesta",
-                visita: false,
+                status_encuesta:true,
+                status_tomamuestras: false,
+                status_caracterizacion:false,
+                status_visita: false,
                 idEncuesta: 1,
                 idEncuestador: this.userData.numDocumento,
                 bd: "Encuesta",
@@ -371,7 +376,16 @@ export default {
         removeRiesgo(index) {
             this.ListpoblacionRiesgo.splice(index, 1);
         },
-
+        updateBarrios() {
+            this.getAllComunaBarrios()
+                .then(() => {
+                    alert("Barrios actualizados correctamente");
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar barrios:", error);
+                    alert("Error al actualizar barrios");
+                });
+        },
         resetForm() {
             this.regimen = "";
             this.eps = "";

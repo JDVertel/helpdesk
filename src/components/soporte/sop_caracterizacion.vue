@@ -1,6 +1,7 @@
 <template>
 <div class="container-fluid">
     <h1 class="text-center">Caracterización de la visita</h1>
+    {{ epss }}
     <div class="row">
         <hr />
         <h4>Visita</h4>
@@ -201,12 +202,17 @@
                         </div>
 
                         <div class="col-6">
-                            <label for="eps" class="form-label">Eps</label>
-                            <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
-                                <option :value="eps" v-for="(eps, index) in epss" :key="index">
-                                    {{ eps }}
-                                </option>
-                            </select>
+
+                            <label for="eps" class="form-label">Eps</label> 
+                            <div class="horizontal">
+                                <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
+                                    <option :value="eps" v-for="(eps, index) in epss" :key="index">
+                                        {{ eps.eps }}
+                                    </option>
+                                </select>
+                                <button class="btn btn-warning btn-sm" @click="updateEps"><i class="bi bi-arrow-repeat"></i></button>
+                            </div>
+
                         </div>
                         <div class="col-6">
                             <label for="regimen" class="form-label">Regimen</label>
@@ -250,7 +256,9 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearform">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" @click="addmiembro" data-bs-dismiss="modal">Guardar</button>
+                    <button type="button" class="btn btn-primary" @click="addmiembro" data-bs-dismiss="modal">
+                        Guardar
+                    </button>
                 </div>
             </div>
         </div>
@@ -301,7 +309,6 @@
         </div>
         <div class="col-6">
             <div class="col">
-
                 <!-- Segunda pregunta seleccionado sedentarismo -->
                 <div v-if="seleccionadosRiesgos.includes('sedentarismo')">
                     <label for="Pregunta2">
@@ -311,8 +318,7 @@
                 </div>
                 <!-- Segunda pregunta seleccionado alcohol-->
                 <div v-if="seleccionadosRiesgos.includes('consumeAlcohol')">
-                    <label for="Pregunta3">Alcohol:
-                        Frecuencia de consumo:</label>
+                    <label for="Pregunta3">Alcohol: Frecuencia de consumo:</label>
 
                     <select class="form-select" id="Pregunta3" v-model="detalleConsumoAlcohol">
                         <option value="Frecuentemente">frecuentemente</option>
@@ -321,15 +327,14 @@
                 </div>
                 <!-- Segunda pregunta seleccionado cigarrillos -->
                 <div v-if="seleccionadosRiesgos.includes('consumeCigarrillo')">
-
-                    <label for="segundaPregunta">
-                        Cigarrillo: frecuencia Diaria</label>
+                    <label for="segundaPregunta"> Cigarrillo: frecuencia Diaria</label>
 
                     <input type="number" id="segundaPregunta" v-model="detalleConsumoCigarrillo" class="form-control" placeholder="Escriba aquí..." />
                 </div>
                 <!-- Segunda pregunta seleccionado alimentacion poco saludable -->
                 <div v-if="seleccionadosRiesgos.includes('alimentacionPocoSaludable')">
-                    <label for="segundaPregunta">Consumo de frutas y verduras: Consumo minimo diaria 5 porciones </label>
+                    <label for="segundaPregunta">Consumo de frutas y verduras: Consumo minimo diaria 5 porciones
+                    </label>
                     <input type="text" id="segundaPregunta" v-model="AlimentacionPocoSaludable" class="form-control" placeholder="Escriba aquí..." />
                 </div>
             </div>
@@ -442,16 +447,23 @@
 </div>
 <div>
     <br />
-    <button class="btn btn-primary" @click="guardarDatosCaracterizacion">Guardar Datos</button>
+    <button class="btn btn-primary" @click="guardarDatosCaracterizacion">
+        Guardar Datos
+    </button>
 </div>
-<br>
+<br />
 </template>
 
 <script>
+import {
+    mapActions,
+    mapState
+} from "vuex";
 export default {
     name: "SopCaracterizacion",
     data() {
         return {
+            idEncuesta: "",
             visita: "",
             tipovisita: "",
             tipovivienda: "",
@@ -673,18 +685,7 @@ export default {
                 "Ti@",
                 "yern@",
             ],
-            epss: [
-                "Sura",
-                "Sanitas",
-                "Coomeva",
-                "Compensar",
-                "Cafesalud",
-                "Salud Total",
-                "Nueva EPS",
-                "Medimás",
-                "Famisanar",
-                "Coosalud",
-            ],
+
             OpcionesRiesgos: [{
                     id: 32,
                     valor: "sedentarismo",
@@ -740,68 +741,98 @@ export default {
             seleccionadosRiesgos: [],
         };
     },
-  methods: {
-      addmiembro() {
-          if (this.nuevoMiembro.nombres && this.nuevoMiembro.apellidos && this.nuevoMiembro.parentesco && this.nuevoMiembro.tipodoc && this.nuevoMiembro.numeroDocumento) {
-              this.grupoFamiliar.push({ ...this.nuevoMiembro });
-              this.clearform();
-          } else {
-              alert("Por favor, complete todos los campos requeridos.");
-          }
+    methods: {
+        ...mapActions(["guardarCaracterizacion", "getAllEpss"]),
+        addmiembro() {
+            if (
+                this.nuevoMiembro.nombres &&
+                this.nuevoMiembro.apellidos &&
+                this.nuevoMiembro.parentesco &&
+                this.nuevoMiembro.tipodoc &&
+                this.nuevoMiembro.numeroDocumento
+            ) {
+                this.grupoFamiliar.push({
+                    ...this.nuevoMiembro,
+                });
+                this.clearform();
+            } else {
+                alert("Por favor, complete todos los campos requeridos.");
+            }
+        },
+        eliminarMiembro(index) {
+            this.grupoFamiliar.splice(index, 1);
+        },
+        clearform() {
+            this.nuevoMiembro = {
+                nombres: "",
+                apellidos: "",
+                parentesco: "",
+                tipodoc: "",
+                numeroDocumento: "",
+                fnacimiento: "",
+                genero: "",
+                eps: "",
+                regimen: "",
+                cursoVida: "",
+                ocupacion: "",
+                viveEnVivienda: "",
+            };
+        },
+        guardarDatosCaracterizacion() {
+            // Aquí puedes implementar la lógica para guardar los datos
+            console.log("Datos guardados:", {
+                idencuesta: this.idEncuesta,
+                visita: this.visita,
+                tipovisita: this.tipovisita,
+                tipovivienda: this.tipovivienda,
+                EstActual_Iluminacion: this.EstActual_Iluminacion,
+                EstActual_Ventilacion: this.EstActual_Ventilacion,
+                EstActual_Paredes: this.EstActual_Paredes,
+                EstActual_Pisos: this.EstActual_Pisos,
+                EstActual_Techo: this.EstActual_Techo,
+                peso: this.peso,
+                talla: this.talla,
+                tensionSistolica: this.tensionSistolica,
+                tensionDiastolica: this.tensionDiastolica,
+                perimetroAbdominal: this.perimetroAbdominal,
+                perimetroBranquial: this.perimetroBranquial,
+                oximetria: this.oximetria,
+                temperatura: this.temperatura,
+                imc: this.imc,
+                clasificacionImc: this.clasificacionImc,
+                Oizquierdo: this.Oizquierdo,
+                Oderecho: this.Oderecho,
+                Evacunal: this.Evacunal,
+                seleccionadosServPublic: this.seleccionadosServPublic,
+                seleccionadosFactoresRiesgo: this.seleccionadosFactoresRiesgo,
+                seleccionadosPresenciaAnimales: this.seleccionadosPresenciaAnimales,
+                seleccionadosAntecedentes: this.seleccionadosAntecedentes,
+                grupoFamiliar: this.grupoFamiliar,
+                seleccionadosRiesgos: this.seleccionadosRiesgos,
+            });
+        },
+        updateEps() {
+            this.getAllEpss()
+            .then(() => {
+                    alert("Eps actualizados correctamente");
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar Eps:", error);
+                    alert("Error al actualizar Eps");
+                });
+        },
     },
-      eliminarMiembro(index) {
-          this.grupoFamiliar.splice(index, 1);
+    computed: {
+        ...mapState(["usuario", "epss"]),
     },
-    clearform() {
-      this.nuevoMiembro = {
-                  nombres: "",
-                  apellidos: "",
-                  parentesco: "",
-                  tipodoc: "",
-                  numeroDocumento: "",
-                  fnacimiento: "",
-                  genero: "",
-                  eps: "",
-                  regimen: "",
-                  cursoVida: "",
-                  ocupacion: "",
-                  viveEnVivienda: "",
-              };
-    },
-      guardarDatosCaracterizacion() {
-          // Aquí puedes implementar la lógica para guardar los datos
-          console.log("Datos guardados:", {
-              visita: this.visita,
-              tipovisita: this.tipovisita,
-              tipovivienda: this.tipovivienda,
-              EstActual_Iluminacion: this.EstActual_Iluminacion,
-              EstActual_Ventilacion: this.EstActual_Ventilacion,
-              EstActual_Paredes: this.EstActual_Paredes,
-              EstActual_Pisos: this.EstActual_Pisos,
-              EstActual_Techo: this.EstActual_Techo,
-              peso: this.peso,
-              talla: this.talla,
-              tensionSistolica: this.tensionSistolica,
-              tensionDiastolica: this.tensionDiastolica,
-              perimetroAbdominal: this.perimetroAbdominal,
-              perimetroBranquial: this.perimetroBranquial,
-              oximetria: this.oximetria,
-              temperatura: this.temperatura,
-              imc: this.imc,
-              clasificacionImc: this.clasificacionImc,
-              Oizquierdo: this.Oizquierdo,
-              Oderecho: this.Oderecho,
-              Evacunal: this.Evacunal,
-              seleccionadosServPublic: this.seleccionadosServPublic,
-              seleccionadosFactoresRiesgo: this.seleccionadosFactoresRiesgo,
-              seleccionadosPresenciaAnimales: this.seleccionadosPresenciaAnimales,
-              seleccionadosAntecedentes: this.seleccionadosAntecedentes,
-              grupoFamiliar: this.grupoFamiliar,
-              seleccionadosRiesgos: this.seleccionadosRiesgos
-          });
-      },  
+    mounted() {
+        this.idEncuesta = this.$route.params.idEncuesta;
+        console.log(this.idEncuesta);
+        this.getAllEpss();
     },
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

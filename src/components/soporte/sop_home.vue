@@ -163,8 +163,13 @@ export default {
             idUsuario: this.userData.numDocumento
         });
         },
-        Agendar() {
-            this.$router.push("/sop_agendamiento");
+        Agendar(id) {
+            this.$router.push({
+                name: "sop_agendamiento",
+                params: {
+                    idEncuesta: id
+                }
+            });
         },
         Caracterizar(id) {
             this.$router.push({

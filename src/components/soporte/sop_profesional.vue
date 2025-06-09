@@ -21,7 +21,7 @@
       <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
               <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                  Historial
+                  Pendientes
               </button>
           </li>
           <li class="nav-item" role="presentation">
@@ -29,11 +29,11 @@
                   Diarias
               </button>
           </li>
-          <li class="nav-item" role="presentation">
+         <!--  <li class="nav-item" role="presentation">
               <button class="nav-link" id="wait-tab" data-bs-toggle="tab" data-bs-target="#wait-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">
                   + Registro
               </button>
-          </li>
+          </li> -->
       </ul>
       <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
@@ -59,11 +59,9 @@
                               <td>
                                 
   
-                                      <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)">
-                                              <i class="bi bi-calendar2-check"></i>
-                                          </button></div>
-                                      <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)">
-                                              <i class="bi bi-pencil"></i>
+                                      
+                                      <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="cerrarEnc(encuesta.id)">
+                                        <i class="bi bi-check-all"></i>
                                           </button></div>
   
                               </td>
@@ -162,6 +160,10 @@
           this.getAllRegistersByIduser({
               idUsuario: this.userData.numDocumento
           });
+          },
+          cerrarEnc() {
+              //procedimiento para guardar los cups y cerrar
+            //cambiar estado de visita a true
           },
           Agendar() {
               this.$router.push("/sop_agendamiento");
