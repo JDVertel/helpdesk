@@ -33,11 +33,13 @@ export default createStore({
             try {
                 const {
                     bd,
+                    idMedicoAtiende, idEnfermeroAtiende, fechavisita,
                     status_encuesta,
                     status_tomamuestras,
                     status_caracterizacion,
                     status_visita,
                     idEncuesta,
+                    grupo,
                     idEncuestador,
                     eps,
                     regimen,
@@ -60,11 +62,13 @@ export default createStore({
                 } = entradasE;
 
                 const DataToSaveE = {
+                    idMedicoAtiende, idEnfermeroAtiende, fechavisita,
                     status_encuesta,
                     status_tomamuestras,
                     status_caracterizacion,
                     status_visita,
                     idEncuesta,
+                    grupo,
                     idEncuestador,
                     eps,
                     regimen,
@@ -280,9 +284,31 @@ export default createStore({
                 throw error;
             }
         },
+        //enuestas finalizadas en el diarias
+        getAllRegistersByFechaProf: async ({ commit }, { doc, fecha }) => {
+            console.log("grupo consultado", doc, fecha);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
 
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+
+                    encuesta.status_visita === true && encuesta.idProfesionalAtiende == doc &&
+                    encuesta.fechaVisita === fecha// Verifica que el formato de fecha coincida
+                );
+
+                commit('setEncuestasToday', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en Action_setEncuestasToday:', error);
+                throw error;
+            }
+        },
         getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran", idUsuario);
+            console.log("parametro de consulta  abiertas", idUsuario);
             try {
                 const { data } = await firebase_api.get('/Encuesta.json');
                 const encuestas = Object.entries(data).map(([key, value]) => ({
@@ -293,7 +319,7 @@ export default createStore({
                 // Filtrar por idEncuestador y visita = false
                 const encuestasFiltradas = encuestas.filter(encuesta =>
                     encuesta.idEncuestador === idUsuario &&
-                    encuesta.visita === false
+                    encuesta.status_visita === false
                 );
 
                 commit('setEncuestas', encuestasFiltradas);
@@ -303,7 +329,28 @@ export default createStore({
                 throw error;
             }
         },
+        getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
+            console.log("parametro de consulta  abiertas", grupo);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
 
+                // Filtrar por idEncuestador y visita = false
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.grupo === grupo &&
+                    encuesta.status_visita === false
+                );
+
+                commit('setEncuestas', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en getAllRegistersByFechaStatus:', error);
+                throw error;
+            }
+        },
         getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
             console.log("datos que entran", idUsuario);
             try {
@@ -315,7 +362,30 @@ export default createStore({
 
                 // Filtrar por idEncuestador
                 const encuestasFiltradas = encuestas.filter(encuesta =>
-                    encuesta.idEncuestador === idUsuario
+                    encuesta.idProfesionalAtiende === idUsuario
+                );
+
+                const cantidad = encuestasFiltradas.length;
+                commit('setcantEncuestas', cantidad);
+                return cantidad;
+            } catch (error) {
+                console.error('Error en getAllRegistersByIduser:', error);
+                throw error;
+            }
+        },
+
+        getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
+            console.log("datos que entran", idUsuario);
+            try {
+                const { data } = await firebase_api.get('/Encuesta.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar por idEncuestador
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.idProfesionalAtiende === idUsuario
                 );
 
                 const cantidad = encuestasFiltradas.length;
@@ -542,6 +612,17 @@ export default createStore({
             } catch (error) {
                 console.error("Error al obtener datos de Firestore:", error);
                 commit("clearUserData");
+            }
+        },
+        cerrarEncuesta: async ({ commit }, { id, user, fecha }) => {
+            console.log({ id, user, fecha });
+            try {
+                const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, { status_visita: true, fechaVisita: fecha, idProfesionalAtiende: user });
+                return data;
+                
+            } catch (error) {
+                console.error('Error en Action cerrarEncuesta:', error);
+                throw error;
             }
         },
 

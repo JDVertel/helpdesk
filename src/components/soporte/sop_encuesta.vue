@@ -311,11 +311,15 @@ export default {
             }
 
             const registro = {
-                status_encuesta:true,
+                fechavisita: "",
+                idMedicoAtiende: "",
+                idEnfermeroAtiende:"",
+                status_encuesta: true,
                 status_tomamuestras: false,
-                status_caracterizacion:false,
+                status_caracterizacion: false,
                 status_visita: false,
                 idEncuesta: 1,
+                grupo: this.userData.grupo,
                 idEncuestador: this.userData.numDocumento,
                 bd: "Encuesta",
                 fecha: moment().format("YYYY-MM-DD"),

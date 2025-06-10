@@ -2,7 +2,7 @@
 <div>
     <h1 class="display-6 center">Encuestador</h1>
 
- <!--    {{ fechaActual }}
+    <!--    {{ fechaActual }}
     <hr>
     {{ userData }} -->
     <!--    {{ encuestas}} -->
@@ -21,7 +21,7 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                Historial
+                Abiertas
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -44,7 +44,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Detalle</th>
-                           
+
                             <th scope="col">
                                 Opciones
                             </th>
@@ -53,18 +53,19 @@
                     </thead>
                     <tbody class="table-group-divider">
                         <tr v-for="(encuesta, index) in encuestas" :key="index">
-                            <td>Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }} <hr>
-                            Actividades:{{ encuesta.tipoActividad }} <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
-                       
-                            <td>
-                              
+                            <td>Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}
+                                <hr>
+                                Actividades:{{ encuesta.tipoActividad }}
+                                <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
 
-                                    <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)">
-                                            <i class="bi bi-calendar2-check"></i>
-                                        </button></div>
-                                    <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)">
-                                            <i class="bi bi-pencil"></i>
-                                        </button></div>
+                            <td>
+
+                                <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)">
+                                        <i class="bi bi-calendar2-check"></i>
+                                    </button></div>
+                                <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button></div>
 
                             </td>
 
@@ -80,8 +81,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Detalle</th>
-                            
-                           
+
                             <th scope="col">
                                 Opciones
                             </th>
@@ -90,22 +90,23 @@
                     </thead>
                     <tbody class="table-group-divider">
                         <tr v-for="(encuesta, index) in this.encuestasToday" :key="index">
-                            <td>Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} <hr> Actividades:{{ encuesta.tipoActividad }} <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
-                       
+                            <td>Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }}
+                                <hr> Actividades:{{ encuesta.tipoActividad }}
+                                <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
+
                             <td>
 
-                                    <div class="col-4"> <button type="button" class="btn btn-danger btn-sm" @click="removeRegEncuesta(encuesta.id)">
-                                            <i class="bi bi-x-circle"></i>
-                                        </button></div>
-
-                           
+                                <div class="col-4"> <button type="button" class="btn btn-danger btn-sm" @click="removeRegEncuesta(encuesta.id)" v-if="encuesta.status_tomamuestras == ''">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button></div>
 
                             </td>
 
                         </tr>
                     </tbody>
                 </table>
-            </div>  </div>
+            </div>
+        </div>
         <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
             <h5>Encuestas Activas</h5>
             <table class="table">
@@ -153,15 +154,15 @@ export default {
             this.removeRegEnc(id);
             alert("Registro eliminado exitosamente.");
             this.getAllRegistersByFecha({
-            idUsuario: this.userData.numDocumento,
-            fecha: this.fechaActual
-        });
-        this.getAllRegistersByFechaStatus({
-            idUsuario: this.userData.numDocumento
-        });
-        this.getAllRegistersByIduser({
-            idUsuario: this.userData.numDocumento
-        });
+                idUsuario: this.userData.numDocumento,
+                fecha: this.fechaActual
+            });
+            this.getAllRegistersByFechaStatus({
+                idUsuario: this.userData.numDocumento
+            });
+            this.getAllRegistersByIduser({
+                idUsuario: this.userData.numDocumento
+            });
         },
         Agendar(id) {
             this.$router.push({
@@ -182,7 +183,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["encuestas", "userData", "cantEncuestas","encuestasToday"]),
+        ...mapState(["encuestas", "userData", "cantEncuestas", "encuestasToday"]),
         documento() {
             return this.userData.numDocumento;
         },
@@ -191,22 +192,24 @@ export default {
             return this.encuestas.length;
         },
 
- 
     },
-    mounted() {
+   mounted() {
 
         this.fechaActual = moment().format("YYYY-MM-DD");
+        //encuestas diarias + contador 
         this.getAllRegistersByFecha({
             idUsuario: this.userData.numDocumento,
             fecha: this.fechaActual
         });
-        this.getAllRegistersByFechaStatus({
-            idUsuario: this.userData.numDocumento
+        //encuestas abiertas
+       this.getAllRegistersByFechaStatus({
+        idUsuario: this.userData.numDocumento,
         });
-        this.getAllRegistersByIduser({
-            idUsuario: this.userData.numDocumento
+        //total de encuestas del usuario . para contador 
+         this.getAllRegistersByIduser({
+            idUsuario: this.userData.numDocumento,
         });
-       
+
     },
 };
 </script>

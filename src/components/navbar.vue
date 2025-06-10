@@ -9,7 +9,8 @@
 
             <div>
                 <h6 v-if="userData" class="text-sm-end text-capitalize blanco">
-                    {{ userData.nombre || "" }}
+                    {{ userData.nombre || "" }} /
+                    {{ userData.cargo || "" }}
                 </h6>
             </div>
 
@@ -31,18 +32,22 @@
                                 <strong><i class="bi bi-people-fill"></i> Equipo</strong>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item" v-if="userData.cargo=='auxiliar de enfermeria'">
                                 <router-link class="nav-link" to="/sop_home" @click="onNavLinkClick">
                                     <i class="bi bi-list-check"></i> Encuestas
                                 </router-link>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item"  v-if="userData.cargo=='medico'">
                                 <router-link class="nav-link" to="/sop_profesional" @click="onNavLinkClick">
-                                    <i class="bi bi-person-circle"></i> Profesionales
+                                    <i class="bi bi-person-circle"></i> Medico
                                 </router-link>
                             </li>
-
+                            <li class="nav-item"  v-if="userData.cargo=='enfermero'">
+                                <router-link class="nav-link" to="/sop_enfermero" @click="onNavLinkClick">
+                                    <i class="bi bi-person-circle"></i> Enfermer@
+                                </router-link>
+                            </li>
                             <li class="nav-item">
                                 <router-link class="nav-link" to="/admin_informes" @click="onNavLinkClick">
                                     <i class="bi bi-bar-chart-fill"></i> Informes

@@ -13,20 +13,7 @@
                 + Nueva
             </button>
         </li>
-        <!--  <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
-        id="contact-tab"
-        data-bs-toggle="tab"
-        data-bs-target="#contact-tab-pane"
-        type="button"
-        role="tab"
-        aria-controls="contact-tab-pane"
-        aria-selected="false"
-      >
-        + Sedes
-      </button>
-    </li> -->
+
 
     </ul>
     <div class="tab-content" id="myTabContent">
