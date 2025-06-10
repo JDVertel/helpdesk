@@ -626,6 +626,82 @@ export default createStore({
             }
         },
 
+     /*    guardarAgendaT: async ({ commit }, datos) => {
+            const agenda = {
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+
+
+                tomademuestras: {
+                    dateIDlab: datos.dateIDlab,
+                    horalab: datos.horalab
+                },
+             
+            };
+            console.log("datos de agenda", agenda);
+            try {
+                // 1. Buscar el registro que coincide con idEncuesta
+                const response = await firebase_api.get('/agendas.json', {
+                    params: {
+                        orderBy: '"idEncuesta"',
+                        equalTo: `"${agenda.tomademuestras.dateIDlab}"`
+                    }
+                });
+
+                const agendas = response.data;
+                if (agendas) {
+                    // 2. Obtener la clave única del registro
+                    const key = Object.keys(agendas)[0];
+
+                    // 3. Actualizar solo el campo visita
+                    await firebase_api.patch(`/agendas/${key}.json`, { "agenda.tomademuestras": agenda.tomademuestras.horalab });
+
+                    return { message: 'Visita actualizada correctamente' };
+                } else {
+                    throw new Error('No se encontró agenda con ese idEncuesta');
+                }
+            } catch (error) {
+                console.error('Error al actualizar visita:', error);
+                throw error;
+              }
+
+        }  */  
+        guardarAgendaT: async ({ commit }, datos) => {
+            const agenda = {
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+                tomademuestras: {
+                    dateIDlab: datos.dateIDlab,
+                    horalab: datos.horalab
+                },
+                DataAgendas: {
+                    hora: datos.hora,
+                    idEncuestador: datos.idEncuestador,
+                }
+            };
+            console.log("datos de id agenda", agenda.tomademuestras.dateIDlab.id);
+
+            try {
+                // La clave única es agenda.tomademuestras.dateIDlab.id
+                const key = agenda.tomademuestras.dateIDlab.id;
+
+                // Verificar que el registro exista
+                const response = await firebase_api.get(`/agendas/${key}.json`);
+
+                if (response.data) {
+                    // Actualizar solo el campo tomademuestras del registro con la key
+                    await firebase_api.patch(`/agendas/${key}.json`, { tomademuestras: agenda.tomademuestras });
+
+                    return { message: 'Toma de muestras actualizada correctamente' };
+                } else {
+                    throw new Error('No se encontró agenda con esa clave única');
+                }
+            } catch (error) {
+                console.error('Error al actualizar toma de muestras:', error);
+                throw error;
+            }
+        }
+              
 
     },
     mutations: {
