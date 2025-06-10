@@ -666,7 +666,7 @@ export default createStore({
               }
 
         }  */  
-        guardarAgendaT: async ({ commit }, datos) => {
+      /*   guardarAgendaT: async ({ commit }, datos) => {
             const agenda = {
                 idEncuesta: datos.idEncuesta,
                 grupo: datos.grupo,
@@ -700,8 +700,55 @@ export default createStore({
                 console.error('Error al actualizar toma de muestras:', error);
                 throw error;
             }
+        } */
+        guardarAgendaT: async ({ commit }, datos) => {
+            const agenda = {
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+                tomademuestras: {
+                    dateIDlab: datos.dateIDlab,
+                    horalab: datos.horalab,
+                    idEncuesta: datos.idEncuesta,
+                    grupo: datos.grupo,
+                },
+            
+            };
+            const key = agenda.tomademuestras.dateIDlab.id;
+
+            try {
+                const response = await firebase_api.get(`/agendas/${key}.json`);
+
+                if (response.data) {
+                    // Suponiendo que tomademuestras es un array, agregamos el nuevo dato
+                    let tomademuestrasExistentes = response.data.tomademuestras || [];
+
+                    // Si no es array, convertirlo en array para manejar múltiples entradas
+                    if (!Array.isArray(tomademuestrasExistentes)) {
+                        tomademuestrasExistentes = [tomademuestrasExistentes];
+                    }
+
+                    // Agregar el nuevo tomademuestras
+                    tomademuestrasExistentes.push(agenda.tomademuestras);
+
+                    // Guardar la lista actualizada
+                    await firebase_api.patch(`/agendas/${key}.json`, { tomademuestras: tomademuestrasExistentes });
+
+                    return { message: 'Toma de muestras agregada correctamente' };
+                } else {
+                    // Si no existe, crear nuevo registro con tomademuestras como array
+                    await firebase_api.put(`/agendas/${key}.json`, {
+                        ...agenda,
+                        tomademuestras: [agenda.tomademuestras]
+                    });
+
+                    return { message: 'Agenda creada con toma de muestras' };
+                }
+            } catch (error) {
+                console.error('Error al guardar toma de muestras:', error);
+                throw error;
+            }
         }
-              
+                
 
     },
     mutations: {
