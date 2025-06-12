@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid">
     <h1 class="text-center">Caracterización de la visita</h1>
-    {{ epss }}
+    eps: {{ epss }}
     <div class="row">
         <hr />
         <h4>Visita</h4>
@@ -144,7 +144,7 @@
     <!-- inicio modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
+          <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
                         Agregar miembro del grupo familiar
@@ -203,14 +203,17 @@
 
                         <div class="col-6">
 
-                            <label for="eps" class="form-label">Eps</label> 
+                            <label for="eps" class="form-label">Eps</label>
                             <div class="horizontal">
                                 <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
                                     <option :value="eps" v-for="(eps, index) in epss" :key="index">
                                         {{ eps.eps }}
                                     </option>
                                 </select>
-                                <button class="btn btn-warning btn-sm" @click="updateEps"><i class="bi bi-arrow-repeat"></i></button>
+                                <button class="btn btn-warning btn-sm" @click="updateEps" :disabled="cargandoEps">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    <span v-if="cargandoEps">Cargando...</span>
+                                </button>
                             </div>
 
                         </div>
@@ -485,7 +488,11 @@ export default {
             Oizquierdo: "",
             Oderecho: "",
             Evacunal: "",
-
+            detalleSedentarismo: "",
+            detalleConsumoAlcohol: "",
+            detalleConsumoCigarrillo: "",
+            AlimentacionPocoSaludable: "",
+            cargandoEps: false,
             seleccionadosServPublic: [],
             opcionesServPublicos: [{
                     id: 1,
@@ -812,15 +819,19 @@ export default {
             });
         },
         updateEps() {
-            this.getAllEpss()
+        this.cargandoEps = true;
+        this.getAllEpss()
             .then(() => {
-                    alert("Eps actualizados correctamente");
-                })
-                .catch((error) => {
-                    console.error("Error al actualizar Eps:", error);
-                    alert("Error al actualizar Eps");
-                });
-        },
+                alert("Eps actualizados correctamente");
+            })
+            .catch((error) => {
+                console.error("Error al actualizar Eps:", error);
+                alert("Error al actualizar Eps");
+            })
+            .finally(() => {
+                this.cargandoEps = false;
+            });
+    },
     },
     computed: {
         ...mapState(["usuario", "epss"]),
@@ -829,6 +840,10 @@ export default {
         this.idEncuesta = this.$route.params.idEncuesta;
         console.log(this.idEncuesta);
         this.getAllEpss();
+        document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) backdrop.remove();
     },
 };
 </script>

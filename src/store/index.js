@@ -7,6 +7,7 @@ const auth = getAuth();
 import router from '../router/index.js'; // Asegúrate de que la ruta sea correcta
 export default createStore({
     state: {
+        encuestasFiltradasById: [],
         usuarios: [],
         encuestas: [],
         comunasBarrios: [],
@@ -508,8 +509,50 @@ export default createStore({
                 throw error;
             }
         },
+        //metodo para obtener agendas por id de toma de muestras
+        getAgendasTomaLab: async ({ commit }, dataidlab) => {
+            console.log("datos que entran xxx", dataidlab);
+            try {
+                const { data } = await firebase_api.get('/agendas.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
 
+                // Filtrar registros por el id recibido
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.tomademuestras && encuesta.tomademuestras.dateIDlab &&
+                    encuesta.tomademuestras.dateIDlab.id === dataidlab
+                );
 
+                commit('setEncuestasfiltradas', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en Action_getAgendasTomaLab:', error);
+                throw error;
+            }
+        },
+        getAgendasTomaLabById: async ({ commit }, id) => {
+            console.log("datos que entran", id);
+            try {
+                const { data } = await firebase_api.get('/agendas.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar registros por el id recibido
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.id === id // ✅ usar el parámetro correcto
+                );
+
+                commit('setEncuestasbyId', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en Action_setEncuestasToday:', error);
+                throw error;
+            }
+        },
 
         /* ---------------------------------------DELETE------------------------------------- */
 
@@ -619,90 +662,16 @@ export default createStore({
             try {
                 const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, { status_visita: true, fechaVisita: fecha, idProfesionalAtiende: user });
                 return data;
-                
+
             } catch (error) {
                 console.error('Error en Action cerrarEncuesta:', error);
                 throw error;
             }
         },
-
-     /*    guardarAgendaT: async ({ commit }, datos) => {
-            const agenda = {
-                idEncuesta: datos.idEncuesta,
-                grupo: datos.grupo,
-
-
-                tomademuestras: {
-                    dateIDlab: datos.dateIDlab,
-                    horalab: datos.horalab
-                },
-             
-            };
-            console.log("datos de agenda", agenda);
-            try {
-                // 1. Buscar el registro que coincide con idEncuesta
-                const response = await firebase_api.get('/agendas.json', {
-                    params: {
-                        orderBy: '"idEncuesta"',
-                        equalTo: `"${agenda.tomademuestras.dateIDlab}"`
-                    }
-                });
-
-                const agendas = response.data;
-                if (agendas) {
-                    // 2. Obtener la clave única del registro
-                    const key = Object.keys(agendas)[0];
-
-                    // 3. Actualizar solo el campo visita
-                    await firebase_api.patch(`/agendas/${key}.json`, { "agenda.tomademuestras": agenda.tomademuestras.horalab });
-
-                    return { message: 'Visita actualizada correctamente' };
-                } else {
-                    throw new Error('No se encontró agenda con ese idEncuesta');
-                }
-            } catch (error) {
-                console.error('Error al actualizar visita:', error);
-                throw error;
-              }
-
-        }  */  
-      /*   guardarAgendaT: async ({ commit }, datos) => {
-            const agenda = {
-                idEncuesta: datos.idEncuesta,
-                grupo: datos.grupo,
-                tomademuestras: {
-                    dateIDlab: datos.dateIDlab,
-                    horalab: datos.horalab
-                },
-                DataAgendas: {
-                    hora: datos.hora,
-                    idEncuestador: datos.idEncuestador,
-                }
-            };
-            console.log("datos de id agenda", agenda.tomademuestras.dateIDlab.id);
-
-            try {
-                // La clave única es agenda.tomademuestras.dateIDlab.id
-                const key = agenda.tomademuestras.dateIDlab.id;
-
-                // Verificar que el registro exista
-                const response = await firebase_api.get(`/agendas/${key}.json`);
-
-                if (response.data) {
-                    // Actualizar solo el campo tomademuestras del registro con la key
-                    await firebase_api.patch(`/agendas/${key}.json`, { tomademuestras: agenda.tomademuestras });
-
-                    return { message: 'Toma de muestras actualizada correctamente' };
-                } else {
-                    throw new Error('No se encontró agenda con esa clave única');
-                }
-            } catch (error) {
-                console.error('Error al actualizar toma de muestras:', error);
-                throw error;
-            }
-        } */
+        //metodo para guardar agenda de toma de muestras
         guardarAgendaT: async ({ commit }, datos) => {
             const agenda = {
+                idAgenda: datos.idAgenda,
                 idEncuesta: datos.idEncuesta,
                 grupo: datos.grupo,
                 tomademuestras: {
@@ -711,9 +680,9 @@ export default createStore({
                     idEncuesta: datos.idEncuesta,
                     grupo: datos.grupo,
                 },
-            
+
             };
-            const key = agenda.tomademuestras.dateIDlab.id;
+            const key = agenda.idAgenda;
 
             try {
                 const response = await firebase_api.get(`/agendas/${key}.json`);
@@ -748,7 +717,7 @@ export default createStore({
                 throw error;
             }
         }
-                
+
 
     },
     mutations: {
@@ -806,8 +775,11 @@ export default createStore({
         },
         setEps(state, eps) {
             state.epss = eps;
-        }
+        },
 
+        setEncuestasbyId(state, encuestas) {
+            state.encuestasFiltradasById = encuestas;
+        },
     },
     getters: {
         getUserData: (state) => state.userData,
