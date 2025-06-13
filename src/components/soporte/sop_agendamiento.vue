@@ -40,29 +40,29 @@
                         </button>
                     </div>
                 </div>
-                {{ encuestasFiltradasById }}
-                <div class="col-12 col-md-6" v-if="dateIDlab !== ''">
+                <!--       {{ encuestasFiltradasById }} -->
+                <div class="col-12 col-md-6" v-if="encuestasFiltradasById !== ''">
                     <p>Agenda del dia Toma de Laboratorio</p>
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th scope="col">grupo</th>
-                                <th scope="col">Paciente</th>
-                                <th scope="col">Barrio</th>
-                                <th scope="col">Hora</th>
-                                <th scope="col">eliminar</th>
+                                <th>Hora Lab</th>
+                                <th>Grupo</th>
+                                <th>Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, index) in encuestasFiltradasById" :key="index">
-                                <td>{{ item.tomademuestras }}</td>
-                                <td>{{ item.idEncuesta }}</td>
-                                <td>{{ item.barrio }}</td>
-                                <td>{{ item.hora }}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" @click="eliminarAgenda(item.id)">Eliminar</button>
-                                </td>
-                            </tr>
+                            <template v-for="(item, index) in encuestasFiltradasLabById" :key="item.id + index">
+                                <tr v-for="(muestra, i) in item.tomademuestras" :key="muestra.idEncuesta + i">
+                                    <td>{{ muestra.horalab }}</td>
+                                    <td>{{ muestra.grupo }}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="userData && userData.grupo && muestra.grupo === this.userData.grupo">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
@@ -79,7 +79,7 @@
                             <div>
                                 <label for="datevisita" class="form-label">Fecha</label>
 
-                                <select class="form-select" aria-label="Default select example" v-model="dateIDvisita">
+                                <select class="form-select" aria-label="Default select example" v-model="dateIDvisita" @change="agendaActualVisita(dateIDvisita)">
                                     <option value="">Disponibles</option>
                                     <option v-for="(fecha, index) in FechasVisitasGrupo" :value="fecha.id" :key="index">
                                         {{ fecha.grupo }} - {{ fecha.fecha }}
@@ -214,12 +214,18 @@ export default {
             console.log("datos que salen", id);
             this.getAgendasTomaLabById(id);
         },
-       /*  guardarAgendamientoVisitas() {
+
+        agendaActualVisita(id) {
+            console.log("datos que salen", id);
+            this.getAgendasVisitaById(id);
+        },
+        guardarAgendamientoVisitas() {
             if (this.dateIDvisita === "" || this.horavisita === "") {
                 alert("Por favor, seleccione una fecha y hora para la visita.");
                 return;
             }
             let datos = {
+                idAgenda: this.dateIDAgenda,
                 idEncuesta: this.idEncuesta,
                 dateIDvisita: this.dateIDvisita,
                 horavisita: this.horavisita,
@@ -227,10 +233,10 @@ export default {
             };
             this.guardarAgendaV(datos);
             console.log("Agendamiento visita guardado");
-        }, */
+        },
     },
     computed: {
-        ...mapState(["agendas", "userData", "encuestasFiltradasById"]),
+        ...mapState(["agendas", "userData", "encuestasFiltradasLabById"]),
 
         FechasVisitasGrupo() {
             return this.agendas.filter((item) => item.grupo == this.userData.grupo);

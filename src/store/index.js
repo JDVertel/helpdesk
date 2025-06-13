@@ -7,7 +7,8 @@ const auth = getAuth();
 import router from '../router/index.js'; // Asegúrate de que la ruta sea correcta
 export default createStore({
     state: {
-        encuestasFiltradasById: [],
+        encuestasFiltradasLabById: [],
+        encuestasFiltradasVisitaById: [],
         usuarios: [],
         encuestas: [],
         comunasBarrios: [],
@@ -546,7 +547,7 @@ export default createStore({
                     encuesta.id === id // ✅ usar el parámetro correcto
                 );
 
-                commit('setEncuestasbyId', encuestasFiltradas);
+                commit('setEncuestaslabbyId', encuestasFiltradas);
                 return encuestasFiltradas;
             } catch (error) {
                 console.error('Error en Action_setEncuestasToday:', error);
@@ -554,6 +555,27 @@ export default createStore({
             }
         },
 
+        getAgendasVisitaById: async ({ commit }, id) => {
+            console.log("datos que entran", id);
+            try {
+                const { data } = await firebase_api.get('/agendas.json');
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value
+                }));
+
+                // Filtrar registros por el id recibido
+                const encuestasFiltradas = encuestas.filter(encuesta =>
+                    encuesta.id === id // ✅ usar el parámetro correcto
+                );
+
+                commit('setEncuestasvisitaById', encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error('Error en Action_setEncuestasToday:', error);
+                throw error;
+            }
+        },
         /* ---------------------------------------DELETE------------------------------------- */
 
         deleteComunaBarrio: async ({ commit }, id) => {
@@ -777,8 +799,11 @@ export default createStore({
             state.epss = eps;
         },
 
-        setEncuestasbyId(state, encuestas) {
-            state.encuestasFiltradasById = encuestas;
+        setEncuestaslabbyId(state, encuestas) {
+            state.encuestasFiltradasLabById = encuestas;
+        },
+        setEncuestasvisitaById(state, encuestas) {
+            state.encuestasFiltradasVisitaById = encuestas;
         },
     },
     getters: {
