@@ -697,7 +697,6 @@ export default createStore({
                 idEncuesta: datos.idEncuesta,
                 grupo: datos.grupo,
                 tomademuestras: {
-                    dateIDlab: datos.dateIDlab,
                     horalab: datos.horalab,
                     idEncuesta: datos.idEncuesta,
                     grupo: datos.grupo,
@@ -738,8 +737,54 @@ export default createStore({
                 console.error('Error al guardar toma de muestras:', error);
                 throw error;
             }
-        }
+        },
+        guardarAgendaV: async ({ commit }, datos) => {
+            const agenda = {
+                idAgenda: datos.idAgenda,
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+                visitamedica: {
+                    horavisita: datos.horavisita,
+                    idEncuesta: datos.idEncuesta,
+                    grupo: datos.grupo,
+                },
 
+            };
+            const key = agenda.idAgenda;
+
+            try {
+                const response = await firebase_api.get(`/agendas/${key}.json`);
+
+                if (response.data) {
+                    // Suponiendo que visitamedica es un array, agregamos el nuevo dato
+                    let visitamedicaExistentes = response.data.visitamedica || [];
+
+                    // Si no es array, convertirlo en array para manejar múltiples entradas
+                    if (!Array.isArray(visitamedicaExistentes)) {
+                        visitamedicaExistentes = [visitamedicaExistentes];
+                    }
+
+                    // Agregar el nuevo visitamedica
+                    visitamedicaExistentes.push(agenda.visitamedica);
+
+                    // Guardar la lista actualizada
+                    await firebase_api.patch(`/agendas/${key}.json`, { visitamedica: visitamedicaExistentes });
+
+                    return { message: 'Visita médica agregada correctamente' };
+                } else {
+                    // Si no existe, crear nuevo registro con visitamedica como array
+                    await firebase_api.put(`/agendas/${key}.json`, {
+                        ...agenda,
+                        visitamedica: [agenda.visitamedica]
+                    });
+
+                    return { message: 'Agenda creada con visita médica' };
+                }
+            } catch (error) {
+                console.error('Error al guardar visita médica:', error);
+                throw error;
+            }
+        }
 
     },
     mutations: {
