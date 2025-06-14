@@ -10,15 +10,13 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <h5><i class="bi bi-prescription2"></i> Toma de laboratorios</h5>
-
                     <hr />
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <div>
                                 <label for="dateconsulta" class="form-label">Fecha</label>
                                 <select class="form-select" aria-label="Default select example" v-model="dateIDAgenda" @change="agendaActualTomaLab(dateIDAgenda)">
-                                    <option>Disponibles</option>
+                                    <option value="">Disponibles</option>
                                     <option v-for="(fecha, index) in agendas" :value="fecha.id" :key="index">
                                         {{ fecha.grupo }} - {{ fecha.fecha }}
                                     </option>
@@ -29,6 +27,7 @@
                         <div class="col-6">
                             <label for="horalab" class="form-label">Hora:</label>
                             <select class="form-control" id="horalab" v-model="horalab">
+                                <option value="">Disponibles</option>
                                 <option v-for="hora in horasValidasLab" :key="hora" :value="hora">
                                     {{ hora }}
                                 </option>
@@ -40,7 +39,7 @@
                     </div>
                 </div>
                 <!--       {{ encuestasFiltradasById }} -->
-                <div class="col-12 col-md-6" v-if="encuestasFiltradasLabById.length !== 0">
+                <div class="col-12 col-md-6" v-if="dateIDAgenda !== '' && encuestasFiltradasLabById.length !== 0">
                     <p>Agenda del dia Toma de Laboratorio</p>
                     <table class="table table-sm">
                         <thead>
@@ -56,7 +55,11 @@
                                     <td>{{ muestra.horalab }}</td>
                                     <td>{{ muestra.grupo }}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="userData && userData.grupo && muestra.grupo === this.userData.grupo">
+                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="
+                          userData &&
+                          userData.grupo &&
+                          muestra.grupo === this.userData.grupo
+                        ">
                                             Eliminar
                                         </button>
                                     </td>
@@ -112,28 +115,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                         <!--    <tr v-for="(item, index) in encuestasFiltradasVisitaById" :key="item.id + index">
-                                <td>{{ item.horavisita }}</td>
-                                <td>{{ item.grupo }}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" @click="eliminarAgenda(item.id)" v-if="userData && userData.grupo && item.grupo === this.userData.grupo">
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr> -->
-
                             <template v-for="(item, index) in encuestasFiltradasVisitaById" :key="item.id + index">
                                 <tr v-for="(muestra, i) in item.visitamedica" :key="muestra.idEncuesta + i">
                                     <td>{{ muestra.horavisita }}</td>
                                     <td>{{ muestra.grupo }}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="userData && userData.grupo && muestra.grupo === this.userData.grupo">
+                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="
+                          userData &&
+                          userData.grupo &&
+                          muestra.grupo === this.userData.grupo
+                        ">
                                             Eliminar
                                         </button>
                                     </td>
                                 </tr>
                             </template>
-
                         </tbody>
                     </table>
                 </div>
@@ -172,7 +168,7 @@ export default {
             "guardarAgendaT",
             "guardarAgendaV",
             "getAgendasTomaLabById",
-            "getAgendasVisitaById"
+            "getAgendasVisitaById",
         ]),
 
         generarHorasValidasLab() {
@@ -200,24 +196,33 @@ export default {
         },
 
         guardarAgendamientoTomaLab() {
-            if (this.dateIDAgenda === "" || this.horalab === "") {
-                alert("Por favor, seleccione una fecha y hora para la toma de laboratorio.");
+            if (this.dateIDAgenda === "" || this.horalab === "" || this.userData.grupo === "") {
+                alert("Error en los datos, loguearse nuevamente.");
                 return;
             }
             let datos = {
                 idAgenda: this.dateIDAgenda, // id de la fecha que se selecciona
-                idEncuesta: this.idEncuesta, // id pasado desde la seleccion de la encuesta para vincular los datos 
+                idEncuesta: this.idEncuesta, // id pasado desde la seleccion de la encuesta para vincular los datos
                 horalab: this.horalab, // hora seleccionada
                 grupo: this.userData.grupo, // grupo del usuario quien agenda
             };
             this.guardarAgendaT(datos);
-            console.log("Agendamiento toma de muestras guardado");
+            alert("Agendamiento toma de muestras guardado");
+            this.clearformlab();
+        },
+        clearformlab() {
+            this.dateIDAgenda = "";
+            this.horalab = "";
         },
         /* ---------------------------------------------------------- */
 
         guardarAgendamientoVisitas() {
-            if (this.dateIDvisita === "" || this.horavisita === "") {
-                alert("Por favor, seleccione una fecha y hora para la visita.");
+            if (
+                this.dateIDvisita === "" ||
+                this.horavisita === "" ||
+                this.userData.grupo === ""
+            ) {
+                alert("Error en los datos, loguearse nuevamente.");
                 return;
             }
             let datos = {
@@ -228,8 +233,13 @@ export default {
             };
             this.guardarAgendaV(datos);
             console.log("Agendamiento visita guardado");
+            this.clearformvisita();
         },
 
+        clearformvisita() {
+            this.dateIDvisita = "";
+            this.horavisita = "";
+        },
         /* ------------------------------------------------- */
         //consulta las citas  de toma de muestra del dia seleccionado
         agendaActualTomaLab(id) {
@@ -240,10 +250,14 @@ export default {
         agendaActualVisita(id) {
             this.getAgendasVisitaById(id);
         },
-    
     },
     computed: {
-        ...mapState(["agendas", "userData", "encuestasFiltradasLabById", "encuestasFiltradasVisitaById"]),
+        ...mapState([
+            "agendas",
+            "userData",
+            "encuestasFiltradasLabById",
+            "encuestasFiltradasVisitaById",
+        ]),
 
         FechasVisitasGrupo() {
             return this.agendas.filter((item) => item.grupo == this.userData.grupo);
@@ -265,7 +279,6 @@ export default {
         console.log(this.idEncuesta);
         this.fechaActual = moment().format("YYYY-MM-DD");
         this.getListAgendas(this.fechaActual);
-
     },
 };
 </script>
