@@ -44,6 +44,7 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Hora Lab</th>
                                 <th>Grupo</th>
                                 <th>Opciones</th>
@@ -51,11 +52,12 @@
                         </thead>
                         <tbody>
                             <template v-for="(item, index) in encuestasFiltradasLabById" :key="item.id + index">
-                                <tr v-for="(muestra, i) in item.tomademuestras" :key="muestra.idEncuesta + i">
+                                <tr v-for="(muestra, i) in item.tomademuestras" :key="i">
+                                    <td>{{ i }}</td>
                                     <td>{{ muestra.horalab }}</td>
                                     <td>{{ muestra.grupo }}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="
+                                        <button class="btn btn-danger btn-sm" @click="eliminarItemAgenda({ indice: i, encuestaID: item.id })" v-if="
                           userData &&
                           userData.grupo &&
                           muestra.grupo === this.userData.grupo
@@ -169,6 +171,7 @@ export default {
             "guardarAgendaV",
             "getAgendasTomaLabById",
             "getAgendasVisitaById",
+            "eliminarAgenda",
         ]),
 
         generarHorasValidasLab() {
@@ -249,6 +252,16 @@ export default {
         //se usa el id de la agenda seleccionada para consultar las citas de visita
         agendaActualVisita(id) {
             this.getAgendasVisitaById(id);
+        },
+
+        eliminarItemAgenda(indice,encuestaID) {
+            if (indice === "") {
+                alert("Error al eliminar, intente nuevamente.");
+
+                return;
+            }
+            this.eliminarAgenda(indice, encuestaID);
+            this.clearformlab();
         },
     },
     computed: {

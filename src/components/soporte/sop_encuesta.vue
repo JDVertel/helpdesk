@@ -207,34 +207,44 @@ export default {
         requiereRemision: "",
 
         tipoActividadExtramural: [{
-                nombre: "Consulta PYMS",
+            nombre: "Consulta PYMS",
+                prof:"M",
             },
             {
                 nombre: "Consulta Morbilidad",
+                prof:"M",
             },
             {
                 nombre: "VPS",
+                prof:"M",
             },
             {
                 nombre: "Toma lab  PYMS",
+                prof:"A",
             },
             {
                 nombre: "Toma lab Morbilidad",
+                prof:"A",
             },
             {
                 nombre: "Vacunacion",
+                prof:"A",
             },
             {
                 nombre: "Realizacion de tamizajes",
+                prof:"E",
             },
             {
                 nombre: "Realizacion Test",
+                prof:"E",
             },
             {
                 nombre: "IEC",
+                prof:"E",
             },
             {
                 nombre: "Remision IPS",
+                prof:"M",
             },
             {
                 nombre: "Otro",

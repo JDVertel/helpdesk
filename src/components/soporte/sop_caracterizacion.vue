@@ -1,7 +1,6 @@
 <template>
 <div class="container-fluid">
     <h1 class="text-center">Caracterización de la visita</h1>
-    eps: {{ epss }}
     <div class="row">
         <hr />
         <h4>Visita</h4>
@@ -100,7 +99,7 @@
                     {{ opcion.texto }}
                 </label>
             </div>
-            {{ this.seleccionadosServPublic }}
+            {{ seleccionadosServPublic }}
         </div>
     </div>
 </div>
@@ -142,7 +141,7 @@
         </button>
     </div>
     <!-- inicio modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
                 <div class="modal-header">
@@ -279,7 +278,7 @@
             <tr v-for="(miembro, index) in grupoFamiliar" :key="index">
                 <td>{{ miembro.parentesco }}</td>
                 <td>{{ miembro.nombres }} {{ miembro.apellidos }}</td>
-                <td><button @click="eliminarMiembro(index)">eliminar</button></td>
+                <td><button class="btn btn-danger btn-sm" @click="eliminarMiembro(index)"><i class="bi bi-trash3"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -667,7 +666,6 @@ export default {
                 numeroDocumento: "",
                 fnacimiento: "",
                 genero: "",
-                genero: "",
                 eps: "",
                 regimen: "",
                 cursoVida: "",
@@ -749,7 +747,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["guardarCaracterizacion", "getAllEpss"]),
+        ...mapActions(["guardarCaracterizacion", "getAllEpss",]),
         addmiembro() {
             if (
                 this.nuevoMiembro.nombres &&
@@ -787,8 +785,8 @@ export default {
         },
         guardarDatosCaracterizacion() {
             // Aquí puedes implementar la lógica para guardar los datos
-            console.log("Datos guardados:", {
-                idencuesta: this.idEncuesta,
+            let DatosGuardados = {
+                idEncuesta: this.idEncuesta,
                 visita: this.visita,
                 tipovisita: this.tipovisita,
                 tipovivienda: this.tipovivienda,
@@ -816,8 +814,17 @@ export default {
                 seleccionadosAntecedentes: this.seleccionadosAntecedentes,
                 grupoFamiliar: this.grupoFamiliar,
                 seleccionadosRiesgos: this.seleccionadosRiesgos,
-            });
+            }
+              this.guardarCaracterizacion(DatosGuardados)
+                .then(() => {
+                    alert("Datos guardados correctamente");
+                })
+                .catch((error) => {
+                    console.error("Error al guardar los datos:", error);
+                    alert("Error al guardar los datos");
+                });
         },
+
         updateEps() {
         this.cargandoEps = true;
         this.getAllEpss()
@@ -840,10 +847,10 @@ export default {
         this.idEncuesta = this.$route.params.idEncuesta;
         console.log(this.idEncuesta);
         this.getAllEpss();
-        document.body.classList.remove('modal-open');
+      /*   document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) backdrop.remove();
+    if (backdrop) backdrop.remove(); */
     },
 };
 </script>
