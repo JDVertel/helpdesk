@@ -262,3 +262,7 @@ footer {
   align-items: center;
   justify-content: space-between;
 }
+.ok{
+  color: rgb(6, 114, 255);
+  text-shadow: 1px 0 0 1px rgba(2, 2, 2, 0.5);
+}

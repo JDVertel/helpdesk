@@ -32,7 +32,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/sop_agendamiento/:idEncuesta",
+    path: "/sop_agendamiento/:idEncuesta, :tipo",
     name: "sop_agendamiento",
     component: () => import("../components/soporte/sop_agendamiento.vue"),
     meta: { requiresAuth: true },
@@ -54,6 +54,13 @@ const routes = [
     path: "/sop_caracterizacion/:idEncuesta",
     name: "sop_caracterizacion",
     component: () => import("../components/soporte/sop_caracterizacion.vue"),
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: "/sop_cups/:idEncuesta",
+    name: "sop_cups",
+    component: () => import("../components/soporte/sop_cups.vue"),
     meta: { requiresAuth: true },
   },
   /* Admin */

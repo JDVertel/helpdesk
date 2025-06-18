@@ -53,20 +53,70 @@
                     </thead>
                     <tbody class="table-group-divider">
                         <tr v-for="(encuesta, index) in encuestas" :key="index">
-                            <td>Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}
-                                <hr>
-                                Actividades:{{ encuesta.tipoActividad }}
-                                <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
-
                             <td>
+                                <small>
+                                    Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }} </small>
+                                <hr>
+                                <small> Actividades:{{ encuesta.tipoActividad }}</small>
+                                <hr>
+                                <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
+                                <hr>
+                           
+                              
+                            </td>
+                            <td>
+                                <!--  v-if="encuesta.cita_tomamuestras === false" -->
+                                <div class="row">
 
-                                <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)" v-if="encuesta.cita_tomamuestras === false">
-                                        <i class="bi bi-calendar2-check"></i>
-                                    </button></div>
-                
-                                <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)" v-if="encuesta.cita_visitamedica === false">
-                                        <i class="bi bi-pencil"></i>
-                                    </button></div>
+                                    <div class="col">
+                                        <div  v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
+                                            <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id,'tomamuestras')" >
+                                                <i class="bi bi-droplet-half"></i>
+                                            </button> <small>Toma muestras</small>
+                                        </div>
+                                        <div v-else-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined">
+                                            <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id,'tomamuestras')" >
+                                                <i class="bi bi-droplet-half"></i>
+                                            </button> <small>Toma muestras</small>
+                                        </div>
+
+
+                                        <div v-else>
+                                            <h6 class="ok"><i class="bi bi-check2-circle"></i> Agenda Toma de muestras</h6>
+                                        </div>
+                                        <hr>
+                                        <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
+                                            <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id,'visitamedica')">
+                                                <i class="bi bi-houses"></i>
+                                            </button> <small>Visita medica Agendada</small>
+                                        </div>
+                                        <div v-else-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined">
+                                            <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id,'visitamedica')">
+                                                <i class="bi bi-houses"></i>
+                                            </button> <small>Visita medica Agendada</small>
+                                        </div>
+                                        <div v-else>
+                                            <h6 class="ok"><i class="bi bi-check2-circle"></i> Agenda Visita medica </h6>
+                                        </div>
+                                        <hr>
+                                        <div v-if="encuesta.status_caracterizacion === false">
+                                            <button type="button" class="btn btn-warning btn-sm" @click="Caracterizar(encuesta.id)" >
+                                                <i class="bi bi-calendar2-check"></i>
+                                            </button> <small>Caracterizacion</small>
+                                        </div>
+                                        <div v-else>
+                                            <h6 class="ok"><i class="bi bi-check2-circle"></i> Caracterizacion </h6>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-danger btn-sm" @click="cupsAux(encuesta.id)" >
+                                                <i class="bi bi-calendar2-heart-fill"></i>
+                                            </button> <small>Gestionar Cups</small>
+                                        </div>
+                                       <!--  <div v-else>
+                                            <h6 class="ok"><i class="bi bi-check2-circle"></i> Caracterizacion </h6>
+                                        </div> -->
+                                    </div>
+                                </div>
 
                             </td>
 
@@ -165,11 +215,12 @@ export default {
                 idUsuario: this.userData.numDocumento
             });
         },
-        Agendar(id) {
+        Agendar(id, tipo) {
             this.$router.push({
                 name: "sop_agendamiento",
                 params: {
-                    idEncuesta: id
+                    idEncuesta: id,
+                    tipo: tipo
                 }
             });
         },
@@ -181,7 +232,15 @@ export default {
                 }
             });
         },
-     
+        cupsAux(id) {
+            this.$router.push({
+                name: "sop_cups",
+                params: {
+                    idEncuesta: id
+                }
+            });
+        }
+
     },
 
     computed: {
@@ -195,7 +254,7 @@ export default {
         },
 
     },
-   mounted() {
+    mounted() {
 
         this.fechaActual = moment().format("YYYY-MM-DD");
         //encuestas diarias + contador 
@@ -204,11 +263,11 @@ export default {
             fecha: this.fechaActual
         });
         //encuestas abiertas
-       this.getAllRegistersByFechaStatus({
-        idUsuario: this.userData.numDocumento,
+        this.getAllRegistersByFechaStatus({
+            idUsuario: this.userData.numDocumento,
         });
         //total de encuestas del usuario . para contador 
-         this.getAllRegistersByIduser({
+        this.getAllRegistersByIduser({
             idUsuario: this.userData.numDocumento,
         });
 

@@ -4,7 +4,7 @@
     <hr>
     <div class="container mb-4">
         <div class="container-fluid tomademuestras">
-            <div class="row">
+            <div class="row" v-if="this.tipo === 'tomamuestras'">
                 <div class="col-12 col-md-6">
                     <h5 class="mt-2"><i class="bi bi-prescription2"></i> Toma de laboratorios</h5>
                     <hr />
@@ -14,7 +14,7 @@
                                 <label for="dateconsulta" class="form-label">Fecha</label>
                                 <select class="form-select" aria-label="Default select example" v-model="dateIDAgenda" @change="agendaActualTomaLab(dateIDAgenda)">
                                     <option value="">Disponibles</option>
-                                    <option v-for="(fecha, index) in agendas" :value="fecha.id" :key="index">
+                                    <option v-for="(fecha, index) in agendas" :value="{ id: fecha.id, fecha: fecha.fecha }" :key="index">
                                         {{ fecha.grupo }} - {{ fecha.fecha }}
                                     </option>
                                 </select>
@@ -70,7 +70,7 @@
             </div>
         </div>
         <br />
-        <div class="container-fluid visitas">
+        <div class="container-fluid visitas" v-if="this.tipo === 'visitamedica'">
             <div class="row">
                 <div class="col-12 col-md-6">
                     <h5 class="mt-2"><i class="bi bi-people-fill"></i> Visita Medica y Enfermeria</h5>
@@ -81,7 +81,7 @@
                                 <label for="datevisita" class="form-label">Fecha</label>
                                 <select class="form-select" aria-label="Default select example" v-model="dateIDvisita" @change="agendaActualVisita(dateIDvisita)">
                                     <option value="">Disponibles</option>
-                                    <option v-for="(fecha, index) in FechasVisitasGrupo" :value="fecha.id" :key="index">
+                                    <option v-for="(fecha, index) in FechasVisitasGrupo" :value="{ id: fecha.id, fecha: fecha.fecha }" :key="index">
                                         {{ fecha.grupo }} - {{ fecha.fecha }}
                                     </option>
                                 </select>
@@ -148,6 +148,7 @@ import {
 export default {
     data: () => {
         return {
+            tipo:"",
             dateIDAgenda: "",
             dateIDvisita: "",
             idEncuesta: "",
@@ -201,8 +202,9 @@ export default {
                 return;
             }
             let datos = {
-                idAgenda: this.dateIDAgenda, // id de la fecha que se selecciona
-                idEncuesta: this.idEncuesta, // id pasado desde la seleccion de la encuesta para vincular los datos
+                idAgenda: this.dateIDAgenda.id, // id de la fecha que se selecciona
+                fechaAgenda: this.dateIDAgenda.fecha, // fecha seleccionada
+                idEncuesta: this.idEncuesta,
                 horalab: this.horalab, // hora seleccionada
                 grupo: this.userData.grupo, // grupo del usuario quien agenda
             };
@@ -225,13 +227,14 @@ export default {
                 return;
             }
             let datos = {
-                idAgenda: this.dateIDvisita, // id de la fecha que se selecciona
-                horavisita: this.horavisita, // hora seleccionada
+                idAgenda: this.dateIDvisita.id, // id de la fecha que se selecciona
+                fechaAgenda: this.dateIDvisita.fecha,// id pasado desde la seleccion de la encuesta para vincular los datos
                 idEncuesta: this.idEncuesta,
+                horavisita: this.horavisita, // hora seleccionada
                 grupo: this.userData.grupo,
             };
             this.guardarAgendaV(datos);
-            console.log("Agendamiento visita guardado");
+            alert("Agendamiento visita guardado");
             this.clearformvisita();
         },
         /* ---------------------------------------------------------------------------------------------------------- */
@@ -290,6 +293,8 @@ export default {
     },
     mounted() {
         this.idEncuesta = this.$route.params.idEncuesta;
+        this.tipo = this.$route.params.tipo;
+        console.log(this.tipo);
         console.log(this.idEncuesta);
         this.fechaActual = moment().format("YYYY-MM-DD");
         this.getListAgendas(this.fechaActual);
