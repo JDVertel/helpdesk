@@ -65,6 +65,8 @@ export default createStore({
                 } = entradasE;
 
                 const DataToSaveE = {
+                    cita_tomamuestras: false,
+                    cita_visitamedica: false,
                     idMedicoAtiende,
                     idEnfermeroAtiende,
                     fechavisita,
@@ -113,6 +115,7 @@ export default createStore({
 
         guardarCaracterizacion: async ({ commit }, entradasC) => {
             const caracterizacion = {
+                estadoCaracterizacion: entradasC.estadoCaracterizacion,
                 idEncuesta: entradasC.idEncuesta,
                 visita: entradasC.visita,
                 tipovisita: entradasC.tipovisita,
@@ -159,7 +162,7 @@ export default createStore({
         },
 
         //metodo para guardar agenda de toma de muestras
-        guardarAgendaT: async ({ commit }, datos) => {
+       /*  guardarAgendaT: async ({ commit }, datos) => {
             const agenda = {
                 idAgenda: datos.idAgenda,
                 idEncuesta: datos.idEncuesta,
@@ -206,7 +209,63 @@ export default createStore({
                 console.error("Error al guardar toma de muestras:", error);
                 throw error;
             }
+        }, */
+        
+        guardarAgendaT: async ({ commit }, datos) => {
+            const agenda = {
+                idAgenda: datos.idAgenda,
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+                tomademuestras: {
+                    horalab: datos.horalab,
+                    idEncuesta: datos.idEncuesta,
+                    grupo: datos.grupo,
+                },
+            };
+            const key = agenda.idAgenda;
+
+            try {
+                const response = await firebase_api.get(`/agendas/${key}.json`);
+
+                if (response.data) {
+                    // Obtener tomademuestras existentes
+                    let tomademuestrasExistentes = response.data.tomademuestras || [];
+
+                    if (!Array.isArray(tomademuestrasExistentes)) {
+                        tomademuestrasExistentes = [tomademuestrasExistentes];
+                    }
+
+                    // Agregar nuevo registro
+                    tomademuestrasExistentes.push(agenda.tomademuestras);
+
+                    // Actualizar agenda con la lista modificada
+                    await firebase_api.patch(`/agendas/${key}.json`, {
+                        tomademuestras: tomademuestrasExistentes,
+                    });
+                } else {
+                    // Crear nuevo registro con tomademuestras como array
+                    await firebase_api.put(`/agendas/${key}.json`, {
+                        ...agenda,
+                        tomademuestras: [agenda.tomademuestras],
+                    });
+                }
+
+                // Actualizar status_tomamuestras en Encuesta/idEncuesta
+                await firebase_api.patch(`/Encuesta/${datos.idEncuesta}.json`, {
+                    cita_tomamuestras: true
+                });
+
+                return { message: "Toma de muestras guardada y estado actualizado correctamente" };
+
+            } catch (error) {
+                console.error("Error al guardar toma de muestras y actualizar estado:", error);
+                throw error;
+            }
         },
+          
+        
+        
+ /*        
         guardarAgendaV: async ({ commit }, datos) => {
             const agenda = {
                 idAgenda: datos.idAgenda,
@@ -248,6 +307,12 @@ export default createStore({
                         visitamedica: [agenda.visitamedica],
                     });
 
+                    // Actualizar cita_visitamedica en Encuesta/idEncuesta
+                    await firebase_api.patch(`/Encuesta/${datos.idEncuesta}.json`, {
+                       cita_visitamedica: true
+                    });
+
+
                     return { message: "Agenda creada con visita médica" };
                 }
             } catch (error) {
@@ -255,8 +320,58 @@ export default createStore({
                 throw error;
             }
         },
+ */
+        guardarAgendaV: async ({ commit }, datos) => {
+            const agenda = {
+                idAgenda: datos.idAgenda,
+                idEncuesta: datos.idEncuesta,
+                grupo: datos.grupo,
+                visitamedica: {
+                    horavisita: datos.horavisita,
+                    idEncuesta: datos.idEncuesta,
+                    grupo: datos.grupo,
+                },
+            };
+            const key = agenda.idAgenda;
 
+            try {
+                const response = await firebase_api.get(`/agendas/${key}.json`);
 
+                if (response.data) {
+                    // Obtener visitamedica existentes
+                    let visitamedicaExistentes = response.data.visitamedica || [];
+
+                    if (!Array.isArray(visitamedicaExistentes)) {
+                        visitamedicaExistentes = [visitamedicaExistentes];
+                    }
+
+                    // Agregar nuevo registro
+                    visitamedicaExistentes.push(agenda.visitamedica);
+
+                    // Actualizar agenda con la lista modificada
+                    await firebase_api.patch(`/agendas/${key}.json`, {
+                        visitamedica: visitamedicaExistentes,
+                    });
+                } else {
+                    // Crear nuevo registro con visitamedica como array
+                    await firebase_api.put(`/agendas/${key}.json`, {
+                        ...agenda,
+                        visitamedica: [agenda.visitamedica],
+                    });
+                }
+
+                // Actualizar cita_visitamedica en el nodo padre de la encuesta (asegúrate que sea 'Encuestas')
+                await firebase_api.patch(`/Encuesta/${datos.idEncuesta}.json`, {
+                    cita_visitamedica: true,
+                });
+
+                return { message: "Visita médica guardada y estado actualizado correctamente" };
+            } catch (error) {
+                console.error("Error al guardar visita médica:", error);
+                throw error;
+            }
+        },
+          
 
         createUser: async ({ commit }, entradasU) => {
             try {
@@ -721,7 +836,7 @@ export default createStore({
             }
         },
         /* ---------------------------------------DELETE------------------------------------- */
-        eliminarAgenda: async ({ commit }, { indice, encuestaID }) => {
+        eliminarAgenda: async ({ commit }, { indice, encuestaID ,lista}) => {
             console.log("Eliminando agenda con índice:", indice, "y encuestaID:", encuestaID);
 
             // Validar que los parámetros no sean nulos ni indefinidos ni vacíos
@@ -733,7 +848,7 @@ export default createStore({
             }
 
             try {
-                await firebase_api.delete(`/agendas/${encuestaID}/tomademuestras/${indice}.json`);
+                await firebase_api.delete(`/agendas/${encuestaID}/${lista}/${indice}.json`);
                 console.log("Registro eliminado correctamente");
 
                 // Si tienes mutation para actualizar el estado local, descomenta y ajusta según tu store
@@ -745,8 +860,8 @@ export default createStore({
                 throw error;
             }
         },
-          
-          
+
+
 
         deleteComunaBarrio: async ({ commit }, id) => {
             try {
@@ -866,6 +981,9 @@ export default createStore({
                 throw error;
             }
         },
+
+        
+          
 
     },
     mutations: {

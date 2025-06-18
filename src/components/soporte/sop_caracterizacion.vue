@@ -143,7 +143,7 @@
     <!-- inicio modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
                         Agregar miembro del grupo familiar
@@ -201,7 +201,6 @@
                         </div>
 
                         <div class="col-6">
-
                             <label for="eps" class="form-label">Eps</label>
                             <div class="horizontal">
                                 <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
@@ -214,7 +213,6 @@
                                     <span v-if="cargandoEps">Cargando...</span>
                                 </button>
                             </div>
-
                         </div>
                         <div class="col-6">
                             <label for="regimen" class="form-label">Regimen</label>
@@ -278,7 +276,11 @@
             <tr v-for="(miembro, index) in grupoFamiliar" :key="index">
                 <td>{{ miembro.parentesco }}</td>
                 <td>{{ miembro.nombres }} {{ miembro.apellidos }}</td>
-                <td><button class="btn btn-danger btn-sm" @click="eliminarMiembro(index)"><i class="bi bi-trash3"></i></button></td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @click="eliminarMiembro(index)">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -747,7 +749,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["guardarCaracterizacion", "getAllEpss",]),
+        ...mapActions(["guardarCaracterizacion", "getAllEpss"]),
         addmiembro() {
             if (
                 this.nuevoMiembro.nombres &&
@@ -782,10 +784,141 @@ export default {
                 ocupacion: "",
                 viveEnVivienda: "",
             };
+            // Limpia scroll solo si es necesario
+            if (document.body.classList.contains('modal-open')) {
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            }
         },
-        guardarDatosCaracterizacion() {
-            // Aquí puedes implementar la lógica para guardar los datos
-            let DatosGuardados = {
+        //requiero  que se pregunte si se desea guardar la informaicon antes de realizar el guardado
+
+        async guardarDatosCaracterizacion() {
+        
+            const campos = [{
+                    valor: this.idEncuesta,
+                    nombre: "ID Encuesta"
+                },
+                {
+                    valor: this.visita,
+                    nombre: "Visita"
+                },
+                {
+                    valor: this.tipovisita,
+                    nombre: "Tipo de Visita"
+                },
+                {
+                    valor: this.tipovivienda,
+                    nombre: "Tipo de Vivienda"
+                },
+                {
+                    valor: this.EstActual_Iluminacion,
+                    nombre: "Iluminación"
+                },
+                {
+                    valor: this.EstActual_Ventilacion,
+                    nombre: "Ventilación"
+                },
+                {
+                    valor: this.EstActual_Paredes,
+                    nombre: "Paredes"
+                },
+                {
+                    valor: this.EstActual_Pisos,
+                    nombre: "Pisos"
+                },
+                {
+                    valor: this.EstActual_Techo,
+                    nombre: "Techo"
+                },
+                {
+                    valor: this.peso,
+                    nombre: "Peso"
+                },
+                {
+                    valor: this.talla,
+                    nombre: "Talla"
+                },
+                {
+                    valor: this.tensionSistolica,
+                    nombre: "Tensión Sistólica"
+                },
+                {
+                    valor: this.tensionDiastolica,
+                    nombre: "Tensión Diastólica"
+                },
+                {
+                    valor: this.perimetroAbdominal,
+                    nombre: "Perímetro Abdominal"
+                },
+                {
+                    valor: this.perimetroBranquial,
+                    nombre: "Perímetro Branquial"
+                },
+                {
+                    valor: this.oximetria,
+                    nombre: "Oximetría"
+                },
+                {
+                    valor: this.temperatura,
+                    nombre: "Temperatura"
+                },
+                {
+                    valor: this.imc,
+                    nombre: "IMC"
+                },
+                {
+                    valor: this.clasificacionImc,
+                    nombre: "Clasificación IMC"
+                },
+                {
+                    valor: this.Oizquierdo,
+                    nombre: "Oído Izquierdo"
+                },
+                {
+                    valor: this.Oderecho,
+                    nombre: "Oído Derecho"
+                },
+                {
+                    valor: this.Evacunal,
+                    nombre: "Estado Vacunal"
+                },
+                {
+                    valor: this.seleccionadosServPublic,
+                    nombre: "Servicios Públicos"
+                },
+                {
+                    valor: this.seleccionadosFactoresRiesgo,
+                    nombre: "Factores de Riesgo"
+                },
+                {
+                    valor: this.seleccionadosPresenciaAnimales,
+                    nombre: "Presencia de Animales"
+                },
+                {
+                    valor: this.seleccionadosAntecedentes,
+                    nombre: "Antecedentes Personales"
+                },
+                {
+                    valor: this.grupoFamiliar.length > 0 ? this.grupoFamiliar : null,
+                    nombre: "Grupo Familiar"
+                },
+                {
+                    valor: this.seleccionadosRiesgos,
+                    nombre: "Riesgos"
+                },
+            ];
+            let camposFaltantes = campos.filter(c => !c.valor).map(c => c.nombre);
+            if (this.seleccionadosServPublic.length === 0) camposFaltantes.push("Servicios Públicos");
+            if (camposFaltantes.length > 0) {
+                alert("!!Falta diligenciar los siguientes campos:\n" + camposFaltantes.join(", "));
+                return;
+            }
+            const confirmado = window.confirm("¿Está seguro que desea guardar la información?");
+            if (!confirmado) return;
+            const DatosGuardados = {
+                estadoCaracterizacion:true,
                 idEncuesta: this.idEncuesta,
                 visita: this.visita,
                 tipovisita: this.tipovisita,
@@ -814,47 +947,47 @@ export default {
                 seleccionadosAntecedentes: this.seleccionadosAntecedentes,
                 grupoFamiliar: this.grupoFamiliar,
                 seleccionadosRiesgos: this.seleccionadosRiesgos,
+            };
+            try {
+                await this.guardarCaracterizacion(DatosGuardados);
+                this.$router.push("/sop_home");
+            } catch (error) {
+                alert("Error al guardar los datos");
             }
-              this.guardarCaracterizacion(DatosGuardados)
-                .then(() => {
-                    alert("Datos guardados correctamente");
-                })
-                .catch((error) => {
-                    console.error("Error al guardar los datos:", error);
-                    alert("Error al guardar los datos");
-                });
         },
 
         updateEps() {
-        this.cargandoEps = true;
-        this.getAllEpss()
-            .then(() => {
-                alert("Eps actualizados correctamente");
-            })
-            .catch((error) => {
-                console.error("Error al actualizar Eps:", error);
-                alert("Error al actualizar Eps");
-            })
-            .finally(() => {
-                this.cargandoEps = false;
-            });
-    },
+            this.cargandoEps = true;
+            this.getAllEpss()
+                .then(() => {
+                    alert("Eps actualizados correctamente");
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar Eps:", error);
+                    alert("Error al actualizar Eps");
+                })
+                .finally(() => {
+                    this.cargandoEps = false;
+                });
+        },
     },
     computed: {
         ...mapState(["usuario", "epss"]),
     },
-    mounted() {
+    async mounted() {
         this.idEncuesta = this.$route.params.idEncuesta;
-        console.log(this.idEncuesta);
-        this.getAllEpss();
-      /*   document.body.classList.remove('modal-open');
-    document.body.style.overflow = '';
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) backdrop.remove(); */
+        try {
+            await this.getAllEpss();
+        } catch (e) {
+            // Maneja el error si es necesario
+        }
+        // Limpia posibles restos de modales
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
     },
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

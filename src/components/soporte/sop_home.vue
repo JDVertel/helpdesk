@@ -46,7 +46,7 @@
                             <th scope="col">Detalle</th>
 
                             <th scope="col">
-                                Opciones
+                                Programacion
                             </th>
 
                         </tr>
@@ -60,10 +60,11 @@
 
                             <td>
 
-                                <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)">
+                                <div class="col-4"> <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id)" v-if="encuesta.cita_tomamuestras === false">
                                         <i class="bi bi-calendar2-check"></i>
                                     </button></div>
-                                <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)">
+                
+                                <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="Caracterizar(encuesta.id)" v-if="encuesta.cita_visitamedica === false">
                                         <i class="bi bi-pencil"></i>
                                     </button></div>
 
@@ -148,7 +149,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["removeRegEnc", "getAllRegistersByFechaStatus", "getAllRegistersByIduser", "getAllRegistersByFecha"]),
+        ...mapActions(["removeRegEnc", "getAllRegistersByFechaStatus", "getAllRegistersByIduser", "getAllRegistersByFecha", " SelectExistenteAgendas"]),
 
         removeRegEncuesta(id) {
             this.removeRegEnc(id);
@@ -180,6 +181,7 @@ export default {
                 }
             });
         },
+     
     },
 
     computed: {

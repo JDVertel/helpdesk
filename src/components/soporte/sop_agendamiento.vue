@@ -1,15 +1,12 @@
 <template>
-<!-- llega id encuesta para (datos paciente ) -->
-<!-- lleha id usuarrio para grupo  -->
-<!-- carga agendas filtradas por grupo disponibles fechas  en input  de visita-->
 <div class="container-fluid">
     <h5><i class="bi bi-calendar2-check"></i> Agendamiento de visita</h5>
+    <hr>
     <div class="container mb-4">
-        <br />
         <div class="container-fluid tomademuestras">
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <h5><i class="bi bi-prescription2"></i> Toma de laboratorios</h5>
+                    <h5 class="mt-2"><i class="bi bi-prescription2"></i> Toma de laboratorios</h5>
                     <hr />
                     <div class="row mb-4">
                         <div class="col-6">
@@ -33,14 +30,14 @@
                                 </option>
                             </select>
                         </div>
-                        <button class="btn btn-sm btn-warning mb-3 mt-3" @click="guardarAgendamientoTomaLab">
+
+                        <button class="btn btn-sm btn-warning mb-3 mt-3" @click="guardarAgendamientoTomaLab" v-if="userData.grupo && dateIDAgenda && horalab !== ''">
                             Guardar Agendamiento
                         </button>
                     </div>
                 </div>
-                <!--       {{ encuestasFiltradasById }} -->
                 <div class="col-12 col-md-6" v-if="dateIDAgenda !== '' && encuestasFiltradasLabById.length !== 0">
-                    <p>Agenda del dia Toma de Laboratorio</p>
+                    <h6 class="mt-2">Agenda del dia Toma de Laboratorio</h6>
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -51,18 +48,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="(item, index) in encuestasFiltradasLabById" :key="item.id + index">
-                                <tr v-for="(muestra, i) in item.tomademuestras" :key="i">
+                            <template v-for="(item, index) in encuestasFiltradasLabById" :key="item?.id + '-' + index">
+                                <tr v-for="(muestra, i) in (item?.tomademuestras || [])" :key="i">
                                     <td>{{ i }}</td>
-                                    <td>{{ muestra.horalab }}</td>
-                                    <td>{{ muestra.grupo }}</td>
+                                    <td>{{ muestra?.horalab || '-' }}</td>
+                                    <td>{{ muestra?.grupo || '-' }}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" @click="eliminarItemAgenda({ indice: i, encuestaID: item.id })" v-if="
-                          userData &&
-                          userData.grupo &&
-                          muestra.grupo === this.userData.grupo
-                        ">
-                                            Eliminar
+                                        <button class="btn btn-danger btn-sm" @click="eliminarItemAgenda({ indice: i, encuestaID: item.id ,lista:'tomademuestras'})" v-if="
+                              userData &&
+                              userData.grupo &&
+                              muestra?.grupo === userData.grupo
+                            ">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -76,13 +73,12 @@
         <div class="container-fluid visitas">
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <h6><i class="bi bi-people-fill"></i> Visita Medica y Enfermeria</h6>
+                    <h5 class="mt-2"><i class="bi bi-people-fill"></i> Visita Medica y Enfermeria</h5>
                     <hr />
                     <div class="row mb-4">
                         <div class="col-6">
                             <div>
                                 <label for="datevisita" class="form-label">Fecha</label>
-
                                 <select class="form-select" aria-label="Default select example" v-model="dateIDvisita" @change="agendaActualVisita(dateIDvisita)">
                                     <option value="">Disponibles</option>
                                     <option v-for="(fecha, index) in FechasVisitasGrupo" :value="fecha.id" :key="index">
@@ -95,39 +91,40 @@
                         <div class="col-6">
                             <label for="horaconsulta" class="form-label">Hora</label>
                             <select class="form-control" id="horavisita" v-model="horavisita">
+                                <option value="">Disponibles</option>
                                 <option v-for="hora in horasValidasVisita" :key="hora" :value="hora">
                                     {{ hora }}
                                 </option>
                             </select>
                         </div>
-                        <button class="btn btn-sm btn-warning mb-3 mt-3" @click="guardarAgendamientoVisitas">
+                        <button class="btn btn-sm btn-warning mb-3 mt-3" @click="guardarAgendamientoVisitas" v-if="userData.grupo && dateIDvisita && horavisita !== ''">
                             Guardar Agendamiento
                         </button>
                     </div>
                 </div>
-                <div class="col-12 col-md-6" v-if="encuestasFiltradasVisitaById.length !== 0">
-                    <p>Agenda del dia Visita medica y enfermeria</p>
-                    <!-- {{ encuestasFiltradasVisitaById }} -->
+                <div class="col-12 col-md-6" v-if="dateIDvisita">
+                    <h6 class="mt-2">Agenda del dia Visita medica y enfermeria</h6>
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>Hora Lab</th>
+                                <th>Id</th>
+                                <th>Hora Visita</th>
                                 <th>Grupo</th>
                                 <th>Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="(item, index) in encuestasFiltradasVisitaById" :key="item.id + index">
-                                <tr v-for="(muestra, i) in item.visitamedica" :key="muestra.idEncuesta + i">
-                                    <td>{{ muestra.horavisita }}</td>
-                                    <td>{{ muestra.grupo }}</td>
+                            <template v-for="(iten, index) in encuestasFiltradasVisitaById" :key="iten?.id + '-' + index">
+                                <tr v-for="(muestras, i) in (iten?.visitamedica || [])" :key="i">
+                                    <td>{{ i }}</td>
+                                    <td>{{ muestras?.horavisita || '-' }}</td>
+                                    <td>{{ muestras?.grupo || '-' }}</td>
                                     <td>
-                                        <button class="btn btn-danger btn-sm" @click="eliminarAgenda(muestra.idEncuesta)" v-if="
-                          userData &&
-                          userData.grupo &&
-                          muestra.grupo === this.userData.grupo
-                        ">
-                                            Eliminar
+                                        <button class="btn btn-danger btn-sm" @click="eliminarItemAgenda({ indice: i, encuestaID: iten.id ,lista: 'visitamedica'})" v-if="
+                              userData &&
+                              userData.grupo &&
+                              muestras?.grupo === userData.grupo
+                            "><i class="bi bi-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -138,7 +135,6 @@
             </div>
         </div>
     </div>
-
     <router-link to="/sop_home">Volver</router-link>
 </div>
 </template>
@@ -172,6 +168,7 @@ export default {
             "getAgendasTomaLabById",
             "getAgendasVisitaById",
             "eliminarAgenda",
+           
         ]),
 
         generarHorasValidasLab() {
@@ -197,7 +194,7 @@ export default {
             }
             return horas;
         },
-
+        /* --------------------------------------------------------------------------------------------------------- */
         guardarAgendamientoTomaLab() {
             if (this.dateIDAgenda === "" || this.horalab === "" || this.userData.grupo === "") {
                 alert("Error en los datos, loguearse nuevamente.");
@@ -217,7 +214,6 @@ export default {
             this.dateIDAgenda = "";
             this.horalab = "";
         },
-        /* ---------------------------------------------------------- */
 
         guardarAgendamientoVisitas() {
             if (
@@ -238,7 +234,7 @@ export default {
             console.log("Agendamiento visita guardado");
             this.clearformvisita();
         },
-
+        /* ---------------------------------------------------------------------------------------------------------- */
         clearformvisita() {
             this.dateIDvisita = "";
             this.horavisita = "";
@@ -254,14 +250,19 @@ export default {
             this.getAgendasVisitaById(id);
         },
 
-        eliminarItemAgenda(indice,encuestaID) {
+        eliminarItemAgenda(indice, encuestaID, lista) {
             if (indice === "") {
                 alert("Error al eliminar, intente nuevamente.");
 
                 return;
             }
-            this.eliminarAgenda(indice, encuestaID);
+            this.eliminarAgenda(indice, encuestaID, lista);
+            this.clearformVisita();
             this.clearformlab();
+        },
+        clearformVisita() {
+            this.dateIDvisita = "";
+            this.horavisita = "";
         },
     },
     computed: {
@@ -298,12 +299,14 @@ export default {
 
 <style>
 .tomademuestras {
-    background-color: rgb(133, 243, 210);
-    border-radius: 15px;
+    background-color: #A388D2;
+    border-radius: 5px;
+    color: white;
 }
 
 .visitas {
-    background-color: rgb(30, 201, 121);
-    border-radius: 15px;
+    background-color: #5F24BD;
+    border-radius: 5px;
+    color: white;
 }
 </style>
