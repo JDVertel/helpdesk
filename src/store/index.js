@@ -23,6 +23,7 @@ export default createStore({
         accessToken: null, // Para manejar el token de acceso
         cantEncuestas: 0,
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
+        InfoEncuestasById: {}, // Para manejar la información de encuestas por ID
         // Puedes agregar más estados según sea necesario
     },
 
@@ -611,6 +612,17 @@ export default createStore({
             }
         },
 
+        getAllEncuestasById: async ({ commit }, idEncuesta) => {
+            try {
+                const { data } = await firebase_api.get(`/Encuesta/${idEncuesta}.json`);
+                commit("setEncuesta", data);
+                return data;
+            } catch (error) {
+                console.error("Error en getAllEncuestasById:", error);
+                throw error;
+            }
+        },
+
         getAllComunaBarrios: async ({ commit }) => {
             try {
                 const { data } = await firebase_api.get("/comunasybarrios.json");
@@ -958,9 +970,13 @@ export default createStore({
         setEncuestasvisitaById(state, encuestas) {
             state.encuestasFiltradasVisitaById = encuestas;
         },
+        setEncuesta(state, encuesta) {
+            state.InfoEncuestasById = [encuesta];
+        },
     },
     getters: {
         getUserData: (state) => state.userData,
         getAllEpss: (state) => state.epss,
+        getInfoEncuestasById: (state) => state.InfoEncuestasById,
     },
 });
