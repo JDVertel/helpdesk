@@ -55,7 +55,7 @@
                         <tr v-for="(encuesta, index) in encuestas" :key="index">
                             <td>
                                 <small>
-                                    Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }} </small>
+                                    Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{ encuesta.eps }} </small>
                                 <hr>
                                 <small> Actividades:{{ encuesta.tipoActividad }}</small>
                                 <hr>
@@ -112,9 +112,7 @@
                                                 <i class="bi bi-calendar2-heart-fill"></i>
                                             </button> <small>Gestionar Cups</small>
                                         </div>
-                                       <!--  <div v-else>
-                                            <h6 class="ok"><i class="bi bi-check2-circle"></i> Caracterizacion </h6>
-                                        </div> -->
+                               
                                     </div>
                                 </div>
 
@@ -195,6 +193,7 @@ export default {
     data() {
         return {
             fechaActual: "",
+       
         };
     },
 
@@ -267,9 +266,9 @@ export default {
             idUsuario: this.userData.numDocumento,
         });
         //total de encuestas del usuario . para contador 
-        this.getAllRegistersByIduser({
+     /*    this.getAllRegistersByIduser({
             idUsuario: this.userData.numDocumento,
-        });
+        }); */
 
     },
 };

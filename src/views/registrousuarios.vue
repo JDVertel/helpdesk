@@ -69,9 +69,9 @@
                     <div class="col col-12 col-md-4 mb-3">
                         <label for="ips">Cargo</label>
                         <select id="rol" v-model="cargo" class="form-select" required>
-                            <option value="auxiliar de enfermeria">Auxiliar</option>
-                            <option value="enfermero">Enfermero</option>
-                            <option value="medico">Medico</option>
+                            <option value="Auxiliar de enfermeria">Auxiliar</option>
+                            <option value="Enfermero">Enfermero</option>
+                            <option value="Medico">Medico</option>
                             <!-- agrega más roles si quieres -->
                         </select>
                     </div>

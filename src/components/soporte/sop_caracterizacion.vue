@@ -756,7 +756,15 @@ export default {
                 this.nuevoMiembro.apellidos &&
                 this.nuevoMiembro.parentesco &&
                 this.nuevoMiembro.tipodoc &&
-                this.nuevoMiembro.numeroDocumento
+                this.nuevoMiembro.numeroDocumento &&
+                this.nuevoMiembro.fnacimiento &&
+                this.nuevoMiembro.genero && 
+                this.nuevoMiembro.eps &&
+                this.nuevoMiembro.regimen &&
+                this.nuevoMiembro.cursoVida &&
+                this.nuevoMiembro.ocupacion &&
+                this.nuevoMiembro.viveEnVivienda
+
             ) {
                 this.grupoFamiliar.push({
                     ...this.nuevoMiembro,
@@ -900,10 +908,7 @@ export default {
                     valor: this.seleccionadosAntecedentes,
                     nombre: "Antecedentes Personales"
                 },
-                {
-                    valor: this.grupoFamiliar.length > 0 ? this.grupoFamiliar : null,
-                    nombre: "Grupo Familiar"
-                },
+           
                 {
                     valor: this.seleccionadosRiesgos,
                     nombre: "Riesgos"

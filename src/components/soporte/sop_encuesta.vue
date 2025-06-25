@@ -274,7 +274,7 @@ export default {
         ],
 
         Deps: [{
-                nombre: "NuevaEps",
+                nombre: "NuevaEPS",
             },
             {
                 nombre: "Sanitas",
@@ -310,7 +310,6 @@ export default {
                 !this.telefono ||
                 !this.barrioVeredacomuna ||
                 this.ListtipoActividad.length === 0 ||
-                this.ListpoblacionRiesgo.length === 0 ||
                 !this.desplazamiento ||
                 !this.requiereRemision ||
                 !this.userData.numDocumento

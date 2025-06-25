@@ -32,6 +32,14 @@
         </div>
         <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
       </form>
+      enfermeralinarussoflorez@gmail.com
+      Linarusso*2025.
+      <hr>
+      juandavidvertelh@gmail.com
+      1234567890
+      <hr>
+      juandavidvertel@hotmail.com
+      1111111111
       <router-link to="/"> <i class="bi bi-house"></i></router-link>
 
       <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>

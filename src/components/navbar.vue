@@ -32,18 +32,18 @@
                                 <strong><i class="bi bi-people-fill"></i> Equipo</strong>
                             </li>
 
-                            <li class="nav-item" v-if="userData.cargo=='auxiliar de enfermeria'">
+                            <li class="nav-item" v-if="userData.cargo=='Auxiliar de enfermeria'">
                                 <router-link class="nav-link" to="/sop_home" @click="onNavLinkClick">
                                     <i class="bi bi-list-check"></i> Encuestas
                                 </router-link>
                             </li>
 
-                            <li class="nav-item"  v-if="userData.cargo=='medico'">
+                            <li class="nav-item"  v-if="userData.cargo=='Medico'">
                                 <router-link class="nav-link" to="/sop_profesional" @click="onNavLinkClick">
                                     <i class="bi bi-person-circle"></i> Medico
                                 </router-link>
                             </li>
-                            <li class="nav-item"  v-if="userData.cargo=='enfermero'">
+                            <li class="nav-item"  v-if="userData.cargo=='Enfermero'">
                                 <router-link class="nav-link" to="/sop_enfermero" @click="onNavLinkClick">
                                     <i class="bi bi-person-circle"></i> Enfermer@
                                 </router-link>

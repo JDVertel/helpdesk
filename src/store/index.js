@@ -161,7 +161,7 @@ export default createStore({
                 });
 
                 return response.data;
-             
+
                 // Retorna la respuesta del servidor
             } catch (error) {
                 console.error("Error al guardar caracterización:", error);
@@ -170,7 +170,7 @@ export default createStore({
         },
 
         guardarAgendaT: async ({ commit }, datos) => {
-            const agenda = {    
+            const agenda = {
                 idAgenda: datos.idAgenda,
                 idEncuesta: datos.idEncuesta,
                 tomademuestras: {
@@ -231,7 +231,7 @@ export default createStore({
             const agenda = {
                 idAgenda: data.idAgenda,
                 idEncuesta: data.idEncuesta,
-               
+
                 visitamedica: {
                     fechaAgenda: data.fechaAgenda,
                     horavisita: data.horavisita,
@@ -417,6 +417,21 @@ export default createStore({
             }
         },
 
+        getAllCups: async ({ commit }) => {
+            try {
+                const { data } = await firebase_api.get("/cups.json");
+                const cups = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+                commit("setCups", cups);
+                return cups;
+            } catch (error) {
+                console.error("Error en Action_getAllCups:", error);
+                throw error;
+            }
+        },
+
         getAllRegisters: async ({ commit }, idUsuario) => {
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
@@ -474,7 +489,7 @@ export default createStore({
                     (encuesta) =>
                         encuesta.status_visita === true &&
                         encuesta.idProfesionalAtiende == doc &&
-                        encuesta.fechaVisita === fecha // Verifica que el formato de fecha coincida
+                        encuesta.fechavisita === fecha // Verifica que el formato de fecha coincida
                 );
 
                 commit("setEncuestasToday", encuestasFiltradas);
@@ -530,7 +545,7 @@ export default createStore({
             }
         },
         getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran", idUsuario);
+            console.log("datos que entran en data", idUsuario);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).map(([key, value]) => ({
@@ -893,7 +908,7 @@ export default createStore({
             try {
                 const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
                     status_visita: true,
-                    fechaVisita: fecha,
+                    fechavisita: fecha,
                     idProfesionalAtiende: user,
                 });
                 return data;
@@ -973,10 +988,14 @@ export default createStore({
         setEncuesta(state, encuesta) {
             state.InfoEncuestasById = [encuesta];
         },
+        setCups(state, cups) {
+            state.cups = cups;
+        },
     },
     getters: {
         getUserData: (state) => state.userData,
         getAllEpss: (state) => state.epss,
         getInfoEncuestasById: (state) => state.InfoEncuestasById,
+
     },
 });
