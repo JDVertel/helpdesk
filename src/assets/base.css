@@ -168,15 +168,11 @@ input[type="password"]:focus {
   cursor: pointer;
 }
 
-.buttonGoogle {
-  background-color: #db4437;
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
+.textRed{
+  color: red;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
-
 footer {
   position: fixed;
   /* Fija el footer en la parte inferior de la ventana */
@@ -265,4 +261,7 @@ footer {
 .ok{
   color: rgb(6, 114, 255);
   text-shadow: 1px 0 0 1px rgba(2, 2, 2, 0.5);
+}
+.table{
+  table-layout: fixed;
 }

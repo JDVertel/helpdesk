@@ -21,25 +21,7 @@ a,
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
-/* 
-.cardpqrs{
-  padding: 5px !important;
 
-  height: 220px;
-  border-radius: 0px;
-} */
-.peticiones{
-  background-color: rgb(164, 164, 189);
-}
-.quejas{
-  background-color: rgb(44, 216, 113);
-}
-.reclamos{
-  background-color: rgb(181, 62, 149);
-}
-.sugerencias{
-  background-color: rgb(229, 213, 38);
-}
 
 
 .contenedor-cards {

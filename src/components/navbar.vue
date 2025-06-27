@@ -19,7 +19,7 @@
                 <div class="offcanvas-header">
                     <div class="row">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
-                        <h6 v-if="userData" class="text-capitalize">{{ userData.rol || "" }}</h6>
+                        <h6 v-if="userData" class="textRed">{{ userData.cargo || "" }}</h6>
                     </div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

@@ -102,7 +102,7 @@
                             <div class="col-10">
                                 <select id="tipoActividad" v-model="tipoActividad" class="form-select">
                                     <option value="">Seleccione</option>
-                                    <option :value="option.nombre" v-for="(option, index) in tipoActividadExtramural" :key="index">
+                                    <option :value="option" v-for="(option, index) in tipoActividadExtramural" :key="index">
                                         {{ option.nombre }}
                                     </option>
                                 </select>
@@ -118,7 +118,7 @@
                                     <button class="btn btn-danger btn-sm" @click="removeActividad(index)">
                                         <i class="bi bi-trash"></i>
                                     </button>
-                                    {{ list }}
+                                    {{ list.nombre }}
                                 </li>
                             </ul>
                         </div>
@@ -207,47 +207,59 @@ export default {
         requiereRemision: "",
 
         tipoActividadExtramural: [{
-            nombre: "Consulta PYMS",
-                prof:"M",
+                nombre: "Consulta PYMS",
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                key: "Proc1"
             },
             {
                 nombre: "Consulta Morbilidad",
-                prof:"M",
+                Profesional: ["Médico"],
+                key: "Proc2"
             },
             {
                 nombre: "VPS",
-                prof:"M",
+                Profesional: [ "Enfermero", "Médico"],
+                key: "Proc3"
             },
             {
                 nombre: "Toma lab  PYMS",
-                prof:"A",
+                Profesional: ["Enfermero","Auxiliar de enfermeria"],
+                key: "Proc4"
             },
             {
                 nombre: "Toma lab Morbilidad",
-                prof:"A",
+                Profesional: ["Enfermero","Auxiliar de enfermeria"],
+                key: "Proc5"
             },
             {
                 nombre: "Vacunacion",
-                prof:"A",
+                Profesional: ["Enfermero", "Auxiliar de enfermeria"],
+                key: "Proc6"
             },
             {
                 nombre: "Realizacion de tamizajes",
-                prof:"E",
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                key: "Proc7"
             },
             {
                 nombre: "Realizacion Test",
-                prof:"E",
+                Profesional: ["Enfermero", "Médico"],
+                key: "Proc8"
             },
             {
                 nombre: "IEC",
-                prof:"E",
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                key: "Proc9"
             },
             {
                 nombre: "Remision IPS",
-                prof:"M",
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                key: "Proc10"
             },
             {
                 nombre: "Otro",
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                key: "Proc11"
             },
         ],
 
@@ -315,14 +327,14 @@ export default {
                 !this.userData.numDocumento
 
             ) {
-                alert("Por favor, complete todos los campos obligatorios.");
+                alert("Por favor, complete todos los campos obligatorios o logeate nuevamente.");
                 return;
             }
 
             const registro = {
                 fechavisita: "",
                 idMedicoAtiende: "",
-                idEnfermeroAtiende:"",
+                idEnfermeroAtiende: "",
                 status_encuesta: true,
                 status_tomamuestras: false,
                 status_caracterizacion: false,
@@ -365,22 +377,31 @@ export default {
 
         ...mapActions(["createNewRegister", "getAllComunaBarrios"]),
         addRiesgo() {
-            if (this.poblacionRiesgo !== "") {
-                this.ListpoblacionRiesgo.push(this.poblacionRiesgo);
+            if (this.poblacionRiesgo !== "" && this.poblacionRiesgo !== null && this.poblacionRiesgo !== undefined) {
+                // Verifica si el elemento ya existe en el array
+                if (!this.ListpoblacionRiesgo.includes(this.poblacionRiesgo)) {
+                    this.ListpoblacionRiesgo.push(this.poblacionRiesgo);
+                } else {
+                    alert("Este elemento ya fue agregado.");
+                }
                 this.poblacionRiesgo = "";
             } else {
                 alert("Seleccione una opción válida.");
             }
-            this.poblacionRiesgo = "";
         },
+
         addActividad() {
-            if (this.tipoActividad !== "") {
-                this.ListtipoActividad.push(this.tipoActividad);
+            if (this.tipoActividad !== "" && this.tipoActividad !== null && this.tipoActividad !== undefined) {
+                // Verifica si el elemento ya existe en el array
+                if (!this.ListtipoActividad.includes(this.tipoActividad)) {
+                    this.ListtipoActividad.push(this.tipoActividad);
+                } else {
+                    alert("Este elemento ya fue agregado.");
+                }
                 this.tipoActividad = "";
             } else {
                 alert("Seleccione una opción válida.");
             }
-            this.tipoActividad;
         },
 
         removeActividad(index) {

@@ -31,8 +31,11 @@ export default createStore({
         /* ----------------------------------------AUTH------------------------------------- */
 
         /* ---------------------------------------POST------------------------------------- */
+ 
+
         createNewRegister: async ({ commit }, entradasE) => {
             try {
+                // ... (desestructuración de entradasE permanece igual)
                 const {
                     bd,
                     idMedicoAtiende,
@@ -66,8 +69,6 @@ export default createStore({
                 } = entradasE;
 
                 const DataToSaveE = {
-                    cita_tomamuestras: false,
-                    cita_visitamedica: false,
                     idMedicoAtiende,
                     idEnfermeroAtiende,
                     fechavisita,
@@ -93,26 +94,51 @@ export default createStore({
                     telefono,
                     barrioVeredacomuna,
                     desplazamiento,
-                    tipoActividad,
                     poblacionRiesgo,
                     requiereRemision,
                 };
+                const Actividades = {
+                    tipoActividad,
+                }
 
-                const Ruta = `/${bd}.json`;
+                // 1. Guardar registro principal (POST genera un ID automático en Firebase)
+                const { data } = await firebase_api.post(`/${bd}.json`, DataToSaveE);
+                const mainId = data.name; // Firebase retorna el ID generado en 'name'
 
-                // Llamada al servicio (asumiendo que firebase_api está importado y configurado)
-                const { data } = await firebase_api.post(Ruta, DataToSaveE);
+                // 2. Guardar actividades con IDs capturados
+                const actividadesIds = {};
 
-                // Opcional: hacer commit para actualizar el estado con la respuesta
-                // commit('mutationName', data);
+                for (const actividad of tipoActividad) {
+                    // POST para crear el registro (Firebase genera el id)
+                    const { data: actividadData } = await firebase_api.post(`/${bd}/${mainId}/tipoActividad.json`, {
+                        ...actividad
+                    });
 
-                return data; // Retornar la respuesta si se necesita
+                    const idGenerado = actividadData.name;
+
+                    // PATCH para actualizar el registro con el id generado
+                    await firebase_api.patch(`/${bd}/${mainId}/tipoActividad/${idGenerado}.json`, {
+                        id: idGenerado
+                    });
+
+                    // Guarda el ID generado para la actividad
+                    actividadesIds[idGenerado] = actividad.key;
+                }
+                
+
+                // 3. Retorna IDs importantes para futuras operaciones
+                return {
+                    mainId: mainId,
+                    actividadesIds: actividadesIds
+                };
+
             } catch (error) {
                 console.error("Error en Action_createDataEmpresa:", error);
-                // Opcional: manejar error, por ejemplo con commit a una mutación de error
-                throw error; // Re-lanzar para que el componente pueda manejarlo
+                throw error;
             }
         },
+
+
 
         guardarCaracterizacion: async ({ commit }, entradasC) => {
             const caracterizacion = {
@@ -376,6 +402,24 @@ export default createStore({
                 throw error; // Re-lanzar para que el componente pueda manejarlo
             }
         },
+
+        adicionarCups: async ({ commit }, entradasC) => {
+            try {
+                const { key, cups, idEncuesta, id, cargo, nombre } = entradasC;
+                const datacups = {cups, cargo, nombre};
+
+                console.log("Datos recibidos en adicionarCups:", entradasC);
+                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}/${key}.json`;
+
+                const { data } = await firebase_api.post(Ruta, datacups);
+                return data;
+            } catch (error) {
+                console.error("Error en Action_adicionarCups:", error);
+                throw error;
+            }
+        },
+
+
 
         /* ---------------------------------------GET------------------------------------- */
         getUser: async ({ commit }, id) => {

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h1 class="display-6 center">Profesional (Medico)</h1>
+    <h1 class="display-6 center">{{ userData.cargo }} {{userData.grupo}}</h1>
 
     <!--    {{ fechaActual }}
       <hr>
@@ -21,7 +21,7 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                Pendientes
+                Pacientes agendados
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -37,8 +37,16 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-            <h5>Encuestas Pendientes x visita</h5>
+            <h5>Gestion de Visitas</h5>
             <br />
+            <div>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Seleccione fecha de Visita</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -56,10 +64,14 @@
                             <td>Paciente:{{ encuesta.nombre1 }} {{ encuesta.apellido1 }}/ {{ encuesta.tipodoc }}{{ encuesta.numdoc }}
                                 <hr>
                                 Actividades:{{ encuesta.tipoActividad }}
-                                <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
+                                <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}
+                                <hr>
 
+                                {{ encuesta.Agenda_Visitamedica }}
+
+                                <hr>
+                            </td>
                             <td>
-
                                 <div class="col-4"> <button type="button" class="btn btn-info btn-sm" @click="cerrarE(encuesta.id)">
                                         <i class="bi bi-check-all"></i>
                                     </button></div>
@@ -82,7 +94,6 @@
                             <th scope="col">
                                 Opciones
                             </th>
-
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
@@ -90,15 +101,11 @@
                             <td>Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} / {{ encuesta.tipodoc }}{{ encuesta.numdoc }}
                                 <hr> Actividades:{{ encuesta.tipoActividad }}
                                 <hr> P Riesgo: {{ encuesta.poblacionRiesgo }}</td>
-
                             <td>
-
                                 <div class="col-4"> <button type="button" class="btn btn-danger btn-sm" @click="VerEncuesta(encuesta.id)">
                                         Ver
                                     </button></div>
-
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
@@ -145,22 +152,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["removeRegEnc", "getAllRegistersByFechaStatusProf", "getAllRegistersByIduserProf", "getAllRegistersByFechaProf", "cerrarEncuesta"]),
-
-        removeRegEncuesta(id) {
-            this.removeRegEnc(id);
-            alert("Registro eliminado exitosamente.");
-            this.getAllRegistersByFecha({
-                idUsuario: this.userData.numDocumento,
-                fecha: this.fechaActual
-            });
-            this.getAllRegistersByFechaStatus({
-                idUsuario: this.userData.numDocumento
-            });
-            this.getAllRegistersByIduser({
-                idUsuario: this.userData.numDocumento
-            });
-        },
+        ...mapActions(["getAllRegistersByFechaStatusProf", "getAllRegistersByIduserProf", "getAllRegistersByFechaProf", "cerrarEncuesta"]),
 
         cerrarE(idEncuesta) {
             this.cerrarEncuesta({
@@ -183,20 +175,6 @@ export default {
             });
             alert("Encuesta cerrada exitosamente.");
         },
-        verEncuesta() {
-            console.log("ver encuesta");
-        },
-        Agendar() {
-            this.$router.push("/sop_agendamiento");
-        },
-        Caracterizar(id) {
-            this.$router.push({
-                name: "sop_caracterizacion",
-                params: {
-                    idEncuesta: id
-                }
-            });
-        },
 
     },
 
@@ -218,7 +196,10 @@ export default {
             doc: this.userData.numDocumento,
             fecha: this.fechaActual
         });
-        //encuestas pendientes       
+
+        this.agendasVisitasMedicas(this.userData.grupo);
+
+        //encuestas pendientes
         this.getAllRegistersByFechaStatusProf({
             grupo: this.userData.grupo
         });
