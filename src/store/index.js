@@ -1,6 +1,6 @@
 import firebase_api from "@/api/ApiFirebase.js";
 import { createStore } from "vuex";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collectionGroup } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore();
 const auth = getAuth();
@@ -23,7 +23,8 @@ export default createStore({
         accessToken: null, // Para manejar el token de acceso
         cantEncuestas: 0,
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
-        InfoEncuestasById: {}, // Para manejar la información de encuestas por ID
+        InfoEncuestasById: {},
+        cupsbyActividad: {}, // Para manejar la información de CUPS por actividad   
         // Puedes agregar más estados según sea necesario
     },
 
@@ -31,7 +32,7 @@ export default createStore({
         /* ----------------------------------------AUTH------------------------------------- */
 
         /* ---------------------------------------POST------------------------------------- */
- 
+
 
         createNewRegister: async ({ commit }, entradasE) => {
             try {
@@ -124,7 +125,7 @@ export default createStore({
                     // Guarda el ID generado para la actividad
                     actividadesIds[idGenerado] = actividad.key;
                 }
-                
+
 
                 // 3. Retorna IDs importantes para futuras operaciones
                 return {
@@ -406,10 +407,10 @@ export default createStore({
         adicionarCups: async ({ commit }, entradasC) => {
             try {
                 const { key, cups, idEncuesta, id, cargo, nombre } = entradasC;
-                const datacups = {cups, cargo, nombre};
+                const datacups = { cups, cargo, nombre };
 
                 console.log("Datos recibidos en adicionarCups:", entradasC);
-                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}/${key}.json`;
+                const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
 
                 const { data } = await firebase_api.post(Ruta, datacups);
                 return data;
@@ -422,6 +423,26 @@ export default createStore({
 
 
         /* ---------------------------------------GET------------------------------------- */
+  
+
+        selectCupsByActividad: async ({ commit }, { enc, act }) => {
+            console.log("Consultando CUPS por actividad con ID:", act, enc);
+
+            try {
+                let ruta = `/cupsActividades/${enc}/tipoActividad/${act}.json`;
+
+                const { data } = await firebase_api.get(ruta);
+               commit("setCupsbyActividad", data); // Guardar en el estado
+                return data; // La acción devuelve los datos directamente
+            } catch (error) {
+                console.error("Error en Action_selectCupsByActividad:", error);
+                throw error;
+            }
+        },
+        
+
+
+  /* -------------------------------------------------------------------------- */
         getUser: async ({ commit }, id) => {
             try {
                 const { data } = await firebase_api.get(`/usuarios/${id}.json`);
@@ -1035,6 +1056,10 @@ export default createStore({
         setCups(state, cups) {
             state.cups = cups;
         },
+        setCupsbyActividad(state, cups) {
+            state.cupsbyActividad = cups;
+        },
+        
     },
     getters: {
         getUserData: (state) => state.userData,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="display-6 center">{{ userData.cargo}}</h1>
+    <h1 class="display-6 center">{{ userData.cargo }}</h1>
     <div class="row">
       <div class="col-6 center">
         <h6 class="display-6">{{ cantEncuestas }}</h6>
@@ -85,7 +85,8 @@
                   </small>
                   <hr />
                   <small>
-                    Actividades: {{this.nombresActividades(encuesta.tipoActividad) }}</small
+                    Actividades:
+                    {{ this.nombresActividades(encuesta.tipoActividad) }}</small
                   >
                   <hr />
                   <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
@@ -105,7 +106,6 @@
                         >
                           <i class="bi bi-droplet-half"> <small> Toma muestras</small></i>
                         </button>
-                       
                       </div>
                       <div
                         v-else-if="
@@ -119,7 +119,6 @@
                         >
                           <i class="bi bi-droplet-half"> <small> Toma muestras</small></i>
                         </button>
-                       
                       </div>
 
                       <div v-else>
@@ -138,7 +137,6 @@
                         >
                           <i class="bi bi-houses"><small> Visita medica</small></i>
                         </button>
-                        
                       </div>
                       <div
                         v-else-if="
@@ -152,7 +150,6 @@
                         >
                           <i class="bi bi-houses"><small> Visita medica</small></i>
                         </button>
-                  
                       </div>
                       <div v-else>
                         <h6 class="ok">
@@ -166,9 +163,10 @@
                           class="btn btn-warning btn-sm"
                           @click="Caracterizar(encuesta.id)"
                         >
-                          <i class="bi bi-calendar2-check"> <small> Caracterizacion</small></i>
+                          <i class="bi bi-calendar2-check">
+                            <small> Caracterizacion</small></i
+                          >
                         </button>
-                       
                       </div>
                       <div v-else>
                         <h6 class="ok">
@@ -182,9 +180,10 @@
                           class="btn btn-danger btn-sm"
                           @click="cupsGestion(encuesta.id)"
                         >
-                          <i class="bi bi-calendar2-heart-fill"> <small> Gestionar Cups</small></i>
+                          <i class="bi bi-calendar2-heart-fill">
+                            <small> Gestionar Cups</small></i
+                          >
                         </button>
-                       
                       </div>
                     </div>
                   </div>
@@ -333,10 +332,8 @@ export default {
 
     nombresActividades(act) {
       // Devuelve un array solo con los nombres
-      return Object.values(act).map(a => a.nombre);
-  }
-
-
+      return Object.values(act).map((a) => a.nombre);
+    },
   },
 
   computed: {

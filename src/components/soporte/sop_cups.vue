@@ -27,48 +27,11 @@
                     <td>{{ actividad.nombre }}</td>
 
                     <td>
-                        <template v-if="actividad.CUPS && Object.keys(actividad.CUPS).length > 0">
-                            <!-- Verifica si hay al menos un array de CUPS no vacío -->
-                            <template v-if="
-                    Object.values(actividad.CUPS).some((list) => list && list.length > 0)
-                  ">
-                                <template v-for="(cupList, cupKey) in actividad.CUPS" :key="cupKey">
-                                    <template v-if="cupList && cupList.length > 0">
-                                        <span v-for="(cup, index) in cupList" :key="index">
-                                            {{ cup.DescripcionCUP
-                        }}<span v-if="index < cupList.length - 1">, </span>
-                                        </span>
-                                    </template>
-                                </template>
-                            </template>
-                            <template v-if="actividad.CUPS && Object.keys(actividad.CUPS).length > 0">
-                                <template v-for="(cupObj, cupKey) in actividad.CUPS" :key="cupKey">
-                                    <span v-for="(cup, index) in cupObj.cups" :key="index">
-                                        {{ cup.DescripcionCUP
-                      }}<span v-if="
-                          !(
-                            cupKey ===
-                              Object.keys(actividad.CUPS)[
-                                Object.keys(actividad.CUPS).length - 1
-                              ] && index === cupObj.cups.length - 1
-                          )
-                        ">
-                                            <hr />
-                                        </span>
-                                    </span>
-                                </template>
-                            </template>
-                            <template v-else><p class="textRed"><i class="bi bi-x-octagon"></i> Sin CUPS asignados</p>  </template>
-                        </template>
-                        <template v-else> <p class="textRed"><i class="bi bi-x-octagon"></i>  Sin CUPS asignados</p> </template>
+
                     </td>
 
                     <td>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" v-if="
-                    Array.isArray(actividad.Profesional) &&
-                    actividad.Profesional.includes(userData.cargo) &&
-                    !(actividad.CUPS && Object.keys(actividad.CUPS).length > 0)
-                  ">
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)">
                             + Cups
                         </button>
                     </td>
@@ -76,6 +39,10 @@
             </tbody>
         </table>
     </div>
+
+    <p>CUPS Asignados:</p>
+    {{ cupsAsignados("-OTm6PWV_IQHwZBsXaQw", "-OTm6PcS4jsaBobTxo2w") }}
+    {{ cupsbyActividad }}
     <hr />
 </div>
 
@@ -157,10 +124,11 @@ export default {
             cupsArray: [], // Esta propiedad se usará para almacenar los cups seleccionados
             keyActividad: "",
             idItem: "",
+
         };
     },
     computed: {
-        ...mapState(["InfoEncuestasById", "userData", "cups", "encuestas"]),
+        ...mapState(["InfoEncuestasById", "userData", "cups", "encuestas", "cupsbyActividad"]),
 
         dataencuesta() {
             return this.encuestas.length > 0 ? this.encuestas[0] : null;
@@ -179,9 +147,10 @@ export default {
             // Devuelve un array solo con los nombres
             return Object.values(act).map((a) => a.nombre);
         },
+
     },
     methods: {
-        ...mapActions(["getAllEncuestasById", "getAllCups", "adicionarCups"]),
+        ...mapActions(["getAllEncuestasById", "getAllCups", "adicionarCups", "selectCupsByActividad"]),
         clear() {
             this.idItem = "";
             this.keyActividad = "";
@@ -229,18 +198,46 @@ export default {
             this.clear();
             this.recargar();
         },
+
+        async cupsAsignados(idEncu, idAct) {
+            try {
+                const response = await this.selectCupsByActividad({
+                    enc: idEncu,
+                    act: idAct
+                });
+                if (response && response.length > 0) {
+                    return response.map(cup => cup.DescripcionCUP).join(', ');
+                } else {
+                    return 'No hay CUPS asignados';
+                }
+            } catch (error) {
+                console.error("Error al obtener los CUPS asignados:", error);
+                return 'Error al cargar CUPS';
+            }
+        },
+
         recargar() {
             this.idEncuesta = this.$route.params.idEncuesta;
             this.getAllEncuestasById(this.idEncuesta);
             this.getAllCups();
-        }
+        },
     },
-    mounted() {
+
+    async created() {
         this.idEncuesta = this.$route.params.idEncuesta;
-        this.getAllEncuestasById(this.idEncuesta);
-        this.getAllCups();
+
     },
-};
+    async mounted() {
+        try {
+            // Usar el id asignado en created
+            await this.getAllEncuestasById(this.idEncuesta);
+            await this.getAllCups();
+        } catch (error) {
+            console.error('Error cargando datos en mounted:', error);
+        }
+
+    },
+}
 </script>
 
 <style>
