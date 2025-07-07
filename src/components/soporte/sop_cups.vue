@@ -1,51 +1,51 @@
 <template>
-<div>
-    <h5>Página de gestión de CUPS</h5>
-    <button @click="cupsAsignados('-OTm6PcS4jsaBobTxo2w')">prueba de funcion</button>
+<!-- {{ InfoEncuestasById }} -->
+<div v-for="item in InfoEncuestasById" :key="item.id" class="mb-4">
+    <p>
+        Paciente: {{ item.nombre1 }} {{ item.nombre2 }} {{ item.apellido1 }}
+        {{ item.apellido2 }} / Eps:{{ item.eps }}
+    </p>
     <hr />
-    <!--  {{ cupsbyActividad }} -->
+    <h6>Items del paciente</h6>
+    <hr />
+    <table class="table table-striped table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Profesional Autorizado</th>
+                <th>Items</th>
+                <th>Cups Asignados</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(actividad, index) in item.tipoActividad || []" :key="index">
+                <td>{{ actividad.Profesional }}</td>
+                <td>{{ actividad.nombre }}</td>
+                <td>
+                    <span>
+                        <span v-for="(cup, idx) in actividad.cups" :key="idx">
 
-    <hr />
-   
+                            <span>
+                                <span v-for="item in cup" :key="item.id">
 
-    <hr />
-    <!--  actividades procesadas : {{ actividadesProcesadas }} -->
-
-    <hr />
-    <div v-for="item in datosfinal" :key="item.id" class="mb-4">
-        <p>
-            Paciente: {{ item.nombre1 }} {{ item.nombre2 }} {{ item.apellido1 }}
-            {{ item.apellido2 }} / Eps:{{ item.eps }}
-        </p>
-        <hr />
-        <h6>Items del paciente</h6>
-        <hr />
-        <table class="table table-striped table-sm table-bordered">
-            <thead>
-                <tr>
-                    <th>Profesional Autorizado</th>
-                    <th>Items</th>
-                    <th>Cups Asignados</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(actividad, index) in Object.values(item.tipoActividad) || []" :key="index">
-                    <td>{{ actividad.Profesional.join(", ") }}</td>
-                    <td>{{ actividad.nombre }}</td>
-                    <td></td>
-
-                    <td>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)">
-                            + Cups
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <!-- todo ok  -->
-    <hr />
+                                    <span v-for="it in item.cups" :key="it.id">
+                                        <button @click="removeCup(it.id)">-</button>  {{ it.DescripcionCUP }}
+                                        <hr>
+                                    </span>
+                                </span>
+                            
+                            </span>
+                        </span>
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)">
+                        + Cups
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- Modal -->
@@ -188,7 +188,7 @@ export default {
         //gestiona los parametros de la ruta de almacenamiento
         integrarCup(id) {
             this.clear();
-            this.keyActividad = "CUPS";
+            this.keyActividad = this.userData.cargo;
             this.idItem = id;
         },
         //confirma la seleccion de cups arma paquete para entregar al storage
@@ -315,8 +315,8 @@ export default {
         await this.getAllEncuestasById(this.idEncuesta);
         await this.getAllCups();
         //1
-        this.datoslistos = await this.Nuevoarray();
-        this.datosfinal = await this.procesarData(this.datoslistos);
+        /*  this.datoslistos = await this.Nuevoarray();
+            this.datosfinal = await this.procesarData(this.datoslistos); */
     },
 
     /* ----------------------------------------------------------------------------------------------- */

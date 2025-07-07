@@ -27,23 +27,23 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <template v-if="userData && userData.rol === 'enc'">
+                        <template v-if="userData && userData.rol === 'aux' || userData.rol === 'med' || userData.rol === 'enf'">
                             <li class="nav-item active" aria-current="page">
                                 <strong><i class="bi bi-people-fill"></i> Equipo</strong>
                             </li>
 
-                            <li class="nav-item" v-if="userData.cargo=='Auxiliar de enfermeria'">
+                            <li class="nav-item">
                                 <router-link class="nav-link" to="/sop_home" @click="onNavLinkClick">
                                     <i class="bi bi-list-check"></i> Encuestas
                                 </router-link>
                             </li>
 
-                            <li class="nav-item"  v-if="userData.cargo=='Medico'">
+                            <li class="nav-item">
                                 <router-link class="nav-link" to="/sop_profesional" @click="onNavLinkClick">
                                     <i class="bi bi-person-circle"></i> Medico
                                 </router-link>
                             </li>
-                            <li class="nav-item"  v-if="userData.cargo=='Enfermero'">
+                            <li class="nav-item">
                                 <router-link class="nav-link" to="/sop_enfermero" @click="onNavLinkClick">
                                     <i class="bi bi-person-circle"></i> Enfermer@
                                 </router-link>

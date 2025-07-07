@@ -410,8 +410,9 @@ export default createStore({
                 const datacups = { cups, cargo, nombre };
 
                 console.log("Datos recibidos en adicionarCups:", entradasC);
-              //  const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
-                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}.json`;
+                //  const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
+                //ruta para aux
+                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}/cups/${key}.json`;
 
                 const { data } = await firebase_api.post(Ruta, datacups);
                 return data;
@@ -420,12 +421,12 @@ export default createStore({
                 throw error;
             }
         },
-        
+
 
 
 
         /* ---------------------------------------GET------------------------------------- */
-  
+
 
         selectCupsByActividad: async ({ commit }, { enc, act }) => {
             console.log("ejecutando procesos, esto entra ", enc, act);
@@ -435,17 +436,17 @@ export default createStore({
 
                 const { data } = await firebase_api.get(ruta);
                 commit("setCupsbyActividad", data); // Guardar en el estado
-              /*   console.log(data); */
+                /*   console.log(data); */
                 return data; // La acción devuelve los datos directamente
             } catch (error) {
                 console.error("Error en Action_selectCupsByActividad:", error);
                 throw error;
             }
         },
-        
 
 
-  /* -------------------------------------------------------------------------- */
+
+        /* -------------------------------------------------------------------------- */
         getUser: async ({ commit }, id) => {
             try {
                 const { data } = await firebase_api.get(`/usuarios/${id}.json`);
@@ -1054,7 +1055,11 @@ export default createStore({
             state.encuestasFiltradasVisitaById = encuestas;
         },
         setEncuesta(state, encuesta) {
-            state.InfoEncuestasById = [encuesta];
+            if (encuesta && typeof encuesta === 'object' && Object.keys(encuesta).length > 0) {
+                state.InfoEncuestasById = [encuesta];
+            } else {
+                state.InfoEncuestasById = [];
+            }
         },
         setCups(state, cups) {
             state.cups = cups;
@@ -1062,7 +1067,7 @@ export default createStore({
         setCupsbyActividad(state, cups) {
             state.cupsbyActividad = cups;
         },
-        
+
     },
     getters: {
         getUserData: (state) => state.userData,

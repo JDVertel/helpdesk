@@ -197,7 +197,7 @@ export default {
             fecha: this.fechaActual
         });
 
-        this.agendasVisitasMedicas(this.userData.grupo);
+      //  this.agendasVisitasMedicas(this.userData.grupo);
 
         //encuestas pendientes
         this.getAllRegistersByFechaStatusProf({

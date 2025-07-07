@@ -14,7 +14,7 @@
             class="form-control"
             id="email"
             placeholder="Ingresa tu email"
-              autocomplete="username"
+            autocomplete="username"
             required
           />
         </div>
@@ -26,20 +26,37 @@
             class="form-control"
             id="password"
             placeholder="Ingresa tu contraseña"
-             autocomplete="current-password"
+            autocomplete="current-password"
             required
           />
         </div>
         <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
       </form>
-      enfermeralinarussoflorez@gmail.com
-      Linarusso*2025.
-      <hr>
-      juandavidvertelh@gmail.com
-      1234567890
-      <hr>
-      juandavidvertel@hotmail.com
-      1111111111
+      <div class="row">
+        <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
+        <div class="col-4">Linarusso*2025.</div>
+        <div class="col-3">Admin</div>
+      </div>
+      <div class="row">
+        <div class="col-5">juandavidvertelh@gmail.com</div>
+        <div class="col-4">1234567890</div>
+        <div class="col-3">med</div>
+      </div>
+      <div class="row">
+        <div class="col-5">correolinarussoflorez@hotmail.es</div>
+        <div class="col-4">Linarusso*2025.</div>
+        <div class="col-3">enfermera</div>
+      </div>
+      <div class="row">
+        <div class="col-5">juandavidvertel@hotmail.com</div>
+        <div class="col-4">1111111111</div>
+        <div class="col-3">aux</div>
+      </div>
+
+      <hr />
+
+      <hr />
+
       <router-link to="/"> <i class="bi bi-house"></i></router-link>
 
       <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
