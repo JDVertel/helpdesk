@@ -23,7 +23,7 @@ export default createStore({
         accessToken: null, // Para manejar el token de acceso
         cantEncuestas: 0,
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
-        InfoEncuestasById: {},
+        InfoEncuestasById: [],
         cupsbyActividad: {}, // Para manejar la información de CUPS por actividad   
         // Puedes agregar más estados según sea necesario
     },
@@ -410,7 +410,8 @@ export default createStore({
                 const datacups = { cups, cargo, nombre };
 
                 console.log("Datos recibidos en adicionarCups:", entradasC);
-                const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
+              //  const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
+                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}.json`;
 
                 const { data } = await firebase_api.post(Ruta, datacups);
                 return data;
@@ -419,6 +420,7 @@ export default createStore({
                 throw error;
             }
         },
+        
 
 
 
@@ -426,13 +428,14 @@ export default createStore({
   
 
         selectCupsByActividad: async ({ commit }, { enc, act }) => {
-            console.log("Consultando CUPS por actividad con ID:", act, enc);
+            console.log("ejecutando procesos, esto entra ", enc, act);
 
             try {
                 let ruta = `/cupsActividades/${enc}/tipoActividad/${act}.json`;
 
                 const { data } = await firebase_api.get(ruta);
-               commit("setCupsbyActividad", data); // Guardar en el estado
+                commit("setCupsbyActividad", data); // Guardar en el estado
+              /*   console.log(data); */
                 return data; // La acción devuelve los datos directamente
             } catch (error) {
                 console.error("Error en Action_selectCupsByActividad:", error);
