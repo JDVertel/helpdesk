@@ -1,6 +1,6 @@
 import firebase_api from "@/api/ApiFirebase.js";
 import { createStore } from "vuex";
-import { getFirestore, doc, getDoc, collectionGroup } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore();
 const auth = getAuth();
@@ -43,7 +43,7 @@ export default createStore({
                     idEnfermeroAtiende,
                     fechavisita,
                     status_gest_aux,
-                    status_gest_medic,
+                    status_gest_medica,
                     status_gest_enfermera,
                     status_tomamuestras,
                     status_caracterizacion,
@@ -76,7 +76,7 @@ export default createStore({
                     idEnfermeroAtiende,
                     fechavisita,
                     status_gest_aux,
-                    status_gest_medic,
+                    status_gest_medica,
                     status_gest_enfermera,
                     status_tomamuestras,
                     status_caracterizacion,
@@ -577,7 +577,7 @@ export default createStore({
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).filter(([_, value]) =>
-                    value.idEncuestador === idUsuario && value.status_gest_aux ===false
+                    value.idEncuestador === idUsuario && value.status_gest_aux === false
                 ).map(([key, value]) => ({
                     id: key,
                     ...value,
@@ -598,28 +598,85 @@ export default createStore({
             }
         },
         //trae los datos par ala tabla
-   /*      getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
-            console.log("parametro de consulta  abiertas", grupo);
-            try {
-                const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    ...value,
-                }));
+        /*      getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
+                 console.log("parametro de consulta  abiertas", grupo);
+                 try {
+                     const { data } = await firebase_api.get("/Encuesta.json");
+                     const encuestas = Object.entries(data).map(([key, value]) => ({
+                         id: key,
+                         ...value,
+                     }));
+     
+                     // Filtrar por idEncuestador y visita = false
+                     const encuestasFiltradas = encuestas.filter(
+                         (encuesta) =>
+                             encuesta.grupo === grupo && encuesta.status_visita === false
+                     );
+     
+                     commit("setEncuestas", encuestasFiltradas);
+                     return encuestasFiltradas;
+                 } catch (error) {
+                     console.error("Error en getAllRegistersByFechaStatus:", error);
+                     throw error;
+                 }
+             }, */
 
-                // Filtrar por idEncuestador y visita = false
-                const encuestasFiltradas = encuestas.filter(
-                    (encuesta) =>
-                        encuesta.grupo === grupo && encuesta.status_visita === false
+
+
+        getAllMedicosbyGrupo: async ({ commit }, { grupo }) => {
+            console.log("datos que entran en data2", grupo);
+            try {
+                // Crea la consulta para filtrar por grupo e incluir solo médicos
+                const q = query(
+                    collection(db, "users"),
+                    where("grupo", "==", grupo),
+                    where("cargo", "==", "Medico")
                 );
 
-                commit("setEncuestas", encuestasFiltradas);
+                // Ejecuta la consulta
+                const querySnapshot = await getDocs(q);
+
+                // Mapea los documentos encontrados
+                const encuestasFiltradas = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+             
+                commit("setMedicosByGrupo", encuestasFiltradas);
                 return encuestasFiltradas;
             } catch (error) {
-                console.error("Error en getAllRegistersByFechaStatus:", error);
+                console.error("Error en getAllMedicosbyGrupo:", error);
                 throw error;
             }
-        }, */
+        },
+
+    getAllEnfermerosbyGrupo: async ({ commit }, { grupo }) => {
+            console.log("datos que entran en data3", grupo);
+            try {
+                // Crea la consulta para filtrar por grupo e incluir solo médicos
+                const q = query(
+                    collection(db, "users"),
+                    where("grupo", "==", grupo),
+                    where("cargo", "==", "Enfermero")
+                );
+
+                // Ejecuta la consulta
+                const querySnapshot = await getDocs(q);
+
+                // Mapea los documentos encontrados
+                const encuestasFiltradas = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                commit("setEnfermerosByGrupo", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en getAllEnfermerosbyGrupo:", error);
+                throw error;
+            }
+        },
 
 
         getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
@@ -637,7 +694,7 @@ export default createStore({
                 // Filtra y mapea solo las encuestas que cumplan ambas condiciones
                 const encuestasFiltradas = Object.entries(data)
                     .filter(([_, value]) =>
-                        value.idEncuestador === idUsuario 
+                        value.idEncuestador === idUsuario
                     )
                     .map(([key, value]) => ({
                         id: key,
@@ -653,8 +710,8 @@ export default createStore({
                 throw error;
             }
         },
-//trae los datos para los contadores
-/* 
+        //trae los datos para los contadores
+
         getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
             console.log("datos que entran3", idUsuario);
             try {
@@ -676,7 +733,7 @@ export default createStore({
                 console.error("Error en getAllRegistersByIduser:", error);
                 throw error;
             }
-        }, */
+        },
 
         GetAllRegistersbyRange: async ({ commit }, rango) => {
             try {
@@ -1085,6 +1142,12 @@ export default createStore({
         },
         setCupsbyActividad(state, cups) {
             state.cupsbyActividad = cups;
+        },
+        setMedicosByGrupo(state, medicos) {
+            state.medicosByGrupo = medicos;
+        },
+        setEnfermerosByGrupo(state, enfermeros) {
+            state.enfermerosByGrupo = enfermeros;
         },
 
     },
