@@ -66,10 +66,8 @@
 
 <script>
 import firebase_api from "@/api/ApiFirebase";
-
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/api/firebase"; // Tu instancia de auth inicializada en firebase.js
-
 import {} from "@/api/ApiFirebase";
 
 export default {

@@ -21,7 +21,7 @@ export default createStore({
         user: null,
         epss: [],
         accessToken: null, // Para manejar el token de acceso
-        cantEncuestas: 0,
+        cantEncuestas: "",
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
         InfoEncuestasById: [],
         cupsbyActividad: {}, // Para manejar la información de CUPS por actividad   
@@ -42,7 +42,9 @@ export default createStore({
                     idMedicoAtiende,
                     idEnfermeroAtiende,
                     fechavisita,
-                    status_encuesta,
+                    status_gest_aux,
+                    status_gest_medic,
+                    status_gest_enfermera,
                     status_tomamuestras,
                     status_caracterizacion,
                     status_visita,
@@ -73,7 +75,9 @@ export default createStore({
                     idMedicoAtiende,
                     idEnfermeroAtiende,
                     fechavisita,
-                    status_encuesta,
+                    status_gest_aux,
+                    status_gest_medic,
+                    status_gest_enfermera,
                     status_tomamuestras,
                     status_caracterizacion,
                     status_visita,
@@ -572,7 +576,9 @@ export default createStore({
             console.log("parametro de consulta  abiertas", idUsuario);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).map(([key, value]) => ({
+                const encuestas = Object.entries(data).filter(([_, value]) =>
+                    value.idEncuestador === idUsuario && value.status_gest_aux ===false
+                ).map(([key, value]) => ({
                     id: key,
                     ...value,
                 }));
@@ -591,7 +597,8 @@ export default createStore({
                 throw error;
             }
         },
-        getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
+        //trae los datos par ala tabla
+   /*      getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
             console.log("parametro de consulta  abiertas", grupo);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
@@ -612,21 +619,32 @@ export default createStore({
                 console.error("Error en getAllRegistersByFechaStatus:", error);
                 throw error;
             }
-        },
+        }, */
+
+
         getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran en data", idUsuario);
+            console.log("datos que entran en data2", idUsuario);
             try {
+                // Solicita los datos de encuestas desde Firebase
                 const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    ...value,
-                }));
 
-                // Filtrar por idEncuestador
-                const encuestasFiltradas = encuestas.filter(
-                    (encuesta) => encuesta.idProfesionalAtiende === idUsuario
-                );
+                // Si no hay datos, establece la cantidad en 0 y retorna
+                if (!data) {
+                    commit("setcantEncuestas", 0);
+                    return 0;
+                }
 
+                // Filtra y mapea solo las encuestas que cumplan ambas condiciones
+                const encuestasFiltradas = Object.entries(data)
+                    .filter(([_, value]) =>
+                        value.idEncuestador === idUsuario 
+                    )
+                    .map(([key, value]) => ({
+                        id: key,
+                        ...value,
+                    }));
+
+                // Calcula la cantidad y actualiza el estado
                 const cantidad = encuestasFiltradas.length;
                 commit("setcantEncuestas", cantidad);
                 return cantidad;
@@ -635,9 +653,10 @@ export default createStore({
                 throw error;
             }
         },
-
+//trae los datos para los contadores
+/* 
         getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran", idUsuario);
+            console.log("datos que entran3", idUsuario);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).map(([key, value]) => ({
@@ -647,7 +666,7 @@ export default createStore({
 
                 // Filtrar por idEncuestador
                 const encuestasFiltradas = encuestas.filter(
-                    (encuesta) => encuesta.idProfesionalAtiende === idUsuario
+                    (encuesta) => encuesta.idEncuestador === idUsuario
                 );
 
                 const cantidad = encuestasFiltradas.length;
@@ -657,7 +676,7 @@ export default createStore({
                 console.error("Error en getAllRegistersByIduser:", error);
                 throw error;
             }
-        },
+        }, */
 
         GetAllRegistersbyRange: async ({ commit }, rango) => {
             try {

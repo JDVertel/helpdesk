@@ -1,7 +1,7 @@
 <template>
 <div>
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
-    <h5>med</h5>
+    <h5>Aux</h5>
     <div class="row">
         <div class="col-6 center">
             <h6 class="display-6">{{ cantEncuestas }}</h6>
@@ -48,8 +48,8 @@
                             <td>
                                 <small>
                                     Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
-                        encuesta.eps
-                      }}
+                      encuesta.eps
+                    }}
                                 </small>
                                 <hr />
                                 <small>
@@ -69,8 +69,8 @@
                                             </button>
                                         </div>
                                         <div v-else-if="
-                            encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
-                          ">
+                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
+                        ">
                                             <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
                                                 <i class="bi bi-droplet-half"> <small> Toma muestras</small></i>
                                             </button>
@@ -88,8 +88,8 @@
                                             </button>
                                         </div>
                                         <div v-else-if="
-                            encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
-                          ">
+                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
+                        ">
                                             <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
                                                 <i class="bi bi-houses"><small> Visita medica</small></i>
                                             </button>
@@ -186,7 +186,6 @@
 </div>
 </template>
 
-  
 <script>
 import {
     mapActions,
@@ -266,24 +265,25 @@ export default {
             return this.encuestas.length;
         },
     },
-    mounted() {
+    async mounted() {
         this.fechaActual = moment().format("YYYY-MM-DD");
         //encuestas diarias + contador
-        this.getAllRegistersByFecha({
+        await this.getAllRegistersByFecha({
             idUsuario: this.userData.numDocumento,
             fecha: this.fechaActual,
         });
+
         //encuestas abiertas
-        this.getAllRegistersByFechaStatus({
+        await this.getAllRegistersByFechaStatus({
             idUsuario: this.userData.numDocumento,
         });
+        
         //total de encuestas del usuario . para contador
-        /*    this.getAllRegistersByIduser({
-                idUsuario: this.userData.numDocumento,
-            }); */
+        await this.getAllRegistersByIduser({
+            idUsuario: this.userData.numDocumento,
+        });
     },
 };
 </script>
 
-  
 <style></style>

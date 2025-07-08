@@ -1,14 +1,14 @@
 <template>
-<div>
-    <div class="container">
-        <h5 class="center">Cuidandote en casa</h5>
+
+    <div class="container-fluid">
+        <h5 class="center mt-2"><i class="bi bi-journal-medical"></i> Registro de Demanda Inducida</h5>
         <br />
         <!-- FORMULARIO -->
-        <div class="container formulario">
+       
             <form @submit.prevent="addRegistroEncuesta">
                 <div class="row">
                     <div class="col-6 col-md-3 mb-3">
-                        <label for="eps" class="form-label">EPS</label>
+                        <label for="eps" class="form-label">EPS del paciente</label>
                         <select id="eps" v-model="eps" class="form-select" required>
                             <option value="">Seleccione</option>
                             <option v-for="(ep, index) in Deps" :key="index" :value="ep.nombre">
@@ -17,7 +17,7 @@
                         </select>
                     </div>
                     <div class="col-6 col-md-3 mb-3">
-                        <label for="regimen" class="form-label">Regimen</label>
+                        <label for="regimen" class="form-label">Regimen del paciente</label>
                         <select id="regimen" v-model="regimen" class="form-select" required>
                             <option value="">Seleccione</option>
                             <option v-for="(regimen, index) in Dregimen" :key="index" :value="regimen.nombre">
@@ -42,7 +42,7 @@
                         <input type="text" id="apellido2" v-model="apellido2" class="form-control" />
                     </div>
                     <div class="col-6 col-md-3 mb-3">
-                        <label for="fechaNac" class="form-label">F Nacimiento</label>
+                        <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
                         <input type="date" id="fechaNac" v-model="fechaNac" class="form-control" required />
                     </div>
                     <div class="col-6 col-md-3 mb-3">
@@ -172,10 +172,10 @@
 
                 <button type="submit" class="btn btn-primary" v-if="userData">Guardar Demanda inducida</button>
             </form>
-        </div>
+    
         <br>
     </div>
-</div>
+
 </template>
 
 <script>
@@ -335,7 +335,9 @@ export default {
                 fechavisita: "",
                 idMedicoAtiende: "",
                 idEnfermeroAtiende: "",
-                status_encuesta: true,
+                status_gest_aux: false,
+                status_gest_medica:false,
+                status_gest_enfermera: false,
                 status_tomamuestras: false,
                 status_caracterizacion: false,
                 status_visita: false,

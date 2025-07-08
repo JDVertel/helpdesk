@@ -26,9 +26,9 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/sop_home",
-    name: "sop_home",
-    component: () => import("../components/soporte/sop_home.vue"),
+    path: "/sop_aux",
+    name: "sop_aux",
+    component: () => import("../components/soporte/sop_aux.vue"),
     meta: { requiresAuth: true },
   },
   {

@@ -19,7 +19,7 @@
                 <div class="offcanvas-header">
                     <div class="row">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
-                        <h6 v-if="userData" class="textRed">{{ userData.cargo || "" }}</h6>
+                        <h6 v-if="userData" >{{ userData.cargo || "" }}</h6>
                     </div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -33,8 +33,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <router-link class="nav-link" to="/sop_home" @click="onNavLinkClick">
-                                    <i class="bi bi-list-check"></i> Encuestas
+                                <router-link class="nav-link" to="/sop_aux" @click="onNavLinkClick">
+                                    <i class="bi bi-person-circle"></i> Auxiliar
                                 </router-link>
                             </li>
 

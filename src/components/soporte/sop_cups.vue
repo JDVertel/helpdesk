@@ -12,7 +12,7 @@
         <thead>
             <tr>
                 <th>Profesional Autorizado</th>
-                <th>Items</th>
+                <th>Actividades</th>
                 <th>Cups Asignados</th>
                 <th>Opciones</th>
             </tr>
@@ -29,7 +29,7 @@
                                 <span v-for="item in cup" :key="item.id">
 
                                     <span v-for="it in item.cups" :key="it.id">
-                                        <button @click="removeCup(it.id)">-</button>  {{ it.DescripcionCUP }}
+                                        <button class="btn btn-danger btn-sm" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small> 
                                         <hr>
                                     </span>
                                 </span>
@@ -40,46 +40,48 @@
                 </td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)">
-                        + Cups
+                        <i class="bi bi-bookmark-heart"></i> Cups
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-
+<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Cerrar Visita
+</button>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                    Añadir CUPS a procedimientos
+                    <i class="bi bi-file-earmark-plus"></i> Añadir CUPS a procedimientos
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Seleccione el cup que desea añadir a la actividad realizada al paciente
+                Seleccione el CUP que desea asignar a la actividad
                 <div class="row">
                     <div class="mb-3">
                         <br />
                         <select v-model="CupsSeleccionado" class="form-select" id="cupSelect">
-                            <option value="">Seleccione CUPS</option>
+                            <option value="">Listado de CUPS disponible</option>
                             <option v-for="cup in cupsEPS" :key="cup.id" :value="cup">
                                 {{ cup.DescripcionCUP }}
                             </option>
                         </select>
                         <button class="btn btn-warning btn-sm mt-2" @click="addCups(CupsSeleccionado)">
-                            + Agregar
+                            <i class="bi bi-plus-circle-dotted"></i> Agregar al listado
                         </button>
                     </div>
                 </div>
                 <hr />
             </div>
             <div class="modal-body">
-                <h6>Cups seleccionados:</h6>
+                <h6>Listado de CUPS:</h6>
 
-                <table class="table">
+                <table class="table" v-if="cupsArray.length > 0">
                     <thead>
                         <tr>
                             <th scope="col">CUPS</th>
@@ -95,13 +97,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <div v-if="cupsArray.length === 0">No hay CUPS seleccionados.</div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-                        Cerrar
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">
+                        <i class="bi bi-x-square"></i> Cancelar
                     </button>
                     <button type="button" class="btn btn-primary btn-sm" @click="confirmarSeleccion()" data-bs-dismiss="modal">
-                        Guardar
+                        <i class="bi bi-floppy"></i>  Guardar Listado
                     </button>
                 </div>
             </div>
