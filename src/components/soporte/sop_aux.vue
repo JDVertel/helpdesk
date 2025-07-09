@@ -58,6 +58,7 @@
                                 <hr />
                                 <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
                                 <hr />
+                                <small>F Encuesta: {{ encuesta.fecha }}</small>
                             </td>
                             <td>
                                 <!--  v-if="encuesta.cita_tomamuestras === false" -->
@@ -277,7 +278,7 @@ export default {
         await this.getAllRegistersByFechaStatus({
             idUsuario: this.userData.numDocumento,
         });
-        
+
         //total de encuestas del usuario . para contador
         await this.getAllRegistersByIduser({
             idUsuario: this.userData.numDocumento,

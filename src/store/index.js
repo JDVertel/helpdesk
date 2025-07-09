@@ -598,7 +598,7 @@ export default createStore({
             }
         },
         //trae los datos par ala tabla
-        /*      getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
+            /*  getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
                  console.log("parametro de consulta  abiertas", grupo);
                  try {
                      const { data } = await firebase_api.get("/Encuesta.json");
@@ -642,7 +642,7 @@ export default createStore({
                     ...doc.data(),
                 }));
 
-             
+
                 commit("setMedicosByGrupo", encuestasFiltradas);
                 return encuestasFiltradas;
             } catch (error) {
@@ -651,7 +651,7 @@ export default createStore({
             }
         },
 
-    getAllEnfermerosbyGrupo: async ({ commit }, { grupo }) => {
+        getAllEnfermerosbyGrupo: async ({ commit }, { grupo }) => {
             console.log("datos que entran en data3", grupo);
             try {
                 // Crea la consulta para filtrar por grupo e incluir solo médicos
@@ -723,7 +723,7 @@ export default createStore({
 
                 // Filtrar por idEncuestador
                 const encuestasFiltradas = encuestas.filter(
-                    (encuesta) => encuesta.idEncuestador === idUsuario
+                    (encuesta) => encuesta.idMedicoAtiende === idUsuario
                 );
 
                 const cantidad = encuestasFiltradas.length;
@@ -772,13 +772,13 @@ export default createStore({
             }
         },
 
-        getAllEncuestasById: async ({ commit }, idEncuesta) => {
+        getEncuestaById: async ({ commit }, idEncuesta) => {
             try {
                 const { data } = await firebase_api.get(`/Encuesta/${idEncuesta}.json`);
                 commit("setEncuesta", data);
                 return data;
             } catch (error) {
-                console.error("Error en getAllEncuestasById:", error);
+                console.error("Error en getEncuestaById:", error);
                 throw error;
             }
         },

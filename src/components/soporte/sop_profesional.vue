@@ -203,7 +203,7 @@ export default {
         ...mapActions([
             "removeRegEnc",
             "getAllRegistersByFechaStatus",
-            "getAllRegistersByIduserprof",
+            "getAllRegistersByIduserProf",
             "getAllRegistersByFecha",
             " SelectExistenteAgendas",
         ]),
@@ -266,20 +266,21 @@ export default {
         },
     },
     mounted() {
-     this.fechaActual = moment().format("YYYY-MM-DD");
+        this.fechaActual = moment().format("YYYY-MM-DD");
         //encuestas diarias + contador
-       /*     this.getAllRegistersByFecha({
+
+       /*  this.getAllRegistersByFecha({
             idUsuario: this.userData.numDocumento,
             fecha: this.fechaActual,
         }); */
         //encuestas abiertas
-       /*  this.getAllRegistersByFechaStatus({
+      /*   this.getAllRegistersByFechaStatus({
             idUsuario: this.userData.numDocumento,
         }); */
         //total de encuestas del usuario . para contador
-           this.getAllRegistersByIduserprof({
-                idUsuario: this.userData.numDocumento,
-            });
+        this.getAllRegistersByIduserProf({
+            idUsuario: this.userData.numDocumento,
+        });
     },
 };
 </script>

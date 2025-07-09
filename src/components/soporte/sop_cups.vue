@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(actividad, index) in item.tipoActividad || []" :key="index">
+            <tr v-for="actividad in actividadesConMedico(item.tipoActividad)" :key="actividad.id">
                 <td>{{ actividad.Profesional }}</td>
                 <td>{{ actividad.nombre }}</td>
                 <td>
@@ -29,11 +29,11 @@
                                 <span v-for="item in cup" :key="item.id">
 
                                     <span v-for="it in item.cups" :key="it.id">
-                                        <button class="btn btn-danger btn-sm" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small> 
+                                        <button class="btn btn-danger btn-sm" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small>
                                         <hr>
                                     </span>
                                 </span>
-                            
+
                             </span>
                         </span>
                     </span>
@@ -104,7 +104,7 @@
                         <i class="bi bi-x-square"></i> Cancelar
                     </button>
                     <button type="button" class="btn btn-primary btn-sm" @click="confirmarSeleccion()" data-bs-dismiss="modal">
-                        <i class="bi bi-floppy"></i>  Guardar Listado
+                        <i class="bi bi-floppy"></i> Guardar Listado
                     </button>
                 </div>
             </div>
@@ -164,7 +164,7 @@ export default {
     /* ----------------------------------------------------------------------------------------------- */
     methods: {
         ...mapActions([
-            "getAllEncuestasById",
+            "getEncuestaById",
             "getAllCups",
             "adicionarCups",
             "selectCupsByActividad",
@@ -204,90 +204,27 @@ export default {
                 cargo: this.userData.cargo,
                 nombre: this.userData.nombre,
             };
-            this.adicionarCups(data);
+            await this.adicionarCups(data);
             this.clear();
             this.recargar();
         },
 
         //2
-        async Nuevoarray() {
-            const valorDelState = this.InfoEncuestasById;
-            let copia = JSON.parse(JSON.stringify(valorDelState));
-            console.log("datos trasformados", copia);
-            return copia;
+        /*   async Nuevoarray() {
+              const valorDelState = this.InfoEncuestasById;
+              let copia = JSON.parse(JSON.stringify(valorDelState));
+              console.log("datos trasformados", copia);
+              return copia;
+          }, */
+
+        actividadesConMedico(tipoActividad) {
+            if (!tipoActividad) return [];
+            return Object.values(tipoActividad).filter(actividad =>
+                actividad.Profesional && actividad.Profesional.includes(this.userData.cargo)
+            );
         },
         /* ---------------------------------------------------------------------------- */
-        async procesarData(datos) {
-            // Procesar todos los items de forma asíncrona
-            if (!Array.isArray(this.datos)) {
-                this.datos = [];
-            }
 
-            const resultados = await Promise.all(
-                datos.map(async (item) => {
-                    // Clonar el objeto para evitar mutaciones directas
-                    const nuevoItem = {
-                        ...item,
-                    };
-
-                    // Crear un nuevo objeto para tipoActividad
-                    const nuevoTipoActividad = {};
-
-                    // Obtener un array con las actividades para procesar en paralelo
-                    const actividades = item.tipoActividad ? Object.values(item.tipoActividad) : [];
-
-                    // Procesar cada actividad y esperar cupsAsignados
-                    await Promise.all(
-                        actividades.map(async (actividad) => {
-                            try {
-                                const cups = await this.cupsAsignados(actividad.id);
-                                nuevoTipoActividad[actividad.id] = {
-                                    ...actividad,
-                                    cups, // cups ya es string con los CUPS separados por coma
-                                };
-                            } catch (error) {
-                                console.error(
-                                    `Error al obtener cups para actividad ${actividad.id}:`,
-                                    error
-                                );
-                                nuevoTipoActividad[actividad.id] = {
-                                    ...actividad,
-                                    cups: "",
-                                };
-                            }
-                        })
-                    );
-
-                    nuevoItem.tipoActividad = nuevoTipoActividad;
-                    return nuevoItem;
-                })
-            );
-
-            // Acumular los nuevos resultados sin duplicados (por id)
-            resultados.forEach((nuevo) => {
-                // Buscar si ya existe un item con el mismo id
-                const idx = this.datoscups.findIndex((item) => item.id === nuevo.id);
-                if (idx === -1) {
-                    // No existe, agregar
-                    this.datoscups.push(nuevo);
-                } else {
-                    // Ya existe, fusionar actividades (acumular tipoActividad)
-                    const actividadesExistentes = this.datoscups[idx].tipoActividad || {};
-                    const actividadesNuevas = nuevo.tipoActividad || {};
-                    // Fusionar actividades por id
-                    this.datoscups[idx] = {
-                        ...this.datoscups[idx],
-                        ...nuevo,
-                        tipoActividad: {
-                            ...actividadesExistentes,
-                            ...actividadesNuevas,
-                        },
-                    };
-                }
-            });
-
-            return this.datoscups;
-        },
         /* --------------------------------------------------------------------- */
         async cupsAsignados(idAct) {
             try {
@@ -309,17 +246,15 @@ export default {
 
         async recargar() {
             this.idEncuesta = this.$route.params.idEncuesta;
-            await this.getAllEncuestasById(this.idEncuesta);
+            await this.getEncuestaById(this.idEncuesta);
             await this.getAllCups();
         },
     },
     /* ----------------------------------------------------------------------------------------------- */
     async mounted() {
-        await this.getAllEncuestasById(this.idEncuesta);
+        await this.getEncuestaById(this.idEncuesta);
         await this.getAllCups();
-        //1
-        /*  this.datoslistos = await this.Nuevoarray();
-            this.datosfinal = await this.procesarData(this.datoslistos); */
+
     },
 
     /* ----------------------------------------------------------------------------------------------- */
