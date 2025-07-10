@@ -19,7 +19,7 @@
                 <div class="offcanvas-header">
                     <div class="row">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
-                        <h6 v-if="userData" >{{ userData.cargo || "" }}</h6>
+                        <h6 v-if="userData">{{ userData.cargo || "" }}</h6>
                     </div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -124,7 +124,8 @@ import {
     signOut
 } from "firebase/auth";
 import {
-    mapState, mapActions
+    mapState,
+    mapActions
 } from "vuex";
 // En navbar.vue
 

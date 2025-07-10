@@ -24,7 +24,8 @@ export default createStore({
         cantEncuestas: "",
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
         InfoEncuestasById: [],
-        cupsbyActividad: {}, // Para manejar la información de CUPS por actividad   
+        cupsbyActividad: {}, 
+        EncuestasProf: [], // Para manejar la información de CUPS por actividad   
         // Puedes agregar más estados según sea necesario
     },
 
@@ -727,7 +728,10 @@ export default createStore({
                 );
 
                 const cantidad = encuestasFiltradas.length;
+                commit("setEncuestasProf", encuestasFiltradas);
                 commit("setcantEncuestas", cantidad);
+
+            
                 return cantidad;
             } catch (error) {
                 console.error("Error en getAllRegistersByIduser:", error);
@@ -1148,6 +1152,10 @@ export default createStore({
         },
         setEnfermerosByGrupo(state, enfermeros) {
             state.enfermerosByGrupo = enfermeros;
+        },
+
+      setEncuestasProf(state, encuestas) {
+            state.EncuestasProf = encuestas;
         },
 
     },

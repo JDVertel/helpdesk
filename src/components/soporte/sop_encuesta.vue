@@ -223,17 +223,17 @@ export default {
 
         tipoActividadExtramural: [{
                 nombre: "Consulta PYMS",
-                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Medico"],
                 key: "Proc1"
             },
             {
                 nombre: "Consulta Morbilidad",
-                Profesional: ["Médico"],
+                Profesional: ["Medico"],
                 key: "Proc2"
             },
             {
                 nombre: "VPS",
-                Profesional: ["Enfermero", "Médico"],
+                Profesional: ["Enfermero", "Medico"],
                 key: "Proc3"
             },
             {
@@ -253,27 +253,27 @@ export default {
             },
             {
                 nombre: "Realizacion de tamizajes",
-                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Medico"],
                 key: "Proc7"
             },
             {
                 nombre: "Realizacion Test",
-                Profesional: ["Enfermero", "Médico"],
+                Profesional: ["Enfermero", "Medico"],
                 key: "Proc8"
             },
             {
                 nombre: "IEC",
-                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Medico"],
                 key: "Proc9"
             },
             {
                 nombre: "Remision IPS",
-                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Medico"],
                 key: "Proc10"
             },
             {
                 nombre: "Otro",
-                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Médico"],
+                Profesional: ["Auxiliar de enfermeria", "Enfermero", "Medico"],
                 key: "Proc11"
             },
         ],

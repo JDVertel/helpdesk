@@ -29,7 +29,7 @@
                                 <span v-for="item in cup" :key="item.id">
 
                                     <span v-for="it in item.cups" :key="it.id">
-                                        <button class="btn btn-danger btn-sm" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small>
+                                        <button class="btn btn-danger btn-sm" v-if="item.cargo == userData.cargo" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small>
                                         <hr>
                                     </span>
                                 </span>
@@ -100,10 +100,10 @@
                 <div v-if="cupsArray.length === 0">No hay CUPS seleccionados.</div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal" @click="removeModalFocus">
                         <i class="bi bi-x-square"></i> Cancelar
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm" @click="confirmarSeleccion()" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-primary btn-sm" @click="removeModalFocus(); confirmarSeleccion()" data-bs-dismiss="modal">
                         <i class="bi bi-floppy"></i> Guardar Listado
                     </button>
                 </div>

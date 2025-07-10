@@ -44,7 +44,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <tr v-for="(encuesta, index) in encuestas" :key="index">
+                        <tr v-for="(encuesta, index) in EncuestasProf" :key="index">
                             <td>
                                 <small>
                                     Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
@@ -256,7 +256,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["encuestas", "userData", "cantEncuestas", "encuestasToday"]),
+        ...mapState(["encuestas", "userData", "cantEncuestas", "encuestasToday","EncuestasProf"]),
         documento() {
             return this.userData.numDocumento;
         },
