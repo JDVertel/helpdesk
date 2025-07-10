@@ -27,35 +27,35 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <template v-if="userData && userData.rol === 'aux' || userData.rol === 'med' || userData.rol === 'enf'">
+
                             <li class="nav-item active" aria-current="page">
                                 <strong><i class="bi bi-people-fill"></i> Equipo</strong>
                             </li>
 
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/sop_aux" @click="onNavLinkClick">
+                            <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
+                                <router-link class="nav-link" to="/sop_aux" @click="onNavLinkClick" >
                                     <i class="bi bi-person-circle"></i> Auxiliar
                                 </router-link>
                             </li>
 
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/sop_profesional" @click="onNavLinkClick">
+                            <li class="nav-item" v-if="userData && (userData.cargo === 'Medico')">
+                                <router-link class="nav-link" to="/sop_profesional" @click="onNavLinkClick" >
                                     <i class="bi bi-person-circle"></i> Medico
                                 </router-link>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item"  v-if="userData && (userData.cargo === 'Enfermero')">
                                 <router-link class="nav-link" to="/sop_enfermero" @click="onNavLinkClick">
                                     <i class="bi bi-person-circle"></i> Enfermer@
                                 </router-link>
                             </li>
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/admin_informes" @click="onNavLinkClick">
+                            <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria' || userData.cargo === 'Enfermero' || userData.cargo === 'Medico')">
+                                <router-link class="nav-link" to="/admin_informes" @click="onNavLinkClick" >
                                     <i class="bi bi-bar-chart-fill"></i> Informes
                                 </router-link>
                             </li>
-                        </template>
+                        
 
-                        <template v-if="userData && userData.rol === 'admin'">
+                        <template v-if="userData && userData.cargo === 'admin'">
                             <li class="nav-item active" aria-current="page">
                                 <strong><i class="bi bi-gear-fill"></i> Admin</strong>
                             </li>

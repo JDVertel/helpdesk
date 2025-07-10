@@ -1,64 +1,92 @@
 <template>
-    <div>
-      <div class="container">
-        <h1>Bienvenido</h1>
-      </div>
-  <hr>
-      <p v-if="getUserData">
-        Nombre: {{ getUserData.nombre }} <br />
-        Cargo: {{ getUserData.cargo }} <br />
-        Rol: {{ getUserData.rol }} <br />
-        Grupo: {{ getUserData.grupo }} <br />
-      </p>
-      <p v-else>Cargando...</p>
-  
-      <footer>
-        <p>Propiedad de BigDataManagements.SAS Todos los Derechos Reservados</p>
-      </footer>
-    </div>
-  </template>
-  
-  <script>
-  import logo from "../assets/images/logo_extramurapp.png";
-  import { mapActions, mapGetters } from "vuex";
-  
-  export default {
+<div>
+
+    <p v-if="getUserData">
+        <div class="container mt-4">
+            <div class="row">
+           <h1>Bienvenido</h1>
+                <div class="col-6 col-md-3 mb-3">
+                    <h2>Usuario</h2>
+                    Nombre: {{ getUserData.nombre }} <br />
+                    Cargo: {{ getUserData.cargo }} <br />
+                    Rol: {{ getUserData.rol }} <br />
+                    Grupo: {{ getUserData.grupo }} <br />
+                </div>
+                <div class="col-6 col-md-3">
+            
+                    <ul>
+                <h2>IPS</h2>
+                        <li class="list-group-item">Nombre: {{ dataips.nombre }}</li>
+                        <li class="list-group-item">Nit: {{ dataips.nit }}</li>
+                        <li class="list-group-item">Cod Habilitacion: {{ dataips.codHab }}</li>
+                        <li class="list-group-item">Dpto Ubicacion: {{ dataips.dpto }}</li>
+                    </ul>
+                </div>
+
+                <div class="col-12"> <img :src="logo" alt="Logo Extramurapp" class="img-fluid mb-3" /></div>
+            </div>
+        </div>
+
+    </p>
+    <p v-else>Cargando...</p>
+
+    <footer>
+        <p>Propiedad de BigDataManagements.SAS Todos los Derechos Reservados 2025</p>
+    </footer>
+</div>
+</template>
+
+<script>
+import logo from "../assets/images/logo_extramurapp.png";
+import {
+    mapActions,
+    mapGetters,
+    mapState
+} from "vuex";
+
+export default {
     data() {
-      return {
-        logo,
-        token: localStorage.getItem("token"),
-        uid: localStorage.getItem("uid"),
-      };
+        return {
+            logo,
+            token: localStorage.getItem("token"),
+            uid: localStorage.getItem("uid"),
+            idips: 1,
+        };
     },
     methods: {
-      ...mapActions(["fetchUserDataByUid"]),
+        ...mapActions(["fetchUserDataByUid", 'getdataips']),
+        getdata(id) {
+            this.getdataips(id);
+        }
 
     },
     computed: {
-      ...mapGetters(["getUserData"]),
+        ...mapGetters(["getUserData"]),
+        ...mapState(["dataips"])
     },
     mounted() {
-      if (this.uid) {
-        this.fetchUserDataByUid(this.uid);
-      } else {
-        console.warn("UID no disponible para cargar datos de usuario");
-      }
+        if (this.uid) {
+            this.fetchUserDataByUid(this.uid);
+        } else {
+            console.warn("UID no disponible para cargar datos de usuario");
+        }
+        this.getdata(this.idips);
     },
-  };
-  </script>
-  
-  <style>
-  footer {
+};
+</script>
+
+<style>
+footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background-color: #ececec;
-    color: #333; /* Cambiado a gris oscuro para mejor legibilidad */
+    color: #333;
+    /* Cambiado a gris oscuro para mejor legibilidad */
     padding: 15px 0;
     text-align: center;
     z-index: 1000;
     box-sizing: border-box;
-  }
-  </style>
-  
+}
+</style>

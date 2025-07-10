@@ -12,7 +12,7 @@ export default createStore({
         usuarios: [],
         encuestas: [],
         comunasBarrios: [],
-        datosips: [],
+        dataips: [],
         encuestasFiltradas: [],
         agendas: [],
         token: null,
@@ -821,6 +821,7 @@ export default createStore({
             try {
                 const { data } = await firebase_api.get(`/ips/${id}.json`);
                 commit("setdatosips", data);
+                console.log(data);
             } catch (error) {
                 console.error("Error en Action_getdataips:", error);
                 throw error;

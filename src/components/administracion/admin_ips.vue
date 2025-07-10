@@ -5,7 +5,7 @@
         <h1>admin ips</h1>
         <p>Datos de radicacion</p>
 
-        {{ dataips }}
+        >> {{ dataips }}
 
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Nombre: </li>
@@ -28,23 +28,22 @@ import {
 export default {
     data() {
         return {
-            dataips: [],
             idips: 1,
         }
     },
     methods: {
         ...mapActions(['getdataips']),
 
-        getdata(idips) {
-            this.getdataips(idips);
+        getdata(id) {
+            this.getdataips(id);
         }
     },
     computed: {
         ...mapState(['dataips']),
-        dataips() {
-            return this.dataips[0];
-        }
     },
+    mounted() {
+        this.getdata(this.idips);
+    }
 
 }
 </script>
