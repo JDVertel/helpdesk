@@ -24,7 +24,7 @@ export default createStore({
         cantEncuestas: "",
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
         InfoEncuestasById: [],
-        cupsbyActividad: {}, 
+        cupsbyActividad: {},
         EncuestasProf: [], // Para manejar la información de CUPS por actividad   
         // Puedes agregar más estados según sea necesario
     },
@@ -549,7 +549,8 @@ export default createStore({
                 throw error;
             }
         },
-        //enuestas finalizadas en el diarias
+
+        // Encuestas finalizadas en el diarias
         getAllRegistersByFechaProf: async ({ commit }, { doc, fecha }) => {
             console.log("grupo consultado", doc, fecha);
             try {
@@ -573,54 +574,8 @@ export default createStore({
                 throw error;
             }
         },
-        getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
-            console.log("parametro de consulta  abiertas", idUsuario);
-            try {
-                const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).filter(([_, value]) =>
-                    value.idEncuestador === idUsuario && value.status_gest_aux === false
-                ).map(([key, value]) => ({
-                    id: key,
-                    ...value,
-                }));
 
-                // Filtrar por idEncuestador y visita = false
-                const encuestasFiltradas = encuestas.filter(
-                    (encuesta) =>
-                        encuesta.idEncuestador === idUsuario &&
-                        encuesta.status_visita === false
-                );
-
-                commit("setEncuestas", encuestasFiltradas);
-                return encuestasFiltradas;
-            } catch (error) {
-                console.error("Error en getAllRegistersByFechaStatus:", error);
-                throw error;
-            }
-        },
-        //trae los datos par ala tabla
-            /*  getAllRegistersByFechaStatusProf: async ({ commit }, { grupo }) => {
-                 console.log("parametro de consulta  abiertas", grupo);
-                 try {
-                     const { data } = await firebase_api.get("/Encuesta.json");
-                     const encuestas = Object.entries(data).map(([key, value]) => ({
-                         id: key,
-                         ...value,
-                     }));
-     
-                     // Filtrar por idEncuestador y visita = false
-                     const encuestasFiltradas = encuestas.filter(
-                         (encuesta) =>
-                             encuesta.grupo === grupo && encuesta.status_visita === false
-                     );
-     
-                     commit("setEncuestas", encuestasFiltradas);
-                     return encuestasFiltradas;
-                 } catch (error) {
-                     console.error("Error en getAllRegistersByFechaStatus:", error);
-                     throw error;
-                 }
-             }, */
+       
 
 
 
@@ -680,61 +635,130 @@ export default createStore({
         },
 
 
-        getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran en data2", idUsuario);
-            try {
-                // Solicita los datos de encuestas desde Firebase
-                const { data } = await firebase_api.get("/Encuesta.json");
 
-                // Si no hay datos, establece la cantidad en 0 y retorna
-                if (!data) {
-                    commit("setcantEncuestas", 0);
-                    return 0;
-                }
 
-                // Filtra y mapea solo las encuestas que cumplan ambas condiciones
-                const encuestasFiltradas = Object.entries(data)
-                    .filter(([_, value]) =>
-                        value.idEncuestador === idUsuario
-                    )
-                    .map(([key, value]) => ({
-                        id: key,
-                        ...value,
-                    }));
-
-                // Calcula la cantidad y actualiza el estado
-                const cantidad = encuestasFiltradas.length;
-                commit("setcantEncuestas", cantidad);
-                return cantidad;
-            } catch (error) {
-                console.error("Error en getAllRegistersByIduser:", error);
-                throw error;
-            }
-        },
-        //trae los datos para los contadores
-
-        getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
-            console.log("datos que entran3", idUsuario);
+        getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
+            console.log("parametro de consulta  abiertas", idUsuario);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).map(([key, value]) => ({
+                const encuestas = Object.entries(data).filter(([_, value]) =>
+                    value.idEncuestador === idUsuario && value.status_gest_aux === false
+                ).map(([key, value]) => ({
                     id: key,
                     ...value,
                 }));
 
-                // Filtrar por idEncuestador
+                // Filtrar por idEncuestador y visita = false
                 const encuestasFiltradas = encuestas.filter(
-                    (encuesta) => encuesta.idMedicoAtiende === idUsuario
+                    (encuesta) =>
+                        encuesta.idEncuestador === idUsuario &&
+                        encuesta.status_visita === false
+                );
+                const cantidad = encuestasFiltradas.length;
+                commit("setEncuestas", encuestasFiltradas);
+                commit("setcantEncuestas", cantidad);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en getAllRegistersByFechaStatus:", error);
+                throw error;
+            }
+        },
+        /*     getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
+                console.log("datos que entran en data2", idUsuario);
+                try {
+                    const { data } = await firebase_api.get("/Encuesta.json");
+                    if (!data) {
+                        commit("setcantEncuestas", 0);
+                        return 0;
+                    }        
+                    const encuestasFiltradas = Object.entries(data)
+                        .filter(([_, value]) =>
+                            value.idEncuestador === idUsuario
+                        )
+                        .map(([key, value]) => ({
+                            id: key,
+                            ...value,
+                        }));
+                    const cantidad = encuestasFiltradas.length;
+                    commit("setcantEncuestas", cantidad);
+                    return cantidad;
+                } catch (error) {
+                    console.error("Error en getAllRegistersByIduser:", error);
+                    throw error;
+                }
+            }, */
+
+
+        getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
+            console.log("datos que entran medico", idUsuario);
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                if (!data) {
+                    commit("setcantEncuestas", 0);
+                    return 0;
+                }
+                /* aqui esta el problema */
+                const encuestas = Object.entries(data).filter(([_, value]) =>
+                    value.idMedicoAtiende === idUsuario && value.status_gest_medica === false
+                ).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+                // Filtrar por idMedicoAtiende
+
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.idMedicoAtiende === idUsuario &&
+                        encuesta.status_gest_medica === false
                 );
 
+                console.log(encuestasFiltradas);
                 const cantidad = encuestasFiltradas.length;
-                commit("setEncuestasProf", encuestasFiltradas);
+                commit("setEncuestas", encuestasFiltradas);
                 commit("setcantEncuestas", cantidad);
 
-            
+
                 return cantidad;
             } catch (error) {
-                console.error("Error en getAllRegistersByIduser:", error);
+                console.error("Error en getAllRegistersByIduserProf:", error);
+                throw error;
+            }
+        },
+
+
+
+        getAllRegistersByIduserEnfer: async ({ commit }, { idUsuario }) => {
+            console.log("datos que entran medico", idUsuario);
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                if (!data) {
+                    commit("setcantEncuestas", 0);
+                    return 0;
+                }
+                /* aqui esta el problema */
+                const encuestas = Object.entries(data).filter(([_, value]) =>
+                    value.idEnfermeroAtiende === idUsuario && value.status_gest_medica === false
+                ).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+                // Filtrar por idEnfermeroAtiende
+
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.idEnfermeroAtiende === idUsuario &&
+                        encuesta.status_gest_medica === false
+                );
+
+                console.log(encuestasFiltradas);
+                const cantidad = encuestasFiltradas.length;
+                commit("setEncuestas", encuestasFiltradas);
+                commit("setcantEncuestas", cantidad);
+
+
+                return cantidad;
+            } catch (error) {
+                console.error("Error en getAllRegistersByIduserProf:", error);
                 throw error;
             }
         },
@@ -1155,7 +1179,7 @@ export default createStore({
             state.enfermerosByGrupo = enfermeros;
         },
 
-      setEncuestasProf(state, encuestas) {
+        setEncuestasProf(state, encuestas) {
             state.EncuestasProf = encuestas;
         },
 

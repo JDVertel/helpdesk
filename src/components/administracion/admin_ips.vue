@@ -8,10 +8,10 @@
         >> {{ dataips }}
 
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Nombre: </li>
-            <li class="list-group-item">Nit: </li>
-            <li class="list-group-item">Cod Habilitacion:</li>
-            <li class="list-group-item">Dpto Ubicacion: </li>
+            <li class="list-group-item">Nombre: {{ dataips.nombre }} </li>
+            <li class="list-group-item">Nit: {{dataips.nit}} </li>
+            <li class="list-group-item">Cod Habilitacion: {{dataips.codHab}} </li>
+            <li class="list-group-item">Dpto Ubicacion: {{dataips.dpto}} </li>
 
         </ul>
 

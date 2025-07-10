@@ -1,7 +1,7 @@
 <template>
 <div>
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
-    <h5>med</h5>
+    <h5>Medico</h5>
     <div class="row">
         <div class="col-6 center">
             <h6 class="display-6">{{ cantEncuestas }}</h6>
@@ -44,12 +44,12 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <tr v-for="(encuesta, index) in EncuestasProf" :key="index">
+                        <tr v-for="(encuesta, index) in encuestas" :key="index">
                             <td>
                                 <small>
                                     Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
-                        encuesta.eps
-                      }}
+                      encuesta.eps
+                    }}
                                 </small>
                                 <hr />
                                 <small>
@@ -58,22 +58,19 @@
                                 <hr />
                                 <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
                                 <hr />
+                                <small>F Encuesta: {{ encuesta.fecha }}</small>
                             </td>
                             <td>
-                                <!--  v-if="encuesta.cita_tomamuestras === false" -->
+
                                 <div class="row">
                                     <div class="col">
                                         <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                            <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
-                                                <i class="bi bi-droplet-half"> <small> Toma muestras</small></i>
-                                            </button>
+                                             <p>Agenda visita toma de muestras Pendiente...</p>
                                         </div>
                                         <div v-else-if="
-                            encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
-                          ">
-                                            <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
-                                                <i class="bi bi-droplet-half"> <small> Toma muestras</small></i>
-                                            </button>
+                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
+                        ">
+                                        <p>Agenda visita toma de muestras Pendiente...</p>
                                         </div>
 
                                         <div v-else>
@@ -83,16 +80,12 @@
                                         </div>
                                         <hr />
                                         <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                            <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
-                                                <i class="bi bi-houses"><small> Visita medica</small></i>
-                                            </button>
+                                            <p>Agenda visita medica Pendiente...</p>
                                         </div>
                                         <div v-else-if="
-                            encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
-                          ">
-                                            <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
-                                                <i class="bi bi-houses"><small> Visita medica</small></i>
-                                            </button>
+                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
+                        ">
+                                                <p>Agenda visita medica Pendiente...</p>
                                         </div>
                                         <div v-else>
                                             <h6 class="ok">
@@ -101,10 +94,7 @@
                                         </div>
                                         <hr />
                                         <div v-if="encuesta.status_caracterizacion === false">
-                                            <button type="button" class="btn btn-warning btn-sm" @click="Caracterizar(encuesta.id)">
-                                                <i class="bi bi-calendar2-check">
-                                                    <small> Caracterizacion</small></i>
-                                            </button>
+                                         <p>Caracterizacion Pendiente...</p>
                                         </div>
                                         <div v-else>
                                             <h6 class="ok">
@@ -256,7 +246,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["encuestas", "userData", "cantEncuestas", "encuestasToday","EncuestasProf"]),
+        ...mapState(["encuestas", "userData", "cantEncuestas", "encuestasToday"]),
         documento() {
             return this.userData.numDocumento;
         },
@@ -265,20 +255,22 @@ export default {
             return this.encuestas.length;
         },
     },
-    mounted() {
+    async mounted() {
         this.fechaActual = moment().format("YYYY-MM-DD");
-        //encuestas diarias + contador
 
-       /*  this.getAllRegistersByFecha({
+        //encuestas diarias + contador
+        await this.getAllRegistersByFecha({
             idUsuario: this.userData.numDocumento,
             fecha: this.fechaActual,
-        }); */
+        });
+
         //encuestas abiertas
-      /*   this.getAllRegistersByFechaStatus({
+        await this.getAllRegistersByFechaStatus({
             idUsuario: this.userData.numDocumento,
-        }); */
+        });
+
         //total de encuestas del usuario . para contador
-        this.getAllRegistersByIduserProf({
+        await this.getAllRegistersByIduserProf({
             idUsuario: this.userData.numDocumento,
         });
     },

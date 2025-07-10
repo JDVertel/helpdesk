@@ -8,13 +8,13 @@
     <hr />
     <h6>Items del paciente</h6>
     <hr />
-    <table class="table table-striped table-sm table-bordered">
+    <table class="table table-striped table-sm table-bordered  w-auto">
         <thead>
             <tr>
                 <th>Profesional Autorizado</th>
                 <th>Actividades</th>
                 <th>Cups Asignados</th>
-                <th>Opciones</th>
+                <th>+Cups</th>
             </tr>
         </thead>
         <tbody>
@@ -39,8 +39,8 @@
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)">
-                        <i class="bi bi-bookmark-heart"></i> Cups
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || cupsEPS.length === 0">
+                        <i class="bi bi-bookmark-heart"></i>
                     </button>
                 </td>
             </tr>
@@ -65,22 +65,22 @@
                 <div class="row">
                     <div class="mb-3">
                         <br />
-                        <select v-model="CupsSeleccionado" class="form-select" id="cupSelect">
+                        <select v-model="CupsSeleccionado" class="form-select" id="cupSelect" :disabled="cupsEPS.length === 0">
                             <option value="">Listado de CUPS disponible</option>
                             <option v-for="cup in cupsEPS" :key="cup.id" :value="cup">
                                 {{ cup.DescripcionCUP }}
                             </option>
                         </select>
+                        <span v-if="cupsEPS.length === 0" class="text-muted">Cargando CUPS...</span>
                         <button class="btn btn-warning btn-sm mt-2" @click="addCups(CupsSeleccionado)">
                             <i class="bi bi-plus-circle-dotted"></i> Agregar al listado
                         </button>
                     </div>
                 </div>
-                <hr />
             </div>
             <div class="modal-body">
                 <h6>Listado de CUPS:</h6>
-
+     <hr />
                 <table class="table" v-if="cupsArray.length > 0">
                     <thead>
                         <tr>
@@ -97,13 +97,14 @@
                         </tr>
                     </tbody>
                 </table>
+             
                 <div v-if="cupsArray.length === 0">No hay CUPS seleccionados.</div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal" @click="removeModalFocus">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">
                         <i class="bi bi-x-square"></i> Cancelar
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm" @click="removeModalFocus(); confirmarSeleccion()" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-primary btn-sm" @click="confirmarSeleccion()" data-bs-dismiss="modal" v-if="cupsArray.length !== 0">
                         <i class="bi bi-floppy"></i> Guardar Listado
                     </button>
                 </div>
@@ -151,7 +152,13 @@ export default {
             return this.encuestas.length > 0 ? this.encuestas[0] : null;
         },
         cupsEPS() {
-            if (!this.cups || !this.dataencuesta || !this.dataencuesta.eps) return [];
+            if (
+                !this.cups ||
+                !this.dataencuesta ||
+                !this.dataencuesta.eps ||
+                !this.userData ||
+                !this.userData.cargo
+            ) return [];
             return this.cups.filter(
                 (cup) =>
                 Array.isArray(cup.Eps) &&
@@ -172,7 +179,7 @@ export default {
         clear() {
             this.idItem = "";
             this.keyActividad = "";
-            this.CupsSeleccionado = "";
+            this.CupsSeleccionado = {};
             this.cupsArray = []; // Limpiar el array de cups seleccionados al abrir el modal
         },
         //adiciona los cups al listado que se va guardando
@@ -191,7 +198,12 @@ export default {
         //gestiona los parametros de la ruta de almacenamiento
         integrarCup(id) {
             this.clear();
-            this.keyActividad = this.userData.cargo;
+
+            if (this.userData && this.userData.cargo) {
+                this.keyActividad = this.userData.cargo;
+            } else {
+                this.keyActividad = this.userData.cargo;
+            }
             this.idItem = id;
         },
         //confirma la seleccion de cups arma paquete para entregar al storage
@@ -209,20 +221,12 @@ export default {
             this.recargar();
         },
 
-        //2
-        /*   async Nuevoarray() {
-              const valorDelState = this.InfoEncuestasById;
-              let copia = JSON.parse(JSON.stringify(valorDelState));
-              console.log("datos trasformados", copia);
-              return copia;
-          }, */
-
-        actividadesConMedico(tipoActividad) {
-            if (!tipoActividad) return [];
-            return Object.values(tipoActividad).filter(actividad =>
-                actividad.Profesional && actividad.Profesional.includes(this.userData.cargo)
-            );
-        },
+      actividadesConMedico(tipoActividad) {
+    if (!tipoActividad || !this.userData || !this.userData.cargo) return [];
+    return Object.values(tipoActividad).filter(actividad =>
+        actividad.Profesional && actividad.Profesional.includes(this.userData.cargo)
+    );
+},
         /* ---------------------------------------------------------------------------- */
 
         /* --------------------------------------------------------------------- */
@@ -247,7 +251,6 @@ export default {
         async recargar() {
             this.idEncuesta = this.$route.params.idEncuesta;
             await this.getEncuestaById(this.idEncuesta);
-            await this.getAllCups();
         },
     },
     /* ----------------------------------------------------------------------------------------------- */

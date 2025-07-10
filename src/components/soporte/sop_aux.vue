@@ -35,7 +35,7 @@
             <h5>Encuestas Pendientes x visita</h5>
             <br />
             <div class="table-responsive">
-                <table class="table table-striped table-sm">
+                <table class="table table-striped table-sm w-auto">
                     <thead>
                         <tr>
                             <th scope="col">Detalle</th>
@@ -219,9 +219,9 @@ export default {
             this.getAllRegistersByFechaStatus({
                 idUsuario: this.userData.numDocumento,
             });
-            this.getAllRegistersByIduser({
-                idUsuario: this.userData.numDocumento,
-            });
+            /*      this.getAllRegistersByIduser({
+                     idUsuario: this.userData.numDocumento,
+                 }); */
         },
         Agendar(id, tipo) {
             this.$router.push({
@@ -268,6 +268,7 @@ export default {
     },
     async mounted() {
         this.fechaActual = moment().format("YYYY-MM-DD");
+
         //encuestas diarias + contador
         await this.getAllRegistersByFecha({
             idUsuario: this.userData.numDocumento,
@@ -280,9 +281,9 @@ export default {
         });
 
         //total de encuestas del usuario . para contador
-        await this.getAllRegistersByIduser({
-            idUsuario: this.userData.numDocumento,
-        });
+        /*         await this.getAllRegistersByIduser({
+                    idUsuario: this.userData.numDocumento,
+                }); */
     },
 };
 </script>

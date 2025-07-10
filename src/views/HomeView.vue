@@ -1,33 +1,33 @@
 <template>
 <div>
 
-    <p v-if="getUserData">
+    <div v-if="getUserData">
         <div class="container mt-4">
             <div class="row">
-           <h1>Bienvenido</h1>
-                <div class="col-6 col-md-3 mb-3">
+                <h1>Bienvenido</h1>
+                <hr>
+                <div class="col-6 col-md-6 mb-6">
                     <h2>Usuario</h2>
                     Nombre: {{ getUserData.nombre }} <br />
                     Cargo: {{ getUserData.cargo }} <br />
-                    Rol: {{ getUserData.rol }} <br />
                     Grupo: {{ getUserData.grupo }} <br />
                 </div>
-                <div class="col-6 col-md-3">
-            
+                <div class="col-6 col-md-6">
+
                     <ul>
-                <h2>IPS</h2>
+                        <h2>IPS</h2>
                         <li class="list-group-item">Nombre: {{ dataips.nombre }}</li>
                         <li class="list-group-item">Nit: {{ dataips.nit }}</li>
                         <li class="list-group-item">Cod Habilitacion: {{ dataips.codHab }}</li>
                         <li class="list-group-item">Dpto Ubicacion: {{ dataips.dpto }}</li>
                     </ul>
                 </div>
-
+                <hr>
                 <div class="col-12"> <img :src="logo" alt="Logo Extramurapp" class="img-fluid mb-3" /></div>
             </div>
         </div>
 
-    </p>
+    </div>
     <p v-else>Cargando...</p>
 
     <footer>
