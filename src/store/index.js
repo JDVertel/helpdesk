@@ -409,24 +409,74 @@ export default createStore({
             }
         },
 
+   
+        generarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        },
+
+
+        generarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        },
+
+       
+        generarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        },
+
         adicionarCups: async ({ commit }, entradasC) => {
             try {
-                const { key, cups, idEncuesta, id, cargo, nombre } = entradasC;
-                const datacups = { cups, cargo, nombre };
+                const { key, idcargo, cups: nuevosCups, idEncuesta, idActividad, nombre } = entradasC;
 
-                console.log("Datos recibidos en adicionarCups:", entradasC);
-                //  const Ruta = `/cupsActividades/${idEncuesta}/tipoActividad/${id}.json`;
-                //ruta para aux
-                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${id}/cups/${key}.json`;
+                if (!key) throw new Error("El identificador 'key' es obligatorio");
 
-                const { data } = await firebase_api.post(Ruta, datacups);
+                const Ruta = `/Encuesta/${idEncuesta}/tipoActividad/${idActividad}/cups/${key}.json`;
+
+                // 1. Leer datos existentes
+                const response = await firebase_api.get(Ruta);
+                const datosExistentes = response.data || {};
+
+                // 2. Obtener objeto actual de cups o inicializar vacío
+                // Si cups es un arreglo (por compatibilidad), convertirlo a objeto
+                let cupsExistentesObj = {};
+                if (Array.isArray(datosExistentes.cups)) {
+                    datosExistentes.cups.forEach(cup => {
+                        if (cup.id) {
+                            cupsExistentesObj[cup.id] = cup;
+                        }
+                    });
+                } else if (typeof datosExistentes.cups === 'object' && datosExistentes.cups !== null) {
+                    cupsExistentesObj = datosExistentes.cups;
+                }
+
+                // 3. Generar id para nuevos cups que no tengan id y convertir a objeto
+                const nuevosCupsObj = {};
+                nuevosCups.forEach(cup => {
+                    const id = cup.id || generarId();
+                    nuevosCupsObj[id] = { ...cup, id };
+                });
+
+                // 4. Combinar cups existentes con los nuevos (los nuevos reemplazan a los existentes con mismo id)
+                const cupsActualizadosObj = { ...cupsExistentesObj, ...nuevosCupsObj };
+
+                // 5. Crear objeto actualizado para guardar
+                const datacups = {
+                    key,
+                    idcargo,
+                    nombre,
+                    cups: cupsActualizadosObj
+                };
+
+                // 6. Guardar datos actualizados con PUT (reemplaza el nodo)
+                const { data } = await firebase_api.put(Ruta, datacups);
+
                 return data;
+
             } catch (error) {
                 console.error("Error en Action_adicionarCups:", error);
                 throw error;
             }
         },
-
 
 
 
@@ -575,7 +625,7 @@ export default createStore({
             }
         },
 
-       
+
 
 
 
@@ -663,30 +713,7 @@ export default createStore({
                 throw error;
             }
         },
-        /*     getAllRegistersByIduser: async ({ commit }, { idUsuario }) => {
-                console.log("datos que entran en data2", idUsuario);
-                try {
-                    const { data } = await firebase_api.get("/Encuesta.json");
-                    if (!data) {
-                        commit("setcantEncuestas", 0);
-                        return 0;
-                    }        
-                    const encuestasFiltradas = Object.entries(data)
-                        .filter(([_, value]) =>
-                            value.idEncuestador === idUsuario
-                        )
-                        .map(([key, value]) => ({
-                            id: key,
-                            ...value,
-                        }));
-                    const cantidad = encuestasFiltradas.length;
-                    commit("setcantEncuestas", cantidad);
-                    return cantidad;
-                } catch (error) {
-                    console.error("Error en getAllRegistersByIduser:", error);
-                    throw error;
-                }
-            }, */
+
 
 
         getAllRegistersByIduserProf: async ({ commit }, { idUsuario }) => {
@@ -1011,6 +1038,19 @@ export default createStore({
                 return data;
             } catch (error) {
                 console.error("Error en Action_removeRegEnc:", error);
+                throw error;
+            }
+        },
+
+
+        deleteCUPS: async ({ commit }, { idEncuesta, idActividad, idCup, rol }) => {
+            /* console.log("parametros para eliminar", idEncuesta,"/", idActividad,"/", idCup ,"/", rol); */
+            try {
+                if (!idEncuesta || !idActividad) throw new Error("ID inválido para eliminar");
+                const { data } = await firebase_api.delete(`/Encuesta/${idEncuesta}/tipoActividad/${idActividad}/cups/${rol}/cups/${idCup}.json`);
+                return data;
+            } catch (error) {
+                console.error("Error en Action deleteCUPS:", error);
                 throw error;
             }
         },

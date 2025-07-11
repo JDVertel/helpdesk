@@ -35,7 +35,7 @@
             <h5>Encuestas Pendientes x visita</h5>
             <br />
             <div class="table-responsive">
-                <table class="table table-striped table-sm">
+                <table class="table table-striped table-sm  w-auto">
                     <thead>
                         <tr>
                             <th scope="col">Detalle</th>

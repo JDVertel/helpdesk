@@ -1,9 +1,9 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
-<div v-for="item in InfoEncuestasById" :key="item.id" class="mb-4">
+<div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
     <p>
-        Paciente: {{ item.nombre1 }} {{ item.nombre2 }} {{ item.apellido1 }}
-        {{ item.apellido2 }} / Eps:{{ item.eps }}
+        Paciente: {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1 }}
+        {{ itemE.apellido2 }} / Eps:{{ itemE.eps }}
     </p>
     <hr />
     <h6>Items del paciente</h6>
@@ -18,25 +18,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="actividad in actividadesConMedico(item.tipoActividad)" :key="actividad.id">
+            <tr v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id">
                 <td>{{ actividad.Profesional }}</td>
                 <td>{{ actividad.nombre }}</td>
                 <td>
-                    <span>
-                        <span v-for="(cup, idx) in actividad.cups" :key="idx">
-
-                            <span>
-                                <span v-for="item in cup" :key="item.id">
-
-                                    <span v-for="it in item.cups" :key="it.id">
-                                        <button class="btn btn-danger btn-sm" v-if="item.cargo == userData.cargo" @click="removeCup(it.id)"><i class="bi bi-trash"></i></button> <small>{{ it.DescripcionCUP }}</small>
-                                        <hr>
-                                    </span>
-                                </span>
-
-                            </span>
+                    <span v-for="(cup, idx) in actividad.cups" :key="idx">
+                        <span v-for="itex in cup.cups" :key="itex.id">
+                            <button class="btn btn-danger btn-sm" v-if="itex.Profesional == userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <small>{{ itex.DescripcionCUP }} </small>
+                            <hr>
                         </span>
                     </span>
+
                 </td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || cupsEPS.length === 0">
@@ -80,7 +75,7 @@
             </div>
             <div class="modal-body">
                 <h6>Listado de CUPS:</h6>
-     <hr />
+                <hr />
                 <table class="table" v-if="cupsArray.length > 0">
                     <thead>
                         <tr>
@@ -97,7 +92,7 @@
                         </tr>
                     </tbody>
                 </table>
-             
+
                 <div v-if="cupsArray.length === 0">No hay CUPS seleccionados.</div>
 
                 <div class="modal-footer">
@@ -146,6 +141,7 @@ export default {
             "cups",
             "encuestas",
             "cupsbyActividad",
+            "deleteCUPS"
         ]),
         //logica para obtener los cups filtrados por EPS y profesional
         dataencuesta() {
@@ -176,6 +172,7 @@ export default {
             "adicionarCups",
             "selectCupsByActividad",
         ]),
+
         clear() {
             this.idItem = "";
             this.keyActividad = "";
@@ -212,7 +209,7 @@ export default {
                 key: this.keyActividad,
                 cups: this.cupsArray,
                 idEncuesta: this.idEncuesta,
-                id: this.idItem,
+                idActividad: this.idItem,
                 cargo: this.userData.cargo,
                 nombre: this.userData.nombre,
             };
@@ -221,12 +218,12 @@ export default {
             this.recargar();
         },
 
-      actividadesConMedico(tipoActividad) {
-    if (!tipoActividad || !this.userData || !this.userData.cargo) return [];
-    return Object.values(tipoActividad).filter(actividad =>
-        actividad.Profesional && actividad.Profesional.includes(this.userData.cargo)
-    );
-},
+        actividadesConMedico(tipoActividad) {
+            if (!tipoActividad || !this.userData || !this.userData.cargo) return [];
+            return Object.values(tipoActividad).filter(actividad =>
+                actividad.Profesional && actividad.Profesional.includes(this.userData.cargo)
+            );
+        },
         /* ---------------------------------------------------------------------------- */
 
         /* --------------------------------------------------------------------- */
@@ -248,10 +245,27 @@ export default {
             }
         },
 
+        eliminarCUP(idEncuesta, idActividad, idCup) {
+            if (confirm("¿Estás seguro de que deseas eliminar este CUP?")) {
+                /*    console.log("Eliminar cup con id:", idx); */
+                this.$store.dispatch("deleteCUPS", {
+                    idEncuesta: this.idEncuesta,
+                    idActividad: idActividad,
+                    idCup: idCup,
+                    rol: this.userData.cargo
+                }).then(() => {
+                    this.recargar();
+                }).catch(error => {
+                    console.error("Error al eliminar el CUP:", error);
+                });
+            }
+        },
+
         async recargar() {
             this.idEncuesta = this.$route.params.idEncuesta;
             await this.getEncuestaById(this.idEncuesta);
         },
+
     },
     /* ----------------------------------------------------------------------------------------------- */
     async mounted() {
