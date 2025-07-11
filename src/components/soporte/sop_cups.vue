@@ -8,39 +8,41 @@
     <hr />
     <h6>Items del paciente</h6>
     <hr />
-    <table class="table table-striped table-sm table-bordered  w-auto">
-        <thead>
-            <tr>
-                <th>Profesional Autorizado</th>
-                <th>Actividades</th>
-                <th>Cups Asignados</th>
-                <th>+Cups</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id">
-                <td>{{ actividad.Profesional }}</td>
-                <td>{{ actividad.nombre }}</td>
-                <td>
-                    <span v-for="(cup, idx) in actividad.cups" :key="idx">
-                        <span v-for="itex in cup.cups" :key="itex.id">
-                            <button class="btn btn-danger btn-sm" v-if="itex.Profesional == userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                            <small>{{ itex.DescripcionCUP }} </small>
-                            <hr>
+    <div class="table-responsive" >
+        <table class="table table-striped table-sm table-bordered  w-auto">
+            <thead>
+                <tr>
+                    <th>Profesional Autorizado</th>
+                    <th>Actividades</th>
+                    <th>Cups Asignados</th>
+                    <th>+Cups</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id">
+                    <td>{{ actividad.Profesional }}</td>
+                    <td>{{ actividad.nombre }}</td>
+                    <td>
+                        <span v-for="(cup, idx) in actividad.cups" :key="idx">
+                            <span v-for="itex in cup.cups" :key="itex.id">
+                                <button class="btn btn-danger btn-sm" v-if="itex.Profesional == userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <small>{{ itex.DescripcionCUP }} </small>
+                                <hr>
+                            </span>
                         </span>
-                    </span>
 
-                </td>
-                <td>
-                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || cupsEPS.length === 0">
-                        <i class="bi bi-bookmark-heart"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || cupsEPS.length === 0">
+                            <i class="bi bi-bookmark-heart"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
     Cerrar Visita

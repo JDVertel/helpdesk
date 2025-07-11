@@ -78,9 +78,27 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/aux_informes",
+    name: "aux_informes",
+    component: () => import("../components/administracion/aux_informes.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/admin_informes",
     name: "admin_informes",
     component: () => import("../components/administracion/admin_informes.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/medico_informes",
+    name: "medico_informes",
+    component: () => import("../components/administracion/medico_informes.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/enfermero_informes",
+    name: "enfermero_informes",
+    component: () => import("../components/administracion/enfermero_informes.vue"),
     meta: { requiresAuth: true },
   },
   {

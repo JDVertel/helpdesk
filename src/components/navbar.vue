@@ -48,8 +48,23 @@
                                     <i class="bi bi-person-circle"></i> Enfermer@
                                 </router-link>
                             </li>
-                            <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria' || userData.cargo === 'Enfermero' || userData.cargo === 'Medico')">
+                            <li class="nav-item" v-if="userData && (userData.cargo === 'Admin' )">
                                 <router-link class="nav-link" to="/admin_informes" @click="onNavLinkClick" >
+                                    <i class="bi bi-bar-chart-fill"></i> Informes
+                                </router-link>
+                            </li>
+                                <li class="nav-item" v-if="userData && (userData.cargo === 'Medico')">
+                                <router-link class="nav-link" to="/medico_informes" @click="onNavLinkClick" >
+                                    <i class="bi bi-bar-chart-fill"></i> Informes
+                                </router-link>
+                            </li>
+                                <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
+                                <router-link class="nav-link" to="/aux_informes" @click="onNavLinkClick" >
+                                    <i class="bi bi-bar-chart-fill"></i> Informes
+                                </router-link>
+                            </li>
+                                <li class="nav-item" v-if="userData && ( userData.cargo === 'Enfermero' )">
+                                <router-link class="nav-link" to="/enfermero_informes" @click="onNavLinkClick" >
                                     <i class="bi bi-bar-chart-fill"></i> Informes
                                 </router-link>
                             </li>
