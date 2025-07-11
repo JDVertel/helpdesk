@@ -1,6 +1,9 @@
 <template>
 <div class="container-fluid">
     <h1>Admin Informes</h1>
+
+    <hr>
+
     <h5>Seleccione el rango de fechas a mostrar</h5>
     <div class="row">
         <div class="col-6 col-md-4">
@@ -18,7 +21,6 @@
         </div>
     </div>
     <br />
-    <!--  {{ encuestasFiltradas }} -->
 
     <table class="table-bordered" border="1" style="border-collapse: collapse; width: 100%">
         <thead>
@@ -63,12 +65,12 @@
         </thead>
         <tbody>
             <tr v-for="usuario in encuestasFiltradas" :key="usuario.id">
-                <td>dpt</td>
-                <td>municipio</td>
-                <td>nombre</td>
-                <td>codigo</td>
+                <td>{{ dataips.dpto }}</td>
+                <td>{{ dataips.municipio }}</td>
+                <td>{{ dataips.nombre }}</td>
+                <td>{{ dataips.codHab }}</td>
                 <td>{{ usuario.fecha }}</td>
-                <!--  -->
+                <!-- DATOS DEL USUARIO -->
                 <td>
                     {{ usuario.nombre1 }} {{ usuario.nombre2 }} {{ usuario.apellido1 }}
                     {{ usuario.apellido2 }}
@@ -77,11 +79,11 @@
                 <td>{{ usuario.numdoc }}</td>
                 <td>{{ usuario.direccion }}</td>
                 <td>{{ usuario.telefono }}</td>
-                <td>{{ usuario.barrioVeredacomuna.barrio }}</td>
+                <td>{{ usuario.barrioVeredacomuna?.barrio }}</td>
                 <td>{{ usuario.desplazamiento }}</td>
-                <!-- TIPO ACTIVIDAD -->
+                <!-- TIPO ACTIVIDAD REALIZADA -->
                 <td v-for="col in columnasTipoActividad" :key="col" style="text-align: center">
-                    <span v-if="usuario.tipoActividad && usuario.tipoActividad.includes(col)">X</span>
+                    <span v-if="obtenerNombresTipoActividad(usuario).includes(col)">X</span>
                 </td>
                 <!-- POBLACIÓN DE RIESGO -->
                 <td v-for="col in columnasPoblacionRiesgo" :key="col" style="text-align: center">
@@ -89,9 +91,10 @@
                 </td>
                 <!-- REMISION -->
                 <td style="text-align: center">{{ usuario.requiereRemision }}</td>
-                <td>NOMBRE</td>
-                <td>CARGO</td>
-                <td>DOC</td>
+                <!-- ENCUESTADOR -->
+                <td>{{ userData.nombre }}</td>
+                <td>{{ userData.cargo }}</td>
+                <td>{{ userData.numDocumento }}</td>
             </tr>
         </tbody>
     </table>
@@ -113,7 +116,7 @@ export default {
             /* cargara los datos del profesional */
             idprofesional: "",
 
-/* ----------------------------------------------------------- */
+            /* ----------------------------------------------------------- */
             fechaInicio: "",
             fechaFin: "",
             columnasTipoActividad: [
@@ -137,7 +140,7 @@ export default {
                 "Orientacion sexual diversa",
                 "Grupo etnico",
             ],
-     
+
         };
     },
     methods: {
@@ -151,9 +154,16 @@ export default {
             };
             this.GetAllRegistersbyRange(rango);
         },
+        obtenerNombresTipoActividad(encuesta) {
+            if (!encuesta.tipoActividad) return [];
+            return Object.values(encuesta.tipoActividad).map(item => item.nombre);
+        }
+
     },
     computed: {
-        ...mapState(["encuestasFiltradas"]),
+        ...mapState(["encuestasFiltradas", "dataips", "userData"]),
+
     },
+
 };
 </script>

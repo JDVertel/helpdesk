@@ -170,7 +170,7 @@
             <div class="col-6 col-md-3 mb-3">
                 <label for="requiereRemision" class="form-label">Profesional Medic@</label>
                 <select id="requiereRemision" v-model="medico" class="form-select" required>
-                <option value="">---Seleccione---</option>
+                    <option value="">---Seleccione---</option>
                     <option v-for="medico in medicosByGrupo" :value="medico.numDocumento">{{ medico.nombre }}</option>
                 </select>
             </div>
@@ -182,7 +182,7 @@
                 </select>
             </div>
         </div>
-    <!--     medicos:{{ medicosByGrupo }} <br>
+        <!--     medicos:{{ medicosByGrupo }} <br>
         enf:{{ enfermerosByGrupo }} <br> -->
         <button type="submit" class="btn btn-primary" v-if="userData">Guardar Demanda inducida</button>
     </form>
@@ -362,6 +362,7 @@ export default {
                 idEncuestador: this.userData.numDocumento,
                 bd: "Encuesta",
                 fecha: moment().format("YYYY-MM-DD"),
+                fechaNac: this.fechaNac,
                 eps: this.eps,
                 regimen: this.regimen,
                 nombre1: this.nombre1,
@@ -371,7 +372,6 @@ export default {
                 tipodoc: this.tipodoc,
                 numdoc: this.numdoc,
                 sexo: this.sexo,
-                fechaNac: this.fechaNac,
                 direccion: this.direccion,
                 telefono: this.telefono,
                 barrioVeredacomuna: this.barrioVeredacomuna,

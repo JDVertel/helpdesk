@@ -47,9 +47,7 @@
                         <tr v-for="(encuesta, index) in encuestas" :key="index">
                             <td>
                                 <small>
-                                    Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
-                      encuesta.eps
-                    }}
+                                    Paciente: {{ encuesta.nombre1 }} {{ encuesta.nombre2 }} {{ encuesta.apellido1 }} {{ encuesta.apellido2 }} | Eps:{{ encuesta.eps }} | F Nacimiento: {{ encuesta.fechaNac }}
                                 </small>
                                 <hr />
                                 <small>
