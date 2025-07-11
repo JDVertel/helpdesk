@@ -21,13 +21,13 @@
         </div>
     </div>
     <br />
-
-    <table class="table-bordered" border="1" style="border-collapse: collapse; width: 100%">
+<div class="table-responsive">
+    <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
         <thead>
             <tr>
                 <th colspan="5" style="background: #d0e6f7">DATOS DE IPS</th>
                 <th colspan="7" style="background: #d0e6f7">DATOS DEL USUARIO</th>
-                <th colspan="11" style="background: #d0e6f7">TIPO ACTIVIDAD REALIZADA</th>
+                <th colspan="11" style="background: #4aed31ff">TIPO ACTIVIDAD REALIZADA</th>
                 <th colspan="6" style="background: #d0e6f7">POBLACIÓN DE RIESGO</th>
                 <th colspan="1" style="background: #d0e6f7">REQUIERE REMISION</th>
                 <th colspan="3" style="background: #d0e6f7">ENCUESTADOR</th>
@@ -98,6 +98,7 @@
             </tr>
         </tbody>
     </table>
+    </div>
 </div>
 </template>
 
@@ -108,13 +109,9 @@ import {
 } from "vuex";
 export default {
     data() {
-        return {
-            /* Datos de Login */
 
-            /* cargara los datos del la ips  */
-            idips: "",
-            /* cargara los datos del profesional */
-            idprofesional: "",
+        return {
+         
 
             /* ----------------------------------------------------------- */
             fechaInicio: "",
