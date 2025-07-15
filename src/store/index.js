@@ -409,24 +409,24 @@ export default createStore({
             }
         },
 
-   
-        generarId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-        },
-
 
         generarId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         },
 
-       
+
+        generarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        },
+
+
         generarId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         },
 
         adicionarCups: async ({ commit }, entradasC) => {
             try {
-                const { key, idcargo, cups: nuevosCups, idEncuesta, idActividad, nombre } = entradasC;
+                const { key, idcargo, cups: nuevosCups, idEncuesta, idActividad, nombre} = entradasC;
 
                 if (!key) throw new Error("El identificador 'key' es obligatorio");
 
@@ -688,7 +688,7 @@ export default createStore({
 
 
         getAllRegistersByFechaStatus: async ({ commit }, { idUsuario }) => {
-            console.log("parametro de consulta  abiertas", idUsuario);
+            console.log("parametro de consulta  abiertas aux", idUsuario);
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).filter(([_, value]) =>
@@ -764,7 +764,7 @@ export default createStore({
                 }
                 /* aqui esta el problema */
                 const encuestas = Object.entries(data).filter(([_, value]) =>
-                    value.idEnfermeroAtiende === idUsuario && value.status_gest_medica === false
+                    value.idEnfermeroAtiende === idUsuario && value.status_gest_enfermera === false
                 ).map(([key, value]) => ({
                     id: key,
                     ...value,

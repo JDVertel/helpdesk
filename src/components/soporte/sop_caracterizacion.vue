@@ -355,13 +355,13 @@
         <div class="col-6">
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="floatingInput1" v-model="peso" placeholder="" />
-                <label for="floatingInput1">Peso (Kl)</label>
+                <label for="floatingInput1">Peso (Kg)</label>
             </div>
         </div>
         <div class="col-6">
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="floatingInput2" v-model="talla" placeholder="" />
-                <label for="floatingInput2">Talla (Cm)</label>
+                <label for="floatingInput2">Talla (m)</label>
             </div>
         </div>
 
@@ -406,14 +406,14 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput9" v-model="imc" placeholder="" />
+                        <input type="number" class="form-control" id="floatingInput9" v-model="Calimc" placeholder="" readonly />
                         <label for="floatingInput9">IMC</label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput10" v-model="clasificacionImc" placeholder="" />
-                        <label for="floatingInput10">Clasificacion IMC (listado)</label>
+                        <input type="text" class="form-control" id="floatingInput10"  placeholder="" v-model="CalclasificacionImc" readonly/>
+                        <label for="floatingInput10">Clasificacion IMC </label>
                     </div>
                 </div>
             </div>
@@ -758,7 +758,7 @@ export default {
                 this.nuevoMiembro.tipodoc &&
                 this.nuevoMiembro.numeroDocumento &&
                 this.nuevoMiembro.fnacimiento &&
-                this.nuevoMiembro.genero && 
+                this.nuevoMiembro.genero &&
                 this.nuevoMiembro.eps &&
                 this.nuevoMiembro.regimen &&
                 this.nuevoMiembro.cursoVida &&
@@ -803,7 +803,7 @@ export default {
         //requiero  que se pregunte si se desea guardar la informaicon antes de realizar el guardado
 
         async guardarDatosCaracterizacion() {
-        
+
             const campos = [{
                     valor: this.idEncuesta,
                     nombre: "ID Encuesta"
@@ -873,14 +873,6 @@ export default {
                     nombre: "Temperatura"
                 },
                 {
-                    valor: this.imc,
-                    nombre: "IMC"
-                },
-                {
-                    valor: this.clasificacionImc,
-                    nombre: "Clasificación IMC"
-                },
-                {
                     valor: this.Oizquierdo,
                     nombre: "Oído Izquierdo"
                 },
@@ -908,7 +900,7 @@ export default {
                     valor: this.seleccionadosAntecedentes,
                     nombre: "Antecedentes Personales"
                 },
-           
+
                 {
                     valor: this.seleccionadosRiesgos,
                     nombre: "Riesgos"
@@ -923,7 +915,7 @@ export default {
             const confirmado = window.confirm("¿Está seguro que desea guardar la información?");
             if (!confirmado) return;
             const DatosGuardados = {
-                estadoCaracterizacion:true,
+                estadoCaracterizacion: true,
                 idEncuesta: this.idEncuesta,
                 visita: this.visita,
                 tipovisita: this.tipovisita,
@@ -978,6 +970,27 @@ export default {
     },
     computed: {
         ...mapState(["usuario", "epss"]),
+
+        Calimc() {
+           // Validar que peso y talla estén definidos y talla > 0 para evitar división por cero
+      if (!this.peso || !this.talla || this.talla <= 0) return null;
+
+      // Calcular IMC: peso / (talla^2)
+      const imcCalc = this.peso / (this.talla * this.talla);
+
+      // Retornar con dos decimales
+      return imcCalc.toFixed(2);
+        },
+        CalclasificacionImc() {
+            if (this.Calimc === null) return '';
+            const imc = this.Calimc;
+            if (imc < 18.5) return 'Bajo peso';
+            else if (imc < 25) return 'Peso normal';
+            else if (imc < 30) return 'Sobrepeso';
+            else if (imc < 35) return 'Obesidad grado I';
+            else if (imc < 40) return 'Obesidad grado II';
+            else return 'Obesidad grado III';
+        }
     },
     async mounted() {
         this.idEncuesta = this.$route.params.idEncuesta;

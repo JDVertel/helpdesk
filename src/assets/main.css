@@ -46,3 +46,13 @@ a,
 hr{
   margin: 0.2rem;
 }
+.contenedor-centrado {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente los elementos hijos */
+  align-items: center; /* Centra verticalmente los elementos hijos (opcional, si el contenedor tiene altura) */
+}
+.linea-vertical {
+  width: 2px;
+  height: 100px;
+  background-color: #030303;
+}

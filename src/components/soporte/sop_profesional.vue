@@ -34,91 +34,93 @@
         <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
             <h5>Encuestas Pendientes x visita</h5>
             <br />
-            <div class="table-responsive">
-                <table class="table table-striped table-sm  w-auto">
-                    <thead>
-                        <tr>
-                            <th scope="col">Detalle</th>
+            <div class="container contenedor-centrado">
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                    <table class="table table-striped table-sm  w-auto">
+                        <thead>
+                            <tr>
+                                <th scope="col">Detalle</th>
 
-                            <th scope="col">Programacion</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        <tr v-for="(encuesta, index) in encuestas" :key="index">
-                            <td>
-                                <small>
-                                    Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
+                                <th scope="col">Programacion</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            <tr v-for="(encuesta, index) in encuestas" :key="index">
+                                <td>
+                                    <small>
+                                        Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
                       encuesta.eps
                     }}
-                                </small>
-                                <hr />
-                                <small>
-                                    Actividades:
-                                    {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
-                                <hr />
-                                <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
-                                <hr />
-                                <small>F Encuesta: {{ encuesta.fecha }}</small>
-                            </td>
-                            <td>
+                                    </small>
+                                    <hr />
+                                    <small>
+                                        Actividades:
+                                        {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
+                                    <hr />
+                                    <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
+                                    <hr />
+                                    <small>F Encuesta: {{ encuesta.fecha }}</small>
+                                </td>
+                                <td>
 
-                                <div class="row">
-                                    <div class="col">
-                                        <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                             <p>Agenda visita toma de muestras Pendiente...</p>
-                                        </div>
-                                        <div v-else-if="
+                                    <div class="row">
+                                        <div class="col">
+                                            <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
+                                                <p>Agenda visita toma de muestras Pendiente...</p>
+                                            </div>
+                                            <div v-else-if="
                           encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
                         ">
-                                        <p>Agenda visita toma de muestras Pendiente...</p>
-                                        </div>
+                                                <p>Agenda visita toma de muestras Pendiente...</p>
+                                            </div>
 
-                                        <div v-else>
-                                            <h6 class="ok">
-                                                <i class="bi bi-check2-circle"></i>Toma de muestras agendada
-                                            </h6>
-                                        </div>
-                                        <hr />
-                                        <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                            <p>Agenda visita medica Pendiente...</p>
-                                        </div>
-                                        <div v-else-if="
+                                            <div v-else>
+                                                <h6 class="ok">
+                                                    <i class="bi bi-check2-circle"></i>Toma de muestras agendada
+                                                </h6>
+                                            </div>
+                                            <hr />
+                                            <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
+                                                <p>Agenda visita medica Pendiente...</p>
+                                            </div>
+                                            <div v-else-if="
                           encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
                         ">
                                                 <p>Agenda visita medica Pendiente...</p>
-                                        </div>
-                                        <div v-else>
-                                            <h6 class="ok">
-                                                <i class="bi bi-check2-circle"></i>Visita medica agendada
-                                            </h6>
-                                        </div>
-                                        <hr />
-                                        <div v-if="encuesta.status_caracterizacion === false">
-                                         <p>Caracterizacion Pendiente...</p>
-                                        </div>
-                                        <div v-else>
-                                            <h6 class="ok">
-                                                <i class="bi bi-check2-circle"></i> Caracterizacion ok
-                                            </h6>
-                                        </div>
-                                        <hr />
-                                        <div>
-                                            <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
-                                                <i class="bi bi-calendar2-heart-fill">
-                                                    <small> Gestionar Cups</small></i>
-                                            </button>
+                                            </div>
+                                            <div v-else>
+                                                <h6 class="ok">
+                                                    <i class="bi bi-check2-circle"></i>Visita medica agendada
+                                                </h6>
+                                            </div>
+                                            <hr />
+                                            <div v-if="encuesta.status_caracterizacion === false">
+                                                <p>Caracterizacion Pendiente...</p>
+                                            </div>
+                                            <div v-else>
+                                                <h6 class="ok">
+                                                    <i class="bi bi-check2-circle"></i> Caracterizacion ok
+                                                </h6>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
+                                                    <i class="bi bi-calendar2-heart-fill">
+                                                        <small> Gestionar Cups</small></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
             <h5>Encuestas Diarias</h5>
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
