@@ -261,6 +261,12 @@ footer {
 .ok{
   color: rgb(6, 114, 255);
   text-shadow: 1px 0 0 1px rgba(2, 2, 2, 0.5);
+  font-size: small;
+}
+.pendiente{
+  color: rgb(241, 11, 45);
+  text-shadow: 1px 0 0 1px rgba(2, 2, 2, 0.5);
+  font-size: small;
 }
 .table{
   table-layout: fixed;

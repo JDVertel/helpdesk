@@ -66,27 +66,29 @@
                                     <div class="row">
                                         <div class="col">
                                             <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                                <p>Agenda visita toma de muestras Pendiente...</p>
+                                                <small>Agenda visita toma de muestras Pendiente...</small>
                                             </div>
                                             <div v-else-if="
                           encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
                         ">
-                                                <p>Agenda visita toma de muestras Pendiente...</p>
+                                                <h6 class="pendiente">
+                                                    <small>Agenda visita medica Pendiente...</small></h6>
                                             </div>
 
                                             <div v-else>
-                                                <h6 class="ok">
-                                                    <i class="bi bi-check2-circle"></i>Toma de muestras agendada
-                                                </h6>
+                                                <h6 class="pendiente">
+                                                    <small>Agenda visita medica Pendiente...</small></h6>
                                             </div>
                                             <hr />
                                             <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                                <p>Agenda visita medica Pendiente...</p>
+                                                <h6 class="pendiente">
+                                                    <small>Agenda visita medica Pendiente...</small></h6>
                                             </div>
                                             <div v-else-if="
                           encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
                         ">
-                                                <p>Agenda visita medica Pendiente...</p>
+                                                <h6 class="pendiente">
+                                                    <small>Agenda visita medica Pendiente...</small></h6>
                                             </div>
                                             <div v-else>
                                                 <h6 class="ok">
@@ -95,7 +97,9 @@
                                             </div>
                                             <hr />
                                             <div v-if="encuesta.status_caracterizacion === false">
-                                                <p>Caracterizacion Pendiente...</p>
+                                                <h6 class="pendiente">
+                                                    <small>Caracterizacion Pendiente...</small>
+                                                </h6>
                                             </div>
                                             <div v-else>
                                                 <h6 class="ok">

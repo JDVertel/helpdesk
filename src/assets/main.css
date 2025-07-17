@@ -56,3 +56,9 @@ hr{
   height: 100px;
   background-color: #030303;
 }
+/* Bootstrap >=5 ya trae border-end-md, pero personalizamos color/grosor */
+.border-end-md {
+  @media (min-width: 768px) {
+    border-right: 2px solid #0d6efd !important; /* azul institucional, cámbialo si deseas */
+  }
+}

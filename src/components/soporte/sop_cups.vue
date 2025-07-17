@@ -1,87 +1,81 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
 <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
-    <div class="container-fluid cabecera">
-
-        <h5><i class="bi bi-person"></i> Informacion del Paciente</h5>
-
-        <div class="row">
-            <div class="col-4"><strong>Nombre:</strong> {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1
-                    }}
-                {{ itemE.apellido2 }}
-
+    <div class="container-fluid cabecera rounded shadow-sm py-3 mb-3 bg-white">
+        <h5 class="fw-bold mb-3 text-primary">
+            <i class="bi bi-person"></i> Información del Paciente
+        </h5>
+        <div class="row align-items-stretch">
+            <div class="col-12 col-md-4 border-end-md mb-2 mb-md-0">
+                <strong>Nombre:</strong> {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1 }} {{ itemE.apellido2 }}
             </div>
-            <div class="col-4"><strong>Eps:</strong> {{ itemE.eps }}
-                <hr>
-                <strong>Regimen:</strong> {{ itemE.regimen }}
+            <div class="col-12 col-md-4 border-end-md mb-2 mb-md-0">
+                <strong>EPS:</strong> {{ itemE.eps }}<br>
+                <strong>Régimen:</strong> {{ itemE.regimen }}
             </div>
-            <div class="col-4">
-                <hr>
-                <strong>Sexo:</strong> {{ itemE.sexo }}
-                <hr> <strong>Edad:</strong> {{ edadActual(itemE.fechaNac) }}
+            <div class="col-12 col-md-4">
+                <strong>Sexo:</strong> {{ itemE.sexo }}<br>
+                <strong>Edad:</strong> {{ edadActual(itemE.fechaNac) }}
             </div>
         </div>
     </div>
-
-    <br />
-
-    <div class="container-fluid cabecera">
-
-        <h5><i class="bi bi-person-check-fill"></i> Actividades del paciente </h5>
-        <br>
-
-        <table class="table table-striped table-sm table-bordered w-auto">
-            <thead>
-                <tr>
-                    <th>Profesional Autorizado</th>
-                    <th>Actividades /+Cups</th>
-                    <th>Cups Asignados / Detalle</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id">
-                    <td><small>{{ actividad.Profesional }}</small></td>
-                    <td class="d-flex justify-content-between">
-                        <small>{{ actividad.nombre }}</small>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
+    <div style="max-height: 650px; overflow-y: auto;">
+        <div class="container-fluid bg-light rounded shadow-sm p-3">
+            <h5 class="fw-bold text-success mb-3">
+                <i class="bi bi-person-check-fill"></i> Actividades del paciente 
+            </h5>
+            <hr>
+            <div v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id" class="mb-4 pb-3 border-bottom">
+                <div class="row align-items-stretch">
+                    <div class="col-12 col-md-2 border-end-md mb-2 mb-md-0">
+                        <h6 class="fw-semibold">Profesionales:</h6>
+                        <small>{{ actividad.Profesional }}</small>
+                    </div>
+                    <div class="col-12 col-md-2 border-end-md mb-2 mb-md-0">
+                        <h6 class="fw-semibold">Actividad:</h6>
+                        <small>{{ actividad.nombre }}</small><br>
+                        <button class="btn btn-warning btn-sm mt-1"
+                                data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop"
+                                @click="integrarCup(actividad.id)"
+                                :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
                             <i class="bi bi-bookmark-heart"></i>
                         </button>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <h6 class="fw-semibold">Cups Asignados:</h6>
                         <span v-for="cup in actividad.cups" :key="cup.id">
                             <span v-for="itex in (cup.cups || [])" :key="itex?.id">
-                                <button class="btn btn-danger btn-sm m-1" v-if="itex && itex.Profesional === userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                                <small>{{ itex.DescripcionCUP }}</small>
-                                <span class="text-danger">/ Cant: {{ itex.cantidad }}</span>
-                                <span class="text-primary">/ Detalle:
-                                    {{ itex.detalle }} </span>
-                                <hr>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-2">
+                                        <button class="btn btn-danger btn-sm m-1"
+                                                v-if="itex && itex.Profesional === userData.cargo"
+                                                @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
+                                                <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-10">
+                                        <small class="fw-medium">{{ itex.DescripcionCUP }}</small>
+                                        <span class="badge bg-danger ms-1">Cant: {{ itex.cantidad }}</span>
+                                        <span class="badge bg-info ms-1 text-dark">Detalle: {{ itex.detalle }}</span>
+                                    </div>
+                                </div>
                             </span>
                         </span>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
-
-        <tr>
-            <td colspan="4" class="text-end">
-                <button class="btn btn-success btn-sm" @click="cerrarVisita()">
-                    <i class="bi bi-clipboard2-check"></i> Cerrar Visita
-                </button>
-            </td>
-        </tr>
-
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!------------------------------------------------------------- Modal -------------------------------------------------------------------------------->
-
+    <div class="my-3 text-end">
+        <button class="btn btn-success btn-sm" @click="cerrarVisita()">
+            <i class="bi bi-clipboard2-check"></i> Cerrar Visita
+        </button>
+    </div>
+    <!-- El modal queda igual, puedes mejorar clase 'modal-content' por 'shadow-lg' si gustas -->
     <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content shadow-lg">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
                         <i class="bi bi-file-earmark-plus"></i> Añadir CUPS a procedimientos
@@ -100,7 +94,6 @@
                                 </option>
                             </select>
                             <span v-if="cupsEPS.length === 0" class="text-muted">Cargando CUPS...</span>
-
                             <div class="row mt-2">
                                 <div class="col-2">Cantidad <input type="number" class="form-control" aria-label="Cantidad" v-model="cantidad"></div>
                                 <div class="col-10">
@@ -110,7 +103,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <button class="btn btn-warning btn-sm mt-2" @click="addCups(this.CupsSeleccionado, this.cantidad, this.detalle)">
                                 <i class="bi bi-plus-circle-dotted"></i> Agregar al listado
                             </button>
@@ -136,9 +128,7 @@
                             </tr>
                         </tbody>
                     </table>
-
                     <div v-if="cupsArray.length === 0">No hay CUPS seleccionados.</div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">
                             <i class="bi bi-x-square"></i> Cancelar
@@ -150,10 +140,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 </template>
+
 
 <script>
 import {
@@ -375,9 +365,12 @@ export default {
         },
 
         cerrarVisita() {
-            this.cerrarEncuesta({id:this.idEncuesta, cargo:this.userData.cargo})
-              
-         /*    console.log(this.idEncuesta, this.userData.cargo); */
+            this.cerrarEncuesta({
+                id: this.idEncuesta,
+                cargo: this.userData.cargo
+            })
+
+            /*    console.log(this.idEncuesta, this.userData.cargo); */
 
         },
 
@@ -411,5 +404,13 @@ select {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.cabecera {
+    background-color: #e9e9e9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-radius: 15px;
 }
 </style>
