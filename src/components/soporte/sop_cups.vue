@@ -2,6 +2,7 @@
 <!-- {{ InfoEncuestasById }} -->
 <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
     <div class="container-fluid cabecera">
+
         <h5><i class="bi bi-person"></i> Informacion del Paciente</h5>
 
         <div class="row">
@@ -54,8 +55,9 @@
                                     <i class="bi bi-trash"></i>
                                 </button>
                                 <small>{{ itex.DescripcionCUP }}</small>
-                                <span class="vr"></span> <strong>Cant:{{ itex.cantidad }} </strong>
-                                <span class="vr"></span> <strong>Detalle:{{ itex.detalle }} </strong>
+                                <span class="text-danger">/ Cant: {{ itex.cantidad }}</span>
+                                <span class="text-primary">/ Detalle:
+                                    {{ itex.detalle }} </span>
                                 <hr>
                             </span>
                         </span>
@@ -64,15 +66,15 @@
             </tbody>
 
         </table>
-        <footer>
-            <tr>
-                <td colspan="4" class="text-end">
-                    <button class="btn btn-success btn-sm" @click="cerrarVisita(this.userData.cargo)">
-                        <i class="bi bi-clipboard2-check"></i> Cerrar Visita
-                    </button>
-                </td>
-            </tr>
-        </footer>
+
+        <tr>
+            <td colspan="4" class="text-end">
+                <button class="btn btn-success btn-sm" @click="cerrarVisita()">
+                    <i class="bi bi-clipboard2-check"></i> Cerrar Visita
+                </button>
+            </td>
+        </tr>
+
     </div>
 
     <!------------------------------------------------------------- Modal -------------------------------------------------------------------------------->
@@ -158,6 +160,7 @@ import {
     mapActions,
     mapState
 } from "vuex";
+import moment from "moment";
 
 /* ----------------------------------------------------------------------------------------------- */
 export default {
@@ -187,8 +190,10 @@ export default {
             "cups",
             "encuestas",
             "cupsbyActividad",
-            "deleteCUPS"
+            "deleteCUPS",
+
         ]),
+
         //logica para obtener los cups filtrados por EPS y profesional
         dataencuesta() {
             return this.encuestas.length > 0 ? this.encuestas[0] : null;
@@ -208,6 +213,9 @@ export default {
                 cup.Profesional === this.userData.cargo
             );
         },
+        cargoUsuario: function () {
+            return this.userData && this.userData.cargo ? this.userData.cargo : "";
+        },
 
     },
 
@@ -218,7 +226,9 @@ export default {
             "getAllCups",
             "adicionarCups",
             "selectCupsByActividad",
+            "cerrarEncuesta"
         ]),
+
         edadActual(x) {
             if (!x) return null; // valida que haya fecha
 
@@ -261,16 +271,6 @@ export default {
 
             return edad;
         },
-        cerrarVisita(tipousuario) {
-            if (tipousuario === "Enfermero") {
-                alert("La visita ha sido cerrada exitosamente x enfermera");
-            } else if (tipousuario === "Medico") {
-                alert("La visita ha sido cerrada exitosamente x  medico");
-            } else {
-                alert("La visita ha sido cerrada exitosamente x auxiliar.");
-            }
-
-        },
 
         clear() {
             this.idItem = "";
@@ -293,6 +293,7 @@ export default {
                     alert("Este elemento ya fue agregado.");
                 }
                 this.CupsSeleccionado = {};
+                this.cantidad = 1; // Reiniciar cantidad
             } else {
                 alert("Seleccione una opción válida.");
             }
@@ -372,6 +373,14 @@ export default {
             /* this.idEncuesta = this.$route.params.idEncuesta; */
             await this.getEncuestaById(this.idEncuesta);
         },
+
+        cerrarVisita() {
+            this.cerrarEncuesta({id:this.idEncuesta, cargo:this.userData.cargo})
+              
+         /*    console.log(this.idEncuesta, this.userData.cargo); */
+
+        },
+
         watch: {
             '$route.params.idEncuesta'(newId) {
                 this.idEncuesta = newId;
@@ -380,6 +389,7 @@ export default {
         }
 
     },
+
     /* ----------------------------------------------------------------------------------------------- */
     async mounted() {
 

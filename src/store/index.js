@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 const db = getFirestore();
 const auth = getAuth();
 import router from "../router/index.js"; // Asegúrate de que la ruta sea correcta
+import moment from "moment"; // Asegúrate de tener moment.js instalado
 export default createStore({
     state: {
         encuestasFiltradasLabById: [],
@@ -426,7 +427,7 @@ export default createStore({
 
         adicionarCups: async ({ commit }, entradasC) => {
             try {
-                const { key, idcargo, cups: nuevosCups, idEncuesta, idActividad, nombre} = entradasC;
+                const { key, idcargo, cups: nuevosCups, idEncuesta, idActividad, nombre } = entradasC;
 
                 if (!key) throw new Error("El identificador 'key' es obligatorio");
 
@@ -1117,20 +1118,40 @@ export default createStore({
                 commit("clearUserData");
             }
         },
-        cerrarEncuesta: async ({ commit }, { id, user, fecha }) => {
-            console.log({ id, user, fecha });
-            try {
-                const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
-                    status_visita: true,
-                    fechavisita: fecha,
-                    idProfesionalAtiende: user,
-                });
-                return data;
-            } catch (error) {
-                console.error("Error en Action cerrarEncuesta:", error);
-                throw error;
-            }
-        },
+   cerrarEncuesta: async ({ commit }, { id, cargo, user, fecha = Date.now() }) => {
+    let varStatus = '';
+    let dateStatus = '';
+    let cargoTexto = '';
+
+    if (cargo === "Enfermero") {
+        varStatus = "status_gest_enfermera";
+        dateStatus = "fechagestEnfermera";
+        cargoTexto = "enfermera";
+    } else if (cargo === "Medico") {
+        varStatus = "status_gest_medica";
+        dateStatus = "fechagestMedica";
+        cargoTexto = "médico";
+    } else {
+        varStatus = "status_gest_aux";
+        dateStatus = "fechagestAuxiliar";
+        cargoTexto = "auxiliar";
+    }
+
+    alert(`La visita ha sido cerrada exitosamente por ${cargoTexto}.`);
+
+    try {
+        const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
+            [varStatus]: true,
+            [dateStatus]: moment(fecha).format("YYYY-MM-DD HH:mm:ss"),
+            idProfesionalAtiende: user, // Si no lo necesitas, puedes quitarlo
+        });
+        return data;
+    } catch (error) {
+        console.error("Error en Action cerrarEncuesta:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
 
 
 
