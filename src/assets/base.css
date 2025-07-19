@@ -268,6 +268,33 @@ footer {
   text-shadow: 1px 0 0 1px rgba(2, 2, 2, 0.5);
   font-size: small;
 }
-.table{
-  table-layout: fixed;
+/*  */
+
+
+.fila-con-columnas > div {
+  border-left: 1px solid #4e4e4e; /* Línea izquierda para separar columnas */
+  padding: 10px;}
+  
+.fila-con-columnas > div:first-child {
+  border-left: none; /* Quita línea a la primera columna */
 }
+
+.fila-con-columnas:hover {
+  background-color: #e4dede; /* Cambia color de fondo al pasar el mouse */
+}
+.Riesgos{
+  background-color: #a5c5e8;
+}
+.Actividades{
+  background-color: #d6ffb0;
+}
+.cupsAsignados{
+  background-color: #f6f2b1;
+}
+.profesionales{
+  background-color: #b6ddfd;
+}
+.paciente{
+  background-color: #efecf5;
+}
+/*  */

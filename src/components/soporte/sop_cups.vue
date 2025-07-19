@@ -1,15 +1,15 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
 <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
-    <div class="container-fluid cabecera rounded shadow-sm py-3 mb-3 bg-white">
+    <div class="container-fluid  rounded shadow-sm py-3 mb-3 paciente">
         <h5 class="fw-bold mb-3 text-primary">
             <i class="bi bi-person"></i> Información del Paciente
         </h5>
-        <div class="row align-items-stretch">
-            <div class="col-12 col-md-4 border-end-md mb-2 mb-md-0">
+        <div class="row align-items-stretch fila-con-columnas">
+            <div class="col-12 col-md-4  mb-2 mb-md-0">
                 <strong>Nombre:</strong> {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1 }} {{ itemE.apellido2 }}
             </div>
-            <div class="col-12 col-md-4 border-end-md mb-2 mb-md-0">
+            <div class="col-12 col-md-4  mb-2 mb-md-0">
                 <strong>EPS:</strong> {{ itemE.eps }}<br>
                 <strong>Régimen:</strong> {{ itemE.regimen }}
             </div>
@@ -20,38 +20,32 @@
         </div>
     </div>
     <div style="max-height: 650px; overflow-y: auto;">
-        <div class="container-fluid bg-light rounded shadow-sm p-3">
+        <div class="container-fluid bg-light rounded shadow-sm p-3 ">
             <h5 class="fw-bold text-success mb-3">
-                <i class="bi bi-person-check-fill"></i> Actividades del paciente 
+                <i class="bi bi-person-check-fill"></i> Actividades del paciente
             </h5>
             <hr>
             <div v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id" class="mb-4 pb-3 border-bottom">
-                <div class="row align-items-stretch">
-                    <div class="col-12 col-md-2 border-end-md mb-2 mb-md-0">
+                <div class="row align-items-stretch fila-con-columnas">
+                    <div class="col-12 col-md-2  mb-2 mb-md-0 profesionales">
                         <h6 class="fw-semibold">Profesionales:</h6>
                         <small>{{ actividad.Profesional }}</small>
                     </div>
-                    <div class="col-12 col-md-2 border-end-md mb-2 mb-md-0">
+                    <div class="col-12 col-md-2  mb-2 mb-md-0 Actividades">
                         <h6 class="fw-semibold">Actividad:</h6>
                         <small>{{ actividad.nombre }}</small><br>
-                        <button class="btn btn-warning btn-sm mt-1"
-                                data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop"
-                                @click="integrarCup(actividad.id)"
-                                :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
+                        <button class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
                             <i class="bi bi-bookmark-heart"></i>
                         </button>
                     </div>
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-8 cupsAsignados">
                         <h6 class="fw-semibold">Cups Asignados:</h6>
                         <span v-for="cup in actividad.cups" :key="cup.id">
                             <span v-for="itex in (cup.cups || [])" :key="itex?.id">
                                 <div class="row align-items-center mb-1">
                                     <div class="col-2">
-                                        <button class="btn btn-danger btn-sm m-1"
-                                                v-if="itex && itex.Profesional === userData.cargo"
-                                                @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
-                                                <i class="bi bi-trash"></i>
+                                        <button class="btn btn-danger btn-sm m-1" v-if="itex && itex.Profesional === userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
                                     <div class="col-10">
@@ -143,7 +137,6 @@
     </div>
 </div>
 </template>
-
 
 <script>
 import {
@@ -365,10 +358,12 @@ export default {
         },
 
         cerrarVisita() {
-            this.cerrarEncuesta({
-                id: this.idEncuesta,
-                cargo: this.userData.cargo
-            })
+            if (confirm("¿Estás seguro de que deseas cerrar las actividades de la visita?")) {
+                this.cerrarEncuesta({
+                    id: this.idEncuesta,
+                    cargo: this.userData.cargo
+                })
+            }
 
             /*    console.log(this.idEncuesta, this.userData.cargo); */
 

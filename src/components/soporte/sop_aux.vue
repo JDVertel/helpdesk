@@ -35,82 +35,93 @@
             <h5>Encuestas Pendientes x visita</h5>
             <br />
             <div class="container-fluid">
-
                 <h4>Detalle de Actividades</h4>
-<hr>
-                <div v-for="(encuesta, index) in encuestas" :key="index">
-                    <div class="row">
-                        <div class="col-12 col-md-4"> <small>
-                                <strong>Paciente:
-                                    {{ encuesta.nombre1 }} {{ encuesta.nombre2 }} {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong> /<strong>Eps:</strong>{{ encuesta.eps }} / <strong>F Nacimiento:</strong> {{ encuesta.fechaNac }} / <small> <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small> / <small><strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
-                            </small></div>
-                        <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width:0; min-height:80px;"></div>
-                        <div class="col-12 col-md-4"> <small>
-                                <strong>Actividades:</strong>
-                                {{ this.nombresActividades(encuesta.tipoActividad) }}</small></div>
-                        <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width:0; min-height:80px;"></div>
-                        <div class="col-12 col-md-3">
+                <hr />
+                <div class="container-fluid" style="max-height: 600px; overflow-y: auto">
+                    <div v-for="(encuesta, index) in encuestas" :key="index">
+                        <div class="row">
+                            <div class="col-12 col-md-4 paciente">
+                                <small>
+                                    <strong>Paciente: {{ encuesta.nombre1 }} {{ encuesta.nombre2 }}
+                                        {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong>
+                                    /<strong>Eps:</strong>{{ encuesta.eps }} /
+                                    <strong>F Nacimiento:</strong> {{ encuesta.fechaNac }} /
+                                    <small>
+                                        <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small>
+                                    / <small><strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
+                                </small>
+                            </div>
+                            <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width: 0; min-height: 80px"></div>
+                            <div class="col-12 col-md-4 Actividades">
+                                <small>
+                                    <strong>Actividades:</strong>
+                                    {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
+                            </div>
+                            <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width: 0; min-height: 80px"></div>
+                            <div class="col-12 col-md-3">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
+                                        <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
+                                            <i class="bi bi-droplet-half"> <small> Lab</small></i>
+                                        </button>
+                                    </div>
+                                    <div v-else-if="
+                        encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
+                      ">
+                                        <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
+                                            <i class="bi bi-droplet-half"> <small> Lab</small></i>
+                                        </button>
+                                    </div>
 
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                    <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
-                                        <i class="bi bi-droplet-half"> <small> Lab</small></i>
-                                    </button>
-                                </div>
-                                <div v-else-if="
-                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
-                        ">
-                                    <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">
-                                        <i class="bi bi-droplet-half"> <small> Lab</small></i>
-                                    </button>
-                                </div>
+                                    <div v-else>
+                                        <h5>
+                                            <span class="badge text-bg-secondary">
+                                                <i class="bi bi-check2-circle mt-1"></i>lab ok</span>
+                                        </h5>
+                                    </div>
 
-                                <div v-else>
+                                    <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
+                                        <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
+                                            <i class="bi bi-houses"><small> Visita</small></i>
+                                        </button>
+                                    </div>
+                                    <div v-else-if="
+                        encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
+                      ">
+                                        <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
+                                            <i class="bi bi-houses"><small> Visita</small></i>
+                                        </button>
+                                    </div>
+                                    <div v-else>
+                                        <h5>
+                                            <span class="badge text-bg-secondary">
+                                                <i class="bi bi-check2-circle"></i>visita ok</span>
+                                        </h5>
+                                    </div>
 
-                                    <h5> <span class="badge text-bg-secondary"> <i class="bi bi-check2-circle mt-1"></i>lab ok</span></h5>
+                                    <div v-if="encuesta.status_caracterizacion === false">
+                                        <button type="button" class="btn btn-warning btn-sm" @click="Caracterizar(encuesta.id)">
+                                            <i class="bi bi-calendar2-check"> <small> Caract</small></i>
+                                        </button>
+                                    </div>
+                                    <div v-else>
+                                        <h5>
+                                            <span class="badge text-bg-secondary">
+                                                <i class="bi bi-check2-circle"></i>caract ok</span>
+                                        </h5>
+                                    </div>
 
-                                </div>
-
-                                <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                    <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
-                                        <i class="bi bi-houses"><small> Visita</small></i>
-                                    </button>
-                                </div>
-                                <div v-else-if="
-                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
-                        ">
-                                    <button type="button" class="btn btn-info btn-sm" @click="Agendar(encuesta.id, 'visitamedica')">
-                                        <i class="bi bi-houses"><small> Visita</small></i>
-                                    </button>
-                                </div>
-                                <div v-else>
-
-                                    <h5> <span class="badge text-bg-secondary"> <i class="bi bi-check2-circle"></i>visita ok</span></h5>
-                                </div>
-
-                                <div v-if="encuesta.status_caracterizacion === false">
-                                    <button type="button" class="btn btn-warning btn-sm" @click="Caracterizar(encuesta.id)">
-                                        <i class="bi bi-calendar2-check">
-                                            <small> Caract</small></i>
-                                    </button>
-                                </div>
-                                <div v-else>
-
-                                    <h5> <span class="badge text-bg-secondary"> <i class="bi bi-check2-circle"></i>caract ok</span></h5>
-                                </div>
-
-                                <div>
-                                    <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
-                                        <i class="bi bi-calendar2-heart-fill">
-                                            <small> Cups</small></i>
-                                    </button>
+                                    <div>
+                                        <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
+                                            <i class="bi bi-calendar2-heart-fill"> <small> Cups</small></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <hr />
                     </div>
-                    <hr>
                 </div>
-
             </div>
         </div>
         <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
@@ -144,7 +155,6 @@
                     </tr>
                 </tbody>
             </table>
-
         </div>
         <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
             <h5>Encuestas Activas</h5>
@@ -205,7 +215,6 @@ export default {
             this.getAllRegistersByFechaStatus({
                 idUsuario: this.userData.numDocumento,
             });
-
         },
         Agendar(id, tipo) {
             this.$router.push({
@@ -263,7 +272,6 @@ export default {
         await this.getAllRegistersByFechaStatus({
             idUsuario: this.userData.numDocumento,
         });
-
     },
 };
 </script>
