@@ -37,7 +37,7 @@
 
                 <div class="row fila-con-columnas" tr v-for="(encuesta, index) in encuestas" :key="index">
                     <hr>
-                    <div class="col-6 col-md-3 p-1"> <small>
+                    <div class="col-12 col-md-3 p-1 paciente"> <small>
                             <strong> Paciente:</strong> {{ encuesta.nombre1 }} {{ encuesta.nombre2 }} {{ encuesta.apellido1 }} {{ encuesta.apellido2 }} <strong>| Eps:</strong>{{
                       encuesta.eps
                     }}
@@ -45,16 +45,17 @@
                             <small> <strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
                         </small></div>
                     <!--  -->
-                    <div class="col-6 col-md-3 Riesgos p-1"> <small> <strong>P Riesgo: </strong>{{ encuesta.poblacionRiesgo }}</small></div>
+                    <div class="col-12 col-md-3 Riesgos p-1"> <small> <strong>P Riesgo: </strong>{{ encuesta.poblacionRiesgo }}</small></div>
                     <!--  -->
-                    <div class="col-6 col-md-3 Actividades p-1"> <small>
+                    <div class="col-12 col-md-3 Actividades p-1"> <small>
                             <strong> Actividades:</strong>
                             {{ this.nombresActividades(encuesta.tipoActividad) }}</small></div>
                     <!--  -->
 
-                    <div class="col-6 col-md-3 p-1 cupsAsignados">
-                        <div class="container-fluid">
-                            <div>
+                    <div class="col-12 col-md-3 p-1 cupsAsignados">
+
+                        <div class="row">
+                            <div class="col-6 col-md-3">
                                 <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
                                     <small>Agenda visita toma de muestras Pendiente...</small>
                                 </div>
@@ -69,7 +70,8 @@
                                     <h6 class="pendiente">
                                         <small>Agenda visita medica Pendiente...</small></h6>
                                 </div>
-                                <hr />
+                            </div>
+                            <div class="col-6 col-md-3">
                                 <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
                                     <h6 class="pendiente">
                                         <small>Agenda visita medica Pendiente...</small></h6>
@@ -85,7 +87,8 @@
                                         <i class="bi bi-check2-circle"></i>Visita medica agendada
                                     </h6>
                                 </div>
-                                <hr />
+                            </div>
+                            <div class="col-6 col-md-3">
                                 <div v-if="encuesta.status_caracterizacion === false">
                                     <h6 class="pendiente">
                                         <small>Caracterizacion Pendiente...</small>
@@ -96,7 +99,8 @@
                                         <i class="bi bi-check2-circle"></i> Caracterizacion ok
                                     </h6>
                                 </div>
-                                <hr />
+                            </div>
+                            <div class="col-6 col-md-3">
                                 <div>
                                     <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
                                         <i class="bi bi-calendar2-heart-fill">
@@ -104,6 +108,7 @@
                                     </button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <!--  -->

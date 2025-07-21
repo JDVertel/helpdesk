@@ -791,11 +791,49 @@ export default createStore({
             }
         },
 
-        GetAllRegistersbyRange: async ({ commit }, rango) => {
+        /*         GetAllRegistersbyRange: async ({ commit }, rango) => {
+                    const { fechaInicio, fechaFin, idempleado, cargo } = rango;
+                    console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
+                        try {
+                           
+                          
+                       
+                            if (!fechaInicio || !fechaFin) {
+                                throw new Error("Debes proporcionar ambas fechas para el filtro.");
+                            }
+            
+                            const { data } = await firebase_api.get("/Encuesta.json");
+                            if (!data) {
+                                commit("setEncuestasfiltradas", []);
+                                return [];
+                            }
+            
+                            const encuestas = Object.entries(data).map(([key, value]) => ({
+                                id: key,
+                                ...value,
+                            }));
+            
+                            // Filtrar por rango de fechas usando el campo 'fecha'
+                            const encuestasFiltradas = encuestas.filter((encuesta) => {
+                                const fecha = encuesta.fecha; // El campo de fecha es 'fecha'
+                                if (!fecha) return false; // Si no hay fecha, no incluir
+            
+                                // Comparar como string porque el formato es YYYY-MM-DD
+                                return fecha >= fechaInicio && fecha <= fechaFin;
+                            });
+            
+                            commit("setEncuestasfiltradas", encuestasFiltradas);
+                            return encuestasFiltradas;
+                        } catch (error) {
+                            console.error("Error en GetAllRegistersbyRange:", error);
+                            throw error;
+                        }
+                }, */
+        /*  */
+        GetAllRegistersbyRangeAux: async ({ commit }, rango) => {
+            const { fechaInicio, fechaFin, idempleado, cargo } = rango;
+            console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
             try {
-                const { fechaInicio, fechaFin } = rango;
-                console.log("data que entra", fechaFin, fechaInicio);
-                // Validación de fechas requeridas
                 if (!fechaInicio || !fechaFin) {
                     throw new Error("Debes proporcionar ambas fechas para el filtro.");
                 }
@@ -811,13 +849,68 @@ export default createStore({
                     ...value,
                 }));
 
-                // Filtrar por rango de fechas usando el campo 'fecha'
                 const encuestasFiltradas = encuestas.filter((encuesta) => {
-                    const fecha = encuesta.fecha; // El campo de fecha es 'fecha'
-                    if (!fecha) return false; // Si no hay fecha, no incluir
+                    const fecha = encuesta.fecha;
+                    if (!fecha) return false;
 
-                    // Comparar como string porque el formato es YYYY-MM-DD
-                    return fecha >= fechaInicio && fecha <= fechaFin;
+                    // Filtrar rango de fechas
+                    if (!(fecha >= fechaInicio && fecha <= fechaFin)) return false;
+
+                    // Filtrar por idempleado si se proporcionó
+                    if (idempleado && encuesta.idEncuestador !== idempleado) return false;
+
+                    // Filtrar por cargo si se proporcionó
+                    /*   if (cargo && encuesta.status_gest_aux !== true) return false; */
+
+
+
+
+                    return true; // Si pasa todos los filtros, incluir
+                });
+
+                commit("setEncuestasfiltradas", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en GetAllRegistersbyRange:", error);
+                throw error;
+            }
+        },
+        GetAllRegistersbyRangeMed: async ({ commit }, rango) => {
+            const { fechaInicio, fechaFin, idempleado, cargo } = rango;
+            console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
+            try {
+                if (!fechaInicio || !fechaFin) {
+                    throw new Error("Debes proporcionar ambas fechas para el filtro.");
+                }
+
+                const { data } = await firebase_api.get("/Encuesta.json");
+                if (!data) {
+                    commit("setEncuestasfiltradas", []);
+                    return [];
+                }
+
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                const encuestasFiltradas = encuestas.filter((encuesta) => {
+                    const fecha = encuesta.fecha;
+                    if (!fecha) return false;
+
+                    // Filtrar rango de fechas
+                    if (!(fecha >= fechaInicio && fecha <= fechaFin)) return false;
+
+                    // Filtrar por idempleado si se proporcionó
+                    if (idempleado && encuesta.idMedicoAtiende !== idempleado) return false;
+
+                    // Filtrar por cargo si se proporcionó
+                    if (cargo && encuesta.status_gest_medica !== true) return false;
+                    if (cargo && encuesta.status_gest_enfermera !== true) return false;
+
+
+
+                    return true; // Si pasa todos los filtros, incluir
                 });
 
                 commit("setEncuestasfiltradas", encuestasFiltradas);
@@ -828,6 +921,58 @@ export default createStore({
             }
         },
 
+        GetAllRegistersbyRangeEnf: async ({ commit }, rango) => {
+            const { fechaInicio, fechaFin, idempleado, cargo } = rango;
+            console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
+            try {
+                if (!fechaInicio || !fechaFin) {
+                    throw new Error("Debes proporcionar ambas fechas para el filtro.");
+                }
+
+                const { data } = await firebase_api.get("/Encuesta.json");
+                if (!data) {
+                    commit("setEncuestasfiltradas", []);
+                    return [];
+                }
+
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                const encuestasFiltradas = encuestas.filter((encuesta) => {
+                    const fecha = encuesta.fecha;
+                    if (!fecha) return false;
+
+                    // Filtrar rango de fechas
+                    if (!(fecha >= fechaInicio && fecha <= fechaFin)) return false;
+
+                    // Filtrar por idempleado si se proporcionó
+                    if (idempleado && encuesta.idEnfermeroAtiende !== idempleado) return false;
+
+                    // Filtrar por cargo si se proporcionó
+                    if (cargo && encuesta.status_gest_medica !== true) return false;
+                    if (cargo && encuesta.status_gest_aux !== true) return false;
+                    if (cargo && encuesta.status_gest_enfermera !== true) return false;
+
+
+
+
+                    return true; // Si pasa todos los filtros, incluir
+                });
+
+                commit("setEncuestasfiltradas", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en GetAllRegistersbyRange:", error);
+                throw error;
+            }
+        },
+
+
+
+
+        /*  */
         getEncuestaById: async ({ commit }, idEncuesta) => {
             try {
                 const { data } = await firebase_api.get(`/Encuesta/${idEncuesta}.json`);
@@ -1118,39 +1263,39 @@ export default createStore({
                 commit("clearUserData");
             }
         },
-   cerrarEncuesta: async ({ commit }, { id, cargo, user, fecha = Date.now() }) => {
-    let varStatus = '';
-    let dateStatus = '';
-    let cargoTexto = '';
+        cerrarEncuesta: async ({ commit }, { id, cargo, user, fecha = Date.now() }) => {
+            let varStatus = '';
+            let dateStatus = '';
+            let cargoTexto = '';
 
-    if (cargo === "Enfermero") {
-        varStatus = "status_gest_enfermera";
-        dateStatus = "fechagestEnfermera";
-        cargoTexto = "enfermera";
-    } else if (cargo === "Medico") {
-        varStatus = "status_gest_medica";
-        dateStatus = "fechagestMedica";
-        cargoTexto = "médico";
-    } else {
-        varStatus = "status_gest_aux";
-        dateStatus = "fechagestAuxiliar";
-        cargoTexto = "auxiliar";
-    }
+            if (cargo === "Enfermero") {
+                varStatus = "status_gest_enfermera";
+                dateStatus = "fechagestEnfermera";
+                cargoTexto = "enfermera";
+            } else if (cargo === "Medico") {
+                varStatus = "status_gest_medica";
+                dateStatus = "fechagestMedica";
+                cargoTexto = "médico";
+            } else {
+                varStatus = "status_gest_aux";
+                dateStatus = "fechagestAuxiliar";
+                cargoTexto = "auxiliar";
+            }
 
-    alert(`La visita ha sido cerrada exitosamente por ${cargoTexto}.`);
+            alert(`La visita ha sido cerrada exitosamente por ${cargoTexto}.`);
 
-    try {
-        const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
-            [varStatus]: true,
-            [dateStatus]: moment(fecha).format("YYYY-MM-DD HH:mm:ss"),
-            idProfesionalAtiende: user, // Si no lo necesitas, puedes quitarlo
-        });
-        return data;
-    } catch (error) {
-        console.error("Error en Action cerrarEncuesta:", error.response?.data || error.message);
-        throw error;
-    }
-}
+            try {
+                const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
+                    [varStatus]: true,
+                    [dateStatus]: moment(fecha).format("YYYY-MM-DD HH:mm:ss"),
+                    idProfesionalAtiende: user, // Si no lo necesitas, puedes quitarlo
+                });
+                return data;
+            } catch (error) {
+                console.error("Error en Action cerrarEncuesta:", error.response?.data || error.message);
+                throw error;
+            }
+        }
 
 
 

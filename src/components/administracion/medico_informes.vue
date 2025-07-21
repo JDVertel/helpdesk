@@ -21,83 +21,83 @@
         </div>
     </div>
     <br />
-<div class="table-responsive">
-    <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
-        <thead>
-            <tr>
-                <th colspan="5" style="background: #d0e6f7">DATOS DE IPS</th>
-                <th colspan="7" style="background: #d0e6f7">DATOS DEL USUARIO</th>
-                <th colspan="11" style="background: #4aed31ff">TIPO ACTIVIDAD REALIZADA</th>
-                <th colspan="6" style="background: #d0e6f7">POBLACIÓN DE RIESGO</th>
-                <th colspan="1" style="background: #d0e6f7">REQUIERE REMISION</th>
-                <th colspan="3" style="background: #d0e6f7">ENCUESTADOR</th>
-            </tr>
-            <tr>
-                <th>DPTO</th>
-                <th>MUNICIPIO</th>
-                <th>NOMBRE</th>
-                <th>CODIGO</th>
-                <th>FECHA</th>
-                <!--  -->
-                <th>NOMBRE DEL USUARIO</th>
-                <th>TIPO ID</th>
-                <th>NUMERO ID</th>
-                <th>DIRECCION DEL USUARIO</th>
-                <th>TELEFONO DE USUARIO</th>
-                <th>BARRIO/VEREDA</th>
-                <th>DESPLAZAMIENTO EFECTIVO (Si/No)</th>
-                <!-- TIPO ACTIVIDAD -->
-                <th v-for="col in columnasTipoActividad" :key="col" style="writing-mode: vertical-lr">
-                    {{ col }}
-                </th>
-                <!-- POBLACIÓN DE RIESGO -->
-                <th v-for="col in columnasPoblacionRiesgo" :key="col" style="writing-mode: vertical-lr">
-                    {{ col }}
-                </th>
-                <!-- REMISION -->
-                <th style="writing-mode: vertical-lr">
-                    REQUIERE REMISION A PROCEDIMIENTOS (Si/No)
-                </th>
-                <th style="writing-mode: vertical-lr">NOMBRE</th>
-                <th style="writing-mode: vertical-lr">CARGO</th>
-                <th style="writing-mode: vertical-lr">DOCUMENTO</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="usuario in encuestasFiltradas" :key="usuario.id">
-                <td>{{ dataips.dpto }}</td>
-                <td>{{ dataips.municipio }}</td>
-                <td>{{ dataips.nombre }}</td>
-                <td>{{ dataips.codHab }}</td>
-                <td>{{ usuario.fecha }}</td>
-                <!-- DATOS DEL USUARIO -->
-                <td>
-                    {{ usuario.nombre1 }} {{ usuario.nombre2 }} {{ usuario.apellido1 }}
-                    {{ usuario.apellido2 }}
-                </td>
-                <td>{{ usuario.tipodoc }}</td>
-                <td>{{ usuario.numdoc }}</td>
-                <td>{{ usuario.direccion }}</td>
-                <td>{{ usuario.telefono }}</td>
-                <td>{{ usuario.barrioVeredacomuna?.barrio }}</td>
-                <td>{{ usuario.desplazamiento }}</td>
-                <!-- TIPO ACTIVIDAD REALIZADA -->
-                <td v-for="col in columnasTipoActividad" :key="col" style="text-align: center">
-                    <span v-if="obtenerNombresTipoActividad(usuario).includes(col)">X</span>
-                </td>
-                <!-- POBLACIÓN DE RIESGO -->
-                <td v-for="col in columnasPoblacionRiesgo" :key="col" style="text-align: center">
-                    <span v-if="usuario.poblacionRiesgo && usuario.poblacionRiesgo.includes(col)">X</span>
-                </td>
-                <!-- REMISION -->
-                <td style="text-align: center">{{ usuario.requiereRemision }}</td>
-                <!-- ENCUESTADOR -->
-                <td>{{ userData.nombre }}</td>
-                <td>{{ userData.cargo }}</td>
-                <td>{{ userData.numDocumento }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
+            <thead>
+                <tr>
+                    <th colspan="5" style="background: #d0e6f7">DATOS DE IPS</th>
+                    <th colspan="7" style="background: #d0e6f7">DATOS DEL USUARIO</th>
+                    <th colspan="11" style="background: #4aed31ff">TIPO ACTIVIDAD REALIZADA</th>
+                    <th colspan="6" style="background: #d0e6f7">POBLACIÓN DE RIESGO</th>
+                    <th colspan="1" style="background: #d0e6f7">REQUIERE REMISION</th>
+                    <th colspan="3" style="background: #d0e6f7">ENCUESTADOR</th>
+                </tr>
+                <tr>
+                    <th>DPTO</th>
+                    <th>MUNICIPIO</th>
+                    <th>NOMBRE</th>
+                    <th>CODIGO</th>
+                    <th>FECHA</th>
+                    <!--  -->
+                    <th>NOMBRE DEL USUARIO</th>
+                    <th>TIPO ID</th>
+                    <th>NUMERO ID</th>
+                    <th>DIRECCION DEL USUARIO</th>
+                    <th>TELEFONO DE USUARIO</th>
+                    <th>BARRIO/VEREDA</th>
+                    <th>DESPLAZAMIENTO EFECTIVO (Si/No)</th>
+                    <!-- TIPO ACTIVIDAD -->
+                    <th v-for="col in columnasTipoActividad" :key="col" style="writing-mode: vertical-lr">
+                        {{ col }}
+                    </th>
+                    <!-- POBLACIÓN DE RIESGO -->
+                    <th v-for="col in columnasPoblacionRiesgo" :key="col" style="writing-mode: vertical-lr">
+                        {{ col }}
+                    </th>
+                    <!-- REMISION -->
+                    <th style="writing-mode: vertical-lr">
+                        REQUIERE REMISION A PROCEDIMIENTOS (Si/No)
+                    </th>
+                    <th style="writing-mode: vertical-lr">NOMBRE</th>
+                    <th style="writing-mode: vertical-lr">CARGO</th>
+                    <th style="writing-mode: vertical-lr">DOCUMENTO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="usuario in encuestasFiltradas" :key="usuario.id">
+                    <td>{{ dataips.dpto }}</td>
+                    <td>{{ dataips.municipio }}</td>
+                    <td>{{ dataips.nombre }}</td>
+                    <td>{{ dataips.codHab }}</td>
+                    <td>{{ usuario.fecha }}</td>
+                    <!-- DATOS DEL USUARIO -->
+                    <td>
+                        {{ usuario.nombre1 }} {{ usuario.nombre2 }} {{ usuario.apellido1 }}
+                        {{ usuario.apellido2 }}
+                    </td>
+                    <td>{{ usuario.tipodoc }}</td>
+                    <td>{{ usuario.numdoc }}</td>
+                    <td>{{ usuario.direccion }}</td>
+                    <td>{{ usuario.telefono }}</td>
+                    <td>{{ usuario.barrioVeredacomuna?.barrio }}</td>
+                    <td>{{ usuario.desplazamiento }}</td>
+                    <!-- TIPO ACTIVIDAD REALIZADA -->
+                    <td v-for="col in columnasTipoActividad" :key="col" style="text-align: center">
+                        <span v-if="obtenerNombresTipoActividad(usuario).includes(col)">X</span>
+                    </td>
+                    <!-- POBLACIÓN DE RIESGO -->
+                    <td v-for="col in columnasPoblacionRiesgo" :key="col" style="text-align: center">
+                        <span v-if="usuario.poblacionRiesgo && usuario.poblacionRiesgo.includes(col)">X</span>
+                    </td>
+                    <!-- REMISION -->
+                    <td style="text-align: center">{{ usuario.requiereRemision }}</td>
+                    <!-- ENCUESTADOR -->
+                    <td>{{ userData.nombre }}</td>
+                    <td>{{ userData.cargo }}</td>
+                    <td>{{ userData.numDocumento }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </template>
@@ -111,7 +111,6 @@ export default {
     data() {
 
         return {
-         
 
             /* ----------------------------------------------------------- */
             fechaInicio: "",
@@ -141,17 +140,19 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["GetAllRegistersbyRange"]),
+        ...mapActions(["GetAllRegistersbyRangeMed"]),
 
         /* metodo para cargar los datos del profesional, y los datos de la ips */
         generarInforme() {
             let rango = {
                 fechaInicio: this.fechaInicio,
                 fechaFin: this.fechaFin,
-                evaluacion: "status_gest_medica"
+                idempleado: this.userData.numDocumento,
+                cargo: this.userData,
             };
-            this.GetAllRegistersbyRange(rango);
+            this.GetAllRegistersbyRangeMed(rango);
         },
+
         obtenerNombresTipoActividad(encuesta) {
             if (!encuesta.tipoActividad) return [];
             return Object.values(encuesta.tipoActividad).map(item => item.nombre);

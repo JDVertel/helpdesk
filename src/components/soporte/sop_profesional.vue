@@ -34,8 +34,94 @@
         <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
             <h5>Encuestas Pendientes x visita</h5>
             <br />
-            <div class="container contenedor-centrado">
-                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <div style="max-height: 650px; overflow-y: auto; mt-3">
+                <div v-for="(encuesta, index) in encuestas" :key="index">
+                    <div class="row">
+
+                        <div class="col-12 col-md-3 paciente"> <small>
+                                <strong>Paciente: </strong> {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
+                      encuesta.eps
+                    }}
+                            </small>
+
+                            <hr />
+                            <small> <strong>F Encuesta: </strong>{{ encuesta.fecha }}</small></div>
+                        <!--  -->
+                        <div class="col-12 col-md-3 Actividades">
+
+                            <small>
+                                <strong>Actividades:</strong>
+                                {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
+
+                        </div>
+                        <!--  -->
+                        <div class="col-12 col-md-3 Riesgos">
+                            <small> <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small></div>
+                        <!--  -->
+
+                        <div class="col-12 col-md-3 ">
+                            <div class="row">
+                                <div class="col-6 col-md-3">
+                                 <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
+                                <small>Agenda visita lab Pendiente...</small>
+                            </div>
+                            <div v-else-if="
+                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
+                        ">
+                                <small>Agenda lab Pendiente...</small>
+                            </div>
+
+                            <div v-else>
+                                <h6 class="ok">
+                                    <i class="bi bi-check2-circle"></i>Toma de muestras agendada
+                                </h6>
+                            </div>
+                                </div>
+                                <div class="col-6 col-md-3"> <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
+                                <small>Agenda visita Pendiente...</small>
+                            </div>
+                            <div v-else-if="
+                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
+                        ">
+                                <small>Agenda visita Pendiente...</small>
+                            </div>
+                            <div v-else>
+                                <h6 class="ok">
+                                    <i class="bi bi-check2-circle"></i>Visita medica ok
+                                </h6>
+                            </div></div>
+                                 <div class="col-6 col-md-3"><div v-if="encuesta.status_caracterizacion === false">
+                                <small>Caracterizacion Pendiente...</small>
+                            </div>
+                            <div v-else>
+                                <h6 class="ok">
+                                    <i class="bi bi-check2-circle"></i> Caracterizacion ok
+                                </h6>
+                            </div></div>
+                                <div class="col-6 col-md-3">        <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
+                                    <i class="bi bi-calendar2-heart-fill">
+                                        <small> Gestionar Cups</small></i>
+                                </button></div>
+
+                            </div>
+
+                            <!--             
+                            <hr />
+                          
+                            <hr />
+                            -->
+                            <hr />
+                            <div>
+                       
+                            </div>
+
+                        </div>
+                        <hr>
+                    </div>
+                    <!--  -->
+                </div>
+
+                <!--     <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                     <table class="table table-striped table-sm  w-auto">
                         <thead>
                             <tr>
@@ -115,7 +201,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">

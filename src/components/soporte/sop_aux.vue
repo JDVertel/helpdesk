@@ -40,25 +40,28 @@
                 <div class="container-fluid" style="max-height: 600px; overflow-y: auto">
                     <div v-for="(encuesta, index) in encuestas" :key="index">
                         <div class="row">
-                            <div class="col-12 col-md-4 paciente">
+                            <div class="col-12 col-md-2 paciente">
                                 <small>
                                     <strong>Paciente: {{ encuesta.nombre1 }} {{ encuesta.nombre2 }}
-                                        {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong>
-                                    /<strong>Eps:</strong>{{ encuesta.eps }} /
-                                    <strong>F Nacimiento:</strong> {{ encuesta.fechaNac }} /
-                                    <small>
-                                        <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small>
-                                    / <small><strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
+                                        {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong> <hr>
+                                    <strong>Eps:</strong>{{ encuesta.eps }} <hr>
+                                    <strong>F Nacimiento:</strong> {{ encuesta.fechaNac }}
+                        
                                 </small>
                             </div>
+                            <div class="col-12 col-md-3 Riesgos">
+                                        <small><strong>F Encuesta:</strong> <strong>{{ encuesta.fecha }}</strong></small> <hr>
+                                <small>
+                                    <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small>
+                            </div>
                             <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width: 0; min-height: 80px"></div>
-                            <div class="col-12 col-md-4 Actividades">
+                            <div class="col-12 col-md-3 Actividades">
                                 <small>
                                     <strong>Actividades:</strong>
                                     {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
                             </div>
                             <div class="d-none d-md-block border-start border-1 border-secondary h-100" style="width: 0; min-height: 80px"></div>
-                            <div class="col-12 col-md-3">
+                            <div class="col-12 col-md-2">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
                                         <button type="button" class="btn btn-success btn-sm" @click="Agendar(encuesta.id, 'tomamuestras')">

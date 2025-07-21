@@ -1,25 +1,23 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
 <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
-    <div class="container-fluid  rounded shadow-sm py-3 mb-3 paciente">
-        <h5 class="fw-bold mb-3 text-primary">
-            <i class="bi bi-person"></i> Información del Paciente
-        </h5>
-        <div class="row align-items-stretch fila-con-columnas">
-            <div class="col-12 col-md-4  mb-2 mb-md-0">
-                <strong>Nombre:</strong> {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1 }} {{ itemE.apellido2 }}
+    <div class="container-fluid  rounded shadow-sm py-3 mb-3 paciente p-1">
+
+        <div class="row align-items-stretch fila-con-columnas p-1">
+            <div class="col-12 col-md-4  mb-2 mb-md-0 p-1">
+                <strong>Paciente:</strong> {{ itemE.nombre1 }} {{ itemE.nombre2 }} {{ itemE.apellido1 }} {{ itemE.apellido2 }}
             </div>
-            <div class="col-12 col-md-4  mb-2 mb-md-0">
+            <div class="col-6 col-md-4  mb-2 mb-md-0 p-1">
                 <strong>EPS:</strong> {{ itemE.eps }}<br>
                 <strong>Régimen:</strong> {{ itemE.regimen }}
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-6 col-md-4 p-1">
                 <strong>Sexo:</strong> {{ itemE.sexo }}<br>
                 <strong>Edad:</strong> {{ edadActual(itemE.fechaNac) }}
             </div>
         </div>
     </div>
-    <div style="max-height: 650px; overflow-y: auto;">
+    <div style="max-height: 600px; overflow-y: auto;">
         <div class="container-fluid bg-light rounded shadow-sm p-3 ">
             <h5 class="fw-bold text-success mb-3">
                 <i class="bi bi-person-check-fill"></i> Actividades del paciente
@@ -27,11 +25,11 @@
             <hr>
             <div v-for="actividad in actividadesConMedico(itemE.tipoActividad)" :key="actividad.id" class="mb-4 pb-3 border-bottom">
                 <div class="row align-items-stretch fila-con-columnas">
-                    <div class="col-12 col-md-2  mb-2 mb-md-0 profesionales">
+                    <div class="col-12 col-md-2  mb-2 mb-md-0 profesionales horizontal">
                         <h6 class="fw-semibold">Profesionales:</h6>
                         <small>{{ actividad.Profesional }}</small>
                     </div>
-                    <div class="col-12 col-md-2  mb-2 mb-md-0 Actividades">
+                    <div class="col-12 col-md-2  mb-2 mb-md-0 Actividades horizontal">
                         <h6 class="fw-semibold">Actividad:</h6>
                         <small>{{ actividad.nombre }}</small><br>
                         <button class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
@@ -61,8 +59,8 @@
             </div>
         </div>
     </div>
-    <div class="my-3 text-end">
-        <button class="btn btn-success btn-sm" @click="cerrarVisita()">
+    <div class="footer my-3 text-end">
+        <button class="btn btn-success btn-sm" @click="cerrarVisita()" v-if="dataips!=''">
             <i class="bi bi-clipboard2-check"></i> Cerrar Visita
         </button>
     </div>
@@ -174,6 +172,7 @@ export default {
             "encuestas",
             "cupsbyActividad",
             "deleteCUPS",
+            "dataips"
 
         ]),
 
@@ -359,38 +358,49 @@ export default {
 
         cerrarVisita() {
             if (confirm("¿Estás seguro de que deseas cerrar las actividades de la visita?")) {
-                this.cerrarEncuesta({
-                    id: this.idEncuesta,
-                    cargo: this.userData.cargo
-                })
-            }
+                if (this.userData.cargo === 'auxiliar de enfermeria' || this.userData.cargo === 'medico') {
 
-            /*    console.log(this.idEncuesta, this.userData.cargo); */
+                    this.cerrarEncuesta({
+                        id: this.idEncuesta,
+                        cargo: this.userData.cargo
+                    })
+                } else {
+                    if (this.status_gest_aux === 'true' && this.status_gest_medica === 'true') {
+                        this.cerrarEncuesta({
+                            id: this.idEncuesta,
+                            cargo: this.userData.cargo
+                        });
+                    } else {
+                        alert("deben estar cerradas las actividades por auxiliar y medico antes de cerrar la visita.");
+                    }
+                }
+            }
+                /*    console.log(this.idEncuesta, this.userData.cargo); */
+
+            },
+
+            watch: {
+                '$route.params.idEncuesta'(newId) {
+                    this.idEncuesta = newId;
+                    this.recargar();
+                }
+            }
 
         },
 
-        watch: {
-            '$route.params.idEncuesta'(newId) {
-                this.idEncuesta = newId;
-                this.recargar();
-            }
-        }
+        /* ----------------------------------------------------------------------------------------------- */
+        async mounted() {
 
-    },
+            await this.getAllCups();
 
-    /* ----------------------------------------------------------------------------------------------- */
-    async mounted() {
+        },
 
-        await this.getAllCups();
-
-    },
-
-    /* ----------------------------------------------------------------------------------------------- */
-    async created() {
-        this.idEncuesta = this.$route.params.idEncuesta;
-        await this.getEncuestaById(this.idEncuesta);
-    },
-};
+        /* ----------------------------------------------------------------------------------------------- */
+        async created() {
+            this.idEncuesta = this.$route.params.idEncuesta;
+            await this.getEncuestaById(this.idEncuesta);
+        },
+    };
 </script>
 
 <style>
