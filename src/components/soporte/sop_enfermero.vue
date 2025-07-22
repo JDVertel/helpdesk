@@ -56,49 +56,8 @@
 
                         <div class="row">
                             <div class="col-6 col-md-3">
-                                <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                    <small>Agenda visita toma de muestras Pendiente...</small>
-                                </div>
-                                <div v-else-if="
-                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
-                        ">
-                                    <h6 class="pendiente">
-                                        <small>Agenda visita medica Pendiente...</small></h6>
-                                </div>
 
-                                <div v-else>
-                                    <h6 class="pendiente">
-                                        <small>Agenda visita medica Pendiente...</small></h6>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                    <h6 class="pendiente">
-                                        <small>Agenda visita medica Pendiente...</small></h6>
-                                </div>
-                                <div v-else-if="
-                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
-                        ">
-                                    <h6 class="pendiente">
-                                        <small>Agenda visita medica Pendiente...</small></h6>
-                                </div>
-                                <div v-else>
-                                    <h6 class="ok">
-                                        <i class="bi bi-check2-circle"></i>Visita medica agendada
-                                    </h6>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div v-if="encuesta.status_caracterizacion === false">
-                                    <h6 class="pendiente">
-                                        <small>Caracterizacion Pendiente...</small>
-                                    </h6>
-                                </div>
-                                <div v-else>
-                                    <h6 class="ok">
-                                        <i class="bi bi-check2-circle"></i> Caracterizacion ok
-                                    </h6>
-                                </div>
+                                gestion medica: {{ encuesta.status_gest_medica }} gestion auxiliar:{{ encuesta.status_gest_aux }}
                             </div>
                             <div class="col-6 col-md-3">
                                 <div>
@@ -115,93 +74,7 @@
                 </div>
             </div>
             <br />
-            <!--  <div class="container contenedor-centrado">
-                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">Detalle</th>
 
-                                <th scope="col">Programacion</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <tr v-for="(encuesta, index) in encuestas" :key="index">
-                                <td>
-                                    <small>
-                                        Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }} | Eps:{{
-                      encuesta.eps
-                    }}
-                                    </small>
-                                    <hr />
-                                    <small>
-                                        Actividades:
-                                        {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
-                                    <hr />
-                                    <small>P Riesgo: {{ encuesta.poblacionRiesgo }}</small>
-                                    <hr />
-                                    <small>F Encuesta: {{ encuesta.fecha }}</small>
-                                </td>
-                                <td>
-
-                                    <div class="row">
-                                        <div class="col">
-                                            <div v-if="encuesta.Agenda_tomademuestras?.cita_tomamuestras === false">
-                                                <small>Agenda visita toma de muestras Pendiente...</small>
-                                            </div>
-                                            <div v-else-if="
-                          encuesta.Agenda_tomademuestras?.cita_tomamuestras === undefined
-                        ">
-                                                <h6 class="pendiente">
-                                                    <small>Agenda visita medica Pendiente...</small></h6>
-                                            </div>
-
-                                            <div v-else>
-                                                <h6 class="pendiente">
-                                                    <small>Agenda visita medica Pendiente...</small></h6>
-                                            </div>
-                                            <hr />
-                                            <div v-if="encuesta.Agenda_Visitamedica?.cita_visitamedica === false">
-                                                <h6 class="pendiente">
-                                                    <small>Agenda visita medica Pendiente...</small></h6>
-                                            </div>
-                                            <div v-else-if="
-                          encuesta.Agenda_Visitamedica?.cita_visitamedica === undefined
-                        ">
-                                                <h6 class="pendiente">
-                                                    <small>Agenda visita medica Pendiente...</small></h6>
-                                            </div>
-                                            <div v-else>
-                                                <h6 class="ok">
-                                                    <i class="bi bi-check2-circle"></i>Visita medica agendada
-                                                </h6>
-                                            </div>
-                                            <hr />
-                                            <div v-if="encuesta.status_caracterizacion === false">
-                                                <h6 class="pendiente">
-                                                    <small>Caracterizacion Pendiente...</small>
-                                                </h6>
-                                            </div>
-                                            <div v-else>
-                                                <h6 class="ok">
-                                                    <i class="bi bi-check2-circle"></i> Caracterizacion ok
-                                                </h6>
-                                            </div>
-                                            <hr />
-                                            <div>
-                                                <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
-                                                    <i class="bi bi-calendar2-heart-fill">
-                                                        <small> Gestionar Cups</small></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div> -->
         </div>
         <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
             <h5>Encuestas Diarias</h5>

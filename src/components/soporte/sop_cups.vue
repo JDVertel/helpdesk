@@ -355,52 +355,54 @@ export default {
             /* this.idEncuesta = this.$route.params.idEncuesta; */
             await this.getEncuestaById(this.idEncuesta);
         },
-
         cerrarVisita() {
+            // Confirmar que el usuario quiere cerrar la visita
             if (confirm("¿Estás seguro de que deseas cerrar las actividades de la visita?")) {
-                if (this.userData.cargo === 'auxiliar de enfermeria' || this.userData.cargo === 'medico') {
+                const cargo = this.userData.cargo;
 
+                // Si el usuario es Auxiliar de enfermería o Médico, cerrar directamente
+                if (cargo === 'Auxiliar de enfermeria' || cargo === 'Medico') {
                     this.cerrarEncuesta({
                         id: this.idEncuesta,
-                        cargo: this.userData.cargo
-                    })
-                } else {
-                    if (this.status_gest_aux === 'true' && this.status_gest_medica === 'true') {
+                        cargo: cargo
+                    });
+                }
+                // Si el usuario es Enfermero, verificar que las actividades de Auxiliar y Médico ya estén cerradas
+                else if (cargo === 'Enfermero') {
+                    if (this.encuestas[0].status_gest_aux === true && this.encuestas[0].status_gest_medica === true) {
                         this.cerrarEncuesta({
                             id: this.idEncuesta,
-                            cargo: this.userData.cargo
+                            cargo: cargo
                         });
                     } else {
-                        alert("deben estar cerradas las actividades por auxiliar y medico antes de cerrar la visita.");
+                        alert("Deben estar cerradas las actividades por Auxiliar y Médico antes de cerrar la visita.");
                     }
                 }
             }
-                /*    console.log(this.idEncuesta, this.userData.cargo); */
+        }
+    },
+    /*    console.log(this.idEncuesta, this.userData.cargo); */
 
-            },
+    watch: {
+        '$route.params.idEncuesta'(newId) {
+            this.idEncuesta = newId;
+            this.recargar();
+        }
+    },
 
-            watch: {
-                '$route.params.idEncuesta'(newId) {
-                    this.idEncuesta = newId;
-                    this.recargar();
-                }
-            }
+    /* ----------------------------------------------------------------------------------------------- */
+    async mounted() {
 
-        },
+        await this.getAllCups();
 
-        /* ----------------------------------------------------------------------------------------------- */
-        async mounted() {
+    },
 
-            await this.getAllCups();
-
-        },
-
-        /* ----------------------------------------------------------------------------------------------- */
-        async created() {
-            this.idEncuesta = this.$route.params.idEncuesta;
-            await this.getEncuestaById(this.idEncuesta);
-        },
-    };
+    /* ----------------------------------------------------------------------------------------------- */
+    async created() {
+        this.idEncuesta = this.$route.params.idEncuesta;
+        await this.getEncuestaById(this.idEncuesta);
+    },
+};
 </script>
 
 <style>

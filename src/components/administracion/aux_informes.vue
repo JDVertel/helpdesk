@@ -21,7 +21,7 @@
         </div>
     </div>
     <br />
-    <div class="table-responsive">
+    <div class="table-responsive" v-if="activacion">
         <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
             <thead>
                 <tr>
@@ -109,12 +109,10 @@ import {
 } from "vuex";
 export default {
     data() {
-
         return {
-
-            /* ----------------------------------------------------------- */
             fechaInicio: "",
             fechaFin: "",
+            activacion: false,
             columnasTipoActividad: [
                 "Consulta PYMS",
                 "Consulta Morbilidad",
@@ -136,7 +134,6 @@ export default {
                 "Orientacion sexual diversa",
                 "Grupo etnico",
             ],
-
         };
     },
     methods: {
@@ -149,9 +146,9 @@ export default {
                 fechaFin: this.fechaFin,
                 idempleado: this.userData.numDocumento,
                 cargo:this.userData.cargo,
-
             };
             this.GetAllRegistersbyRangeAux(rango);
+            this.activacion = true;
         },
         obtenerNombresTipoActividad(encuesta) {
             if (!encuesta.tipoActividad) return [];

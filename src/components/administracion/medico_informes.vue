@@ -3,7 +3,7 @@
     <h1>Medico Informes</h1>
 
     <hr>
-
+{{ userData }}
     <h5>Seleccione el rango de fechas a mostrar</h5>
     <div class="row">
         <div class="col-6 col-md-4">
@@ -15,13 +15,13 @@
             <input type="date" id="fechaFin" class="form-control" v-model="fechaFin" required />
         </div>
         <div class="col-12 col-md-4">
-            <button type="button" class="btn btn-warning btn-sm mt-4" @click="generarInforme()">
+            <button type="button" class="btn btn-warning btn-sm mt-4" @click="generarInforme()" >
                 Generar Informe
             </button>
         </div>
     </div>
     <br />
-    <div class="table-responsive">
+    <div class="table-responsive" v-if="activacion">
         <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
             <thead>
                 <tr>
@@ -115,6 +115,7 @@ export default {
             /* ----------------------------------------------------------- */
             fechaInicio: "",
             fechaFin: "",
+            activacion:false,
             columnasTipoActividad: [
                 "Consulta PYMS",
                 "Consulta Morbilidad",
@@ -148,11 +149,11 @@ export default {
                 fechaInicio: this.fechaInicio,
                 fechaFin: this.fechaFin,
                 idempleado: this.userData.numDocumento,
-                cargo: this.userData,
+                cargo: this.userData.cargo,
             };
             this.GetAllRegistersbyRangeMed(rango);
+            this.activacion = true;
         },
-
         obtenerNombresTipoActividad(encuesta) {
             if (!encuesta.tipoActividad) return [];
             return Object.values(encuesta.tipoActividad).map(item => item.nombre);
@@ -160,7 +161,9 @@ export default {
 
     },
     computed: {
-        ...mapState(["encuestasFiltradas", "dataips", "userData"]),
+        ...mapState(["encuestasFiltradas", "dataips", "userData","uid"]),
+
+
 
     },
 

@@ -1,8 +1,10 @@
 <template>
-<div class="container-fluid">
+<div class="container">
     <h5 class="center mt-2"><i class="bi bi-journal-medical"></i> Registro de Demanda Inducida</h5>
     <br />
     <!-- FORMULARIO -->
+
+
 
     <form @submit.prevent="addRegistroEncuesta">
         <div class="row">
@@ -184,11 +186,10 @@
         </div>
         <!--     medicos:{{ medicosByGrupo }} <br>
         enf:{{ enfermerosByGrupo }} <br> -->
-        <button type="submit" class="btn btn-primary" v-if="userData">Guardar Demanda inducida</button>
+        <button type="submit" class="btn btn-primary" v-if="userData" :disabled="enviando">Guardar Demanda inducida</button>
     </form>
-
-    <br>
 </div>
+
 </template>
 
 <script>
@@ -220,6 +221,7 @@ export default {
         requiereRemision: "",
         medico: "",
         enfermero: "",
+        enviando: false,
 
         tipoActividadExtramural: [{
                 nombre: "Consulta PYMS",
@@ -322,7 +324,9 @@ export default {
         ListtipoActividad: [],
     }),
     methods: {
-        addRegistroEncuesta() {
+        async addRegistroEncuesta() {
+            if (this.enviando) return;
+            this.enviando = true;
             // Validación de campos obligatorios
             if (
                 !this.eps ||
@@ -341,9 +345,9 @@ export default {
                 !this.requiereRemision ||
                 !this.userData.numDocumento ||
                 !this.medico || !this.enfermero
-
             ) {
                 alert("Por favor, complete todos los campos obligatorios o logeate nuevamente.");
+                this.enviando = false;
                 return;
             }
 
@@ -380,17 +384,19 @@ export default {
                 poblacionRiesgo: this.ListpoblacionRiesgo,
                 requiereRemision: this.requiereRemision,
             };
-            console.log(registro);
-            this.createNewRegister(registro)
-                .then(() => {
-                    alert("Registro creado exitosamente");
-                    this.resetForm();
-                    this.$router.push("/sop_home");
-                })
-                .catch((error) => {
-                    console.error("Error al crear el registro:", error);
-                    alert("Error al crear el registro");
-                });
+            try {
+                console.log(registro);
+                await this.createNewRegister(registro);
+                alert("Registro creado exitosamente");
+                this.resetForm();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                this.$router.push("/sop_aux");
+            } catch (error) {
+                console.error("Error al crear el registro:", error);
+                alert("Error al crear el registro");
+            } finally {
+                this.enviando = false;
+            }
         },
 
         ...mapActions(["createNewRegister", "getAllComunaBarrios", "getAllMedicosbyGrupo", "getAllEnfermerosbyGrupo"]),
@@ -399,6 +405,12 @@ export default {
                 // Verifica si el elemento ya existe en el array
                 if (!this.ListpoblacionRiesgo.includes(this.poblacionRiesgo)) {
                     this.ListpoblacionRiesgo.push(this.poblacionRiesgo);
+                    this.$nextTick(() => {
+                        const items = this.$el.querySelectorAll('.comb_B .list-group-item');
+                        if (items.length > 0) {
+                            items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
                 } else {
                     alert("Este elemento ya fue agregado.");
                 }
@@ -413,6 +425,12 @@ export default {
                 // Verifica si el elemento ya existe en el array
                 if (!this.ListtipoActividad.includes(this.tipoActividad)) {
                     this.ListtipoActividad.push(this.tipoActividad);
+                    this.$nextTick(() => {
+                        const items = this.$el.querySelectorAll('.comb_A .list-group-item');
+                        if (items.length > 0) {
+                            items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
                 } else {
                     alert("Este elemento ya fue agregado.");
                 }
@@ -482,4 +500,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* Elimina restricciones de scroll para permitir desplazamiento libre */
+</style>
