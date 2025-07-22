@@ -1,195 +1,200 @@
 <template>
-<div class="container">
-    <h5 class="center mt-2"><i class="bi bi-journal-medical"></i> Registro de Demanda Inducida</h5>
-    <br />
-    <!-- FORMULARIO -->
+<div>
+    <div v-if="enviando" class="overlay-guardando">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Guardando...</span>
+        </div>
+        <div class="texto-guardando">Guardando registro, por favor espere...</div>
+    </div>
+    <div class="container" :aria-busy="enviando">
+        <h5 class="center mt-2"><i class="bi bi-journal-medical"></i> Registro de Demanda Inducida</h5>
+        <br />
+        <!-- FORMULARIO -->
 
-
-
-    <form @submit.prevent="addRegistroEncuesta">
-        <div class="row">
-            <div class="col-6 col-md-3 mb-3">
-                <label for="eps" class="form-label">EPS del paciente</label>
-                <select id="eps" v-model="eps" class="form-select" required>
-                    <option value="">Seleccione</option>
-                    <option v-for="(ep, index) in Deps" :key="index" :value="ep.nombre">
-                        {{ ep.nombre }}
-                    </option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="regimen" class="form-label">Regimen del paciente</label>
-                <select id="regimen" v-model="regimen" class="form-select" required>
-                    <option value="">Seleccione</option>
-                    <option v-for="(regimen, index) in Dregimen" :key="index" :value="regimen.nombre">
-                        {{ regimen.nombre }}
-                    </option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="nombre1" class="form-label">Primer Nombre</label>
-                <input type="text" id="nombre1" v-model="nombre1" class="form-control" required />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="nombre2" class="form-label">Segundo Nombre</label>
-                <input type="text" id="nombre2" v-model="nombre2" class="form-control" />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="apellido1" class="form-label">Primer Apellido</label>
-                <input type="text" id="apellido1" v-model="apellido1" class="form-control" required />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="apellido2" class="form-label">Segundo Apellido</label>
-                <input type="text" id="apellido2" v-model="apellido2" class="form-control" />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                <input type="date" id="fechaNac" v-model="fechaNac" class="form-control" required />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="sexo" class="form-label">Sexo</label>
-                <select id="sexo" v-model="sexo" class="form-select" required>
-                    <option value="">Seleccione</option>
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="tipodoc" class="form-label">Tipo de Documento</label>
-                <select id="tipodoc" v-model="tipodoc" class="form-select" required>
-                    <option value="">Seleccione</option>
-                    <option value="RC">Registro Civil</option>
-                    <option value="TI">Tarjeta de Identidad</option>
-                    <option value="CC">Cédula de Ciudadanía</option>
-                    <option value="CE">Cédula de Extranjería</option>
-                    <option value="NV">Certificado nacido vivo</option>
-                    <option value="PA">Pasaporte</option>
-                    <option value="PE">Permiso Especial de Permanencia</option>
-                    <option value="MS">Menos sin identificacion</option>
-                    <option value="AS">Adulto sin identificacion</option>
-                    <option value="PT">Permiso por proteccion temporal</option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="numdoc" class="form-label">Número de Documento</label>
-                <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="direccion" class="form-label">Dirección</label>
-                <input type="text" id="direccion" v-model="direccion" class="form-control" required />
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="number" id="telefono" v-model="telefono" class="form-control" required />
-            </div>
-
-            <div class="col-12 col-md-3 mb-3">
-                <label for="barrioVeredacomuna" class="form-label">Barrio-vereda/comuna</label>
-                <div class="horizontal">
-                    <select id="barrioVeredacomuna" v-model="barrioVeredacomuna" class="form-select" required>
+        <form @submit.prevent="addRegistroEncuesta">
+            <div class="row">
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="eps" class="form-label">EPS del paciente</label>
+                    <select id="eps" v-model="eps" class="form-select" required>
                         <option value="">Seleccione</option>
-                        <option :value="option" v-for="(option, index) in comunasBarrios" :key="index">
-                            {{ option.barrio }} ({{ option.comuna }})
+                        <option v-for="(ep, index) in Deps" :key="index" :value="ep.nombre">
+                            {{ ep.nombre }}
                         </option>
                     </select>
-                    <button class="btn btn-warning btn-sm" @click="updateBarrios"><i class="bi bi-arrow-repeat"></i></button>
                 </div>
-            </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="regimen" class="form-label">Regimen del paciente</label>
+                    <select id="regimen" v-model="regimen" class="form-select" required>
+                        <option value="">Seleccione</option>
+                        <option v-for="(regimen, index) in Dregimen" :key="index" :value="regimen.nombre">
+                            {{ regimen.nombre }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="nombre1" class="form-label">Primer Nombre</label>
+                    <input type="text" id="nombre1" v-model="nombre1" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="nombre2" class="form-label">Segundo Nombre</label>
+                    <input type="text" id="nombre2" v-model="nombre2" class="form-control" />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="apellido1" class="form-label">Primer Apellido</label>
+                    <input type="text" id="apellido1" v-model="apellido1" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="apellido2" class="form-label">Segundo Apellido</label>
+                    <input type="text" id="apellido2" v-model="apellido2" class="form-control" />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
+                    <input type="date" id="fechaNac" v-model="fechaNac" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="sexo" class="form-label">Sexo</label>
+                    <select id="sexo" v-model="sexo" class="form-select" required>
+                        <option value="">Seleccione</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="tipodoc" class="form-label">Tipo de Documento</label>
+                    <select id="tipodoc" v-model="tipodoc" class="form-select" required>
+                        <option value="">Seleccione</option>
+                        <option value="RC">Registro Civil</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="CE">Cédula de Extranjería</option>
+                        <option value="NV">Certificado nacido vivo</option>
+                        <option value="PA">Pasaporte</option>
+                        <option value="PE">Permiso Especial de Permanencia</option>
+                        <option value="MS">Menos sin identificacion</option>
+                        <option value="AS">Adulto sin identificacion</option>
+                        <option value="PT">Permiso por proteccion temporal</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="numdoc" class="form-label">Número de Documento</label>
+                    <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input type="text" id="direccion" v-model="direccion" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="number" id="telefono" v-model="telefono" class="form-control" required />
+                </div>
 
-            <div class="col-12 col-md-3 mb-3">
-                <label for="tipoActividad" class="form-label">Tipo de Actividad (Proyectada)
-                </label>
-                <div class="row">
-                    <div class="col-10">
-                        <select id="tipoActividad" v-model="tipoActividad" class="form-select">
+                <div class="col-12 col-md-3 mb-3">
+                    <label for="barrioVeredacomuna" class="form-label">Barrio-vereda/comuna</label>
+                    <div class="horizontal">
+                        <select id="barrioVeredacomuna" v-model="barrioVeredacomuna" class="form-select" required>
                             <option value="">Seleccione</option>
-                            <option :value="option" v-for="(option, index) in tipoActividadExtramural" :key="index">
-                                {{ option.nombre }}
+                            <option :value="option" v-for="(option, index) in comunasBarrios" :key="index">
+                                {{ option.barrio }} ({{ option.comuna }})
                             </option>
                         </select>
-                    </div>
-                    <div class="col-2" v-if="tipoActividad !== ''">
-                        <button class="btn btn-warning btn-sm" @click="addActividad">+</button>
+                        <button class="btn btn-warning btn-sm" @click="updateBarrios"><i class="bi bi-arrow-repeat"></i></button>
                     </div>
                 </div>
-                <br />
-                <div class="container comb_A">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="(list, index) in ListtipoActividad" :key="index">
-                            <button class="btn btn-danger btn-sm" @click="removeActividad(index)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                            {{ list.nombre }}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-12 col-md-3 mb-3">
-                <label for="poblacionRiesgo" class="form-label">Población de Riesgo</label>
-                <div class="row">
-                    <div class="col-10">
-                        <select id="poblacionRiesgo" v-model="poblacionRiesgo" class="form-select">
-                            <option value="">Seleccione</option>
-                            <option :value="option2.nombre" v-for="(option2, index) in poblacionRiesgoOptions" :key="index">
-                                {{ option2.nombre }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-2">
-                        <div class="col-2" v-if="poblacionRiesgo !== ''">
-                            <button class="btn btn-warning btn-sm" @click="addRiesgo">+</button>
+
+                <div class="col-12 col-md-3 mb-3">
+                    <label for="tipoActividad" class="form-label">Tipo de Actividad (Proyectada)
+                    </label>
+                    <div class="row">
+                        <div class="col-10">
+                            <select id="tipoActividad" v-model="tipoActividad" class="form-select">
+                                <option value="">Seleccione</option>
+                                <option :value="option" v-for="(option, index) in tipoActividadExtramural" :key="index">
+                                    {{ option.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-2" v-if="tipoActividad !== ''">
+                            <button class="btn btn-warning btn-sm" @click="addActividad">+</button>
                         </div>
                     </div>
+                    <br />
+                    <div class="container comb_A">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" v-for="(list, index) in ListtipoActividad" :key="index">
+                                <button class="btn btn-danger btn-sm" @click="removeActividad(index)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                {{ list.nombre }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <br />
-                <div class="container comb_B">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="(list, index) in ListpoblacionRiesgo" :key="index">
-                            <button class="btn btn-danger btn-sm" @click="removeRiesgo(index)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                            {{ list }}
-                        </li>
-                    </ul>
+                <div class="col-12 col-md-3 mb-3">
+                    <label for="poblacionRiesgo" class="form-label">Población de Riesgo</label>
+                    <div class="row">
+                        <div class="col-10">
+                            <select id="poblacionRiesgo" v-model="poblacionRiesgo" class="form-select">
+                                <option value="">Seleccione</option>
+                                <option :value="option2.nombre" v-for="(option2, index) in poblacionRiesgoOptions" :key="index">
+                                    {{ option2.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <div class="col-2" v-if="poblacionRiesgo !== ''">
+                                <button class="btn btn-warning btn-sm" @click="addRiesgo">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="container comb_B">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" v-for="(list, index) in ListpoblacionRiesgo" :key="index">
+                                <button class="btn btn-danger btn-sm" @click="removeRiesgo(index)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                {{ list }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="desplazamiento" class="form-label">¿Desplazamiento efectivo?</label>
+                    <select id="desplazamiento" v-model="desplazamiento" class="form-select" required>
+                        <option value="" disabled>Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="requiereRemision" class="form-label">¿Requiere remisión a procedimiento?</label>
+                    <select id="requiereRemision" v-model="requiereRemision" class="form-select" required>
+                        <option value="" disabled>Seleccione</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="requiereRemision" class="form-label">Profesional Medic@</label>
+                    <select id="requiereRemision" v-model="medico" class="form-select" required>
+                        <option value="">---Seleccione---</option>
+                        <option v-for="medico in medicosByGrupo" :value="medico.numDocumento">{{ medico.nombre }}</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="requiereRemision" class="form-label">Profesional Enfermer@</label>
+                    <select id="requiereRemision" v-model="enfermero" class="form-select" required>
+                        <option value="">---Seleccione---</option>
+                        <option v-for="enfermero in enfermerosByGrupo" :value="enfermero.numDocumento">{{ enfermero.nombre }}</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="desplazamiento" class="form-label">¿Desplazamiento efectivo?</label>
-                <select id="desplazamiento" v-model="desplazamiento" class="form-select" required>
-                    <option value="" disabled>Seleccione</option>
-                    <option value="si">Sí</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="requiereRemision" class="form-label">¿Requiere remisión a procedimiento?</label>
-                <select id="requiereRemision" v-model="requiereRemision" class="form-select" required>
-                    <option value="" disabled>Seleccione</option>
-                    <option value="si">Sí</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="requiereRemision" class="form-label">Profesional Medic@</label>
-                <select id="requiereRemision" v-model="medico" class="form-select" required>
-                    <option value="">---Seleccione---</option>
-                    <option v-for="medico in medicosByGrupo" :value="medico.numDocumento">{{ medico.nombre }}</option>
-                </select>
-            </div>
-            <div class="col-6 col-md-3 mb-3">
-                <label for="requiereRemision" class="form-label">Profesional Enfermer@</label>
-                <select id="requiereRemision" v-model="enfermero" class="form-select" required>
-                    <option value="">---Seleccione---</option>
-                    <option v-for="enfermero in enfermerosByGrupo" :value="enfermero.numDocumento">{{ enfermero.nombre }}</option>
-                </select>
-            </div>
-        </div>
-        <!--     medicos:{{ medicosByGrupo }} <br>
+            <!--     medicos:{{ medicosByGrupo }} <br>
         enf:{{ enfermerosByGrupo }} <br> -->
-        <button type="submit" class="btn btn-primary" v-if="userData" :disabled="enviando">Guardar Demanda inducida</button>
-    </form>
+            <button type="submit" class="btn btn-primary" v-if="userData" :disabled="enviando">Guardar Demanda inducida</button>
+        </form>
+    </div>
 </div>
-
 </template>
 
 <script>
@@ -389,7 +394,10 @@ export default {
                 await this.createNewRegister(registro);
                 alert("Registro creado exitosamente");
                 this.resetForm();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
                 this.$router.push("/sop_aux");
             } catch (error) {
                 console.error("Error al crear el registro:", error);
@@ -408,7 +416,10 @@ export default {
                     this.$nextTick(() => {
                         const items = this.$el.querySelectorAll('.comb_B .list-group-item');
                         if (items.length > 0) {
-                            items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            items[items.length - 1].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
                         }
                     });
                 } else {
@@ -428,7 +439,10 @@ export default {
                     this.$nextTick(() => {
                         const items = this.$el.querySelectorAll('.comb_A .list-group-item');
                         if (items.length > 0) {
-                            items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            items[items.length - 1].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
                         }
                     });
                 } else {
@@ -501,5 +515,33 @@ export default {
 </script>
 
 <style>
-/* Elimina restricciones de scroll para permitir desplazamiento libre */
+html, body, #app {
+    height: 100%;
+}
+
+.container {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.overlay-guardando {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.texto-guardando {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+}
 </style>

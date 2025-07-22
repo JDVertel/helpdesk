@@ -1,5 +1,12 @@
 <template>
-<div class="container-fluid">
+<div>
+  <div v-if="guardando" class="overlay-guardando">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Guardando...</span>
+    </div>
+    <div class="texto-guardando">Guardando datos, por favor espere...</div>
+  </div>
+  <div class="container-fluid" :aria-busy="guardando">
     <h1 class="text-center">Caracterización de la visita</h1>
     <div class="row">
         <hr />
@@ -105,187 +112,194 @@
 </div>
 
 <br />
-<div class="row">
-    <hr />
-    <h4>Factores de Riesgo</h4>
-    <div class="col-6">
-        <p>Entorno</p>
-        <div class="form-check" v-for="opcionr in factoresRiesgo" :key="opcionr.id">
-            <input class="form-check-input" type="checkbox" :id="'check-' + opcionr.id" :value="opcionr.valor" v-model="seleccionadosFactoresRiesgo" />
-            <label class="form-check-label" :for="'check-' + opcionr.id">
-                {{ opcionr.texto }}
-            </label>
+<div class="container-fluid">
+    <div class="row">
+        <hr />
+        <h4>Factores de Riesgo</h4>
+        <div class="col-6">
+            <p>Entorno</p>
+            <div class="form-check" v-for="opcionr in factoresRiesgo" :key="opcionr.id">
+                <input class="form-check-input" type="checkbox" :id="'check-' + opcionr.id" :value="opcionr.valor" v-model="seleccionadosFactoresRiesgo" />
+                <label class="form-check-label" :for="'check-' + opcionr.id">
+                    {{ opcionr.texto }}
+                </label>
+            </div>
+            {{ seleccionadosFactoresRiesgo }}
         </div>
-        {{ seleccionadosFactoresRiesgo }}
-    </div>
-    <div class="col-6">
-        <p>Presencia de Animales</p>
-        <div class="form-check" v-for="opcion in OpcionesPresenciaAnimales" :key="opcion.id">
-            <input class="form-check-input" type="checkbox" :id="'check-' + opcion.id" :value="opcion.valor" v-model="seleccionadosPresenciaAnimales" />
-            <label class="form-check-label" :for="'check-' + opcion.id">
-                {{ opcion.texto }}
-            </label>
+        <div class="col-6">
+            <p>Presencia de Animales</p>
+            <div class="form-check" v-for="opcion in OpcionesPresenciaAnimales" :key="opcion.id">
+                <input class="form-check-input" type="checkbox" :id="'check-' + opcion.id" :value="opcion.valor" v-model="seleccionadosPresenciaAnimales" />
+                <label class="form-check-label" :for="'check-' + opcion.id">
+                    {{ opcion.texto }}
+                </label>
+            </div>
+            {{ seleccionadosPresenciaAnimales }}
         </div>
-        {{ seleccionadosPresenciaAnimales }}
     </div>
 </div>
-
 <br />
-<div class="row">
-    <hr />
-    <h4>Grupo Familiar</h4>
+<div class="container-fluid">
     <div class="row">
-        <div class="col"></div>
-        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            + Agregar
-        </button>
-    </div>
-    <!-- inicio modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Agregar miembro del grupo familiar
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="nombres" v-model="nuevoMiembro.nombres" />
-                        </div>
-                        <div class="col-6">
-                            <label for="apellidos" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="apellidos" v-model="nuevoMiembro.apellidos" />
-                        </div>
-                        <div class="col-6">
-                            <label for="parentesco" class="form-label">Parentesco</label>
-                            <select class="form-select" id="parentesco" v-model="nuevoMiembro.parentesco">
-                                <option :value="parentesco" v-for="(parentesco, index) in parentescos" :key="index">
-                                    {{ parentesco }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="tipodoc" class="form-label">Tipo de Documento</label>
-                            <select class="form-select" id="tipodoc" v-model="nuevoMiembro.tipodoc">
-                                <option value="">Seleccione</option>
-                                <option value="RC">Registro Civil</option>
-                                <option value="TI">Tarjeta de Identidad</option>
-                                <option value="CC">Cédula de Ciudadanía</option>
-                                <option value="CE">Cédula de Extranjería</option>
-                                <option value="NV">Certificado nacido vivo</option>
-                                <option value="PA">Pasaporte</option>
-                                <option value="PE">Permiso Especial de Permanencia</option>
-                                <option value="MS">Menos sin identificacion</option>
-                                <option value="AS">Adulto sin identificacion</option>
-                                <option value="PT">Permiso por proteccion temporal</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="numeroDocumento" class="form-label">Numero de documento</label>
-                            <input type="number" class="form-control" id="numeroDocumento" v-model="nuevoMiembro.numeroDocumento" />
-                        </div>
-                        <div class="col-6">
-                            <label for="fnacimiento" class="form-label">Fnacimiento</label>
-                            <input type="date" class="form-control" id="fnacimiento" v-model="nuevoMiembro.fnacimiento" />
-                        </div>
-                        <div class="col-6">
-                            <label for="genero" class="form-label">Género</label>
-                            <select class="form-select" id="genero" v-model="nuevoMiembro.genero">
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                            </select>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="eps" class="form-label">Eps</label>
-                            <div class="horizontal">
-                                <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
-                                    <option :value="eps" v-for="(eps, index) in epss" :key="index">
-                                        {{ eps.eps }}
+        <hr />
+        <h4>Grupo Familiar</h4>
+        <div class="row">
+            <div class="col"></div>
+            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                + Agregar
+            </button>
+        </div>
+        <!-- inicio modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                            Agregar miembro del grupo familiar
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="nombres" class="form-label">Nombres</label>
+                                <input type="text" class="form-control" id="nombres" v-model="nuevoMiembro.nombres" />
+                            </div>
+                            <div class="col-6">
+                                <label for="apellidos" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="apellidos" v-model="nuevoMiembro.apellidos" />
+                            </div>
+                            <div class="col-6">
+                                <label for="parentesco" class="form-label">Parentesco</label>
+                                <select class="form-select" id="parentesco" v-model="nuevoMiembro.parentesco">
+                                    <option :value="parentesco" v-for="(parentesco, index) in parentescos" :key="index">
+                                        {{ parentesco }}
                                     </option>
                                 </select>
-                                <button class="btn btn-warning btn-sm" @click="updateEps" :disabled="cargandoEps">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                    <span v-if="cargandoEps">Cargando...</span>
-                                </button>
+                            </div>
+                            <div class="col-6">
+                                <label for="tipodoc" class="form-label">Tipo de Documento</label>
+                                <select class="form-select" id="tipodoc" v-model="nuevoMiembro.tipodoc">
+                                    <option value="">Seleccione</option>
+                                    <option value="RC">Registro Civil</option>
+                                    <option value="TI">Tarjeta de Identidad</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="CE">Cédula de Extranjería</option>
+                                    <option value="NV">Certificado nacido vivo</option>
+                                    <option value="PA">Pasaporte</option>
+                                    <option value="PE">Permiso Especial de Permanencia</option>
+                                    <option value="MS">Menos sin identificacion</option>
+                                    <option value="AS">Adulto sin identificacion</option>
+                                    <option value="PT">Permiso por proteccion temporal</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="numeroDocumento" class="form-label">Numero de documento</label>
+                                <input type="number" class="form-control" id="numeroDocumento" v-model="nuevoMiembro.numeroDocumento" />
+                            </div>
+                            <div class="col-6">
+                                <label for="fnacimiento" class="form-label">Fnacimiento</label>
+                                <input type="date" class="form-control" id="fnacimiento" v-model="nuevoMiembro.fnacimiento" />
+                            </div>
+                            <div class="col-6">
+                                <label for="genero" class="form-label">Género</label>
+                                <select class="form-select" id="genero" v-model="nuevoMiembro.genero">
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="eps" class="form-label">Eps</label>
+                                <div class="horizontal">
+                                    <select class="form-select" id="eps" v-model="nuevoMiembro.eps">
+                                        <option :value="eps" v-for="(eps, index) in epss" :key="index">
+                                            {{ eps.eps }}
+                                        </option>
+                                    </select>
+                                    <button class="btn btn-warning btn-sm" @click="updateEps" :disabled="cargandoEps">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                        <span v-if="cargandoEps">Cargando...</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="regimen" class="form-label">Regimen</label>
+                                <select class="form-select" id="regimen" v-model="nuevoMiembro.regimen">
+                                    <option value="Subsididiado">Subsididiado</option>
+                                    <option value="Contributivo">Contributivo</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="cursodevida" class="form-label">Curso de vida</label>
+                                <select class="form-select" id="cursodevida" v-model="nuevoMiembro.cursoVida">
+                                    <option value="primera infancia">primera infancia</option>
+                                    <option value="infancia">infancia</option>
+                                    <option value="adolescencia">adolescencia</option>
+                                    <option value="juventud">juventud</option>
+                                    <option value="adultez">adultez</option>
+                                    <option value="vejez">vejez</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="ocupacion" class="form-label">Ocupacion</label>
+                                <select class="form-select" id="ocupacion" v-model="nuevoMiembro.ocupacion">
+                                    <option value="menor de edad">Menor de edad</option>
+                                    <option value="emplead@">Emplead@</option>
+                                    <option value="estudiante">Estudiante</option>
+                                    <option value="ama de casa">Ama de casa</option>
+                                    <option value="pensionad@">Pensionad@</option>
+                                    <option value="independiente">Independiente</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="viveenvivienda" class="form-label">Vive en vivienda</label>
+                                <select class="form-select" id="viveenvivienda" v-model="nuevoMiembro.viveEnVivienda">
+                                    <option value="si">Si</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="regimen" class="form-label">Regimen</label>
-                            <select class="form-select" id="regimen" v-model="nuevoMiembro.regimen">
-                                <option value="Subsididiado">Subsididiado</option>
-                                <option value="Contributivo">Contributivo</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="cursodevida" class="form-label">Curso de vida</label>
-                            <select class="form-select" id="cursodevida" v-model="nuevoMiembro.cursoVida">
-                                <option value="primera infancia">primera infancia</option>
-                                <option value="infancia">infancia</option>
-                                <option value="adolescencia">adolescencia</option>
-                                <option value="juventud">juventud</option>
-                                <option value="adultez">adultez</option>
-                                <option value="vejez">vejez</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="ocupacion" class="form-label">Ocupacion</label>
-                            <select class="form-select" id="ocupacion" v-model="nuevoMiembro.ocupacion">
-                                <option value="menor de edad">Menor de edad</option>
-                                <option value="emplead@">Emplead@</option>
-                                <option value="estudiante">Estudiante</option>
-                                <option value="ama de casa">Ama de casa</option>
-                                <option value="pensionad@">Pensionad@</option>
-                                <option value="independiente">Independiente</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="viveenvivienda" class="form-label">Vive en vivienda</label>
-                            <select class="form-select" id="viveenvivienda" v-model="nuevoMiembro.viveEnVivienda">
-                                <option value="si">Si</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearform">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="addmiembro" data-bs-dismiss="modal">
-                        Guardar
-                    </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearform">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="addmiembro" data-bs-dismiss="modal">
+                            Guardar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- fin modal -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Parentesco</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(miembro, index) in grupoFamiliar" :key="index">
-                <td>{{ miembro.parentesco }}</td>
-                <td>{{ miembro.nombres }} {{ miembro.apellidos }}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" @click="eliminarMiembro(index)">
-                        <i class="bi bi-trash3"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Parentesco</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(miembro, index) in grupoFamiliar" :key="index">
+                    <td>{{ miembro.parentesco }}</td>
+                    <td>{{ miembro.nombres }} {{ miembro.apellidos }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @click="eliminarMiembro(index)">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <br />
+<div class="container">
+
 <div class="row">
     <hr />
     <h4>Antecedentes personales</h4>
@@ -298,7 +312,9 @@
     <br />
     {{ seleccionadosAntecedentes }}
 </div>
+</div>
 <br />
+<div class="container-fluid">
 <div class="row">
     <hr />
     <h4>Riesgos</h4>
@@ -346,8 +362,10 @@
         {{ seleccionadosRiesgos }}
     </div>
 </div>
-
+</div>
 <br />
+<div class="container-fluid">
+
 <div class="row">
     <hr />
     <h4>Tamizaje</h4>
@@ -412,7 +430,7 @@
                 </div>
                 <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput10"  placeholder="" v-model="CalclasificacionImc" readonly/>
+                        <input type="text" class="form-control" id="floatingInput10" placeholder="" v-model="CalclasificacionImc" readonly />
                         <label for="floatingInput10">Clasificacion IMC </label>
                     </div>
                 </div>
@@ -420,7 +438,10 @@
         </div>
     </div>
 </div>
+</div>
 <br />
+<div class="container-fluid">
+
 <div class="row">
     <hr />
     <h4>Tamizaje Visual</h4>
@@ -439,7 +460,9 @@
         </div>
     </div>
 </div>
+</div>
 <br />
+<div class="container-fluid">
 <div class="row">
     <hr />
     <h4>Esquema vacunal</h4>
@@ -454,6 +477,7 @@
     <button class="btn btn-primary" @click="guardarDatosCaracterizacion">
         Guardar Datos
     </button>
+</div>
 </div>
 <br />
 </template>
@@ -506,6 +530,7 @@ export default {
                     texto: "energia electrica",
                 },
                 {
+            guardando: false,
                     id: 3,
                     valor: "gas natural",
                     texto: "gas natural",
@@ -945,11 +970,14 @@ export default {
                 grupoFamiliar: this.grupoFamiliar,
                 seleccionadosRiesgos: this.seleccionadosRiesgos,
             };
+            this.guardando = true;
             try {
                 await this.guardarCaracterizacion(DatosGuardados);
                 this.$router.push("/sop_home");
             } catch (error) {
                 alert("Error al guardar los datos");
+            } finally {
+                this.guardando = false;
             }
         },
 
@@ -972,14 +1000,14 @@ export default {
         ...mapState(["usuario", "epss"]),
 
         Calimc() {
-           // Validar que peso y talla estén definidos y talla > 0 para evitar división por cero
-      if (!this.peso || !this.talla || this.talla <= 0) return null;
+            // Validar que peso y talla estén definidos y talla > 0 para evitar división por cero
+            if (!this.peso || !this.talla || this.talla <= 0) return null;
 
-      // Calcular IMC: peso / (talla^2)
-      const imcCalc = this.peso / (this.talla * this.talla);
+            // Calcular IMC: peso / (talla^2)
+            const imcCalc = this.peso / (this.talla * this.talla);
 
-      // Retornar con dos decimales
-      return imcCalc.toFixed(2);
+            // Retornar con dos decimales
+            return imcCalc.toFixed(2);
         },
         CalclasificacionImc() {
             if (this.Calimc === null) return '';
@@ -1008,4 +1036,24 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.overlay-guardando {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.7);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.texto-guardando {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+</style>
+</div>

@@ -211,6 +211,7 @@ export default {
             this.guardarAgendaT(datos);
             alert("Agendamiento toma de muestras guardado");
             this.clearformlab();
+                this.$router.push("/sop_aux");
         },
         clearformlab() {
             this.dateIDAgenda = "";
@@ -236,6 +237,7 @@ export default {
             this.guardarAgendaV(datos);
             alert("Agendamiento visita guardado");
             this.clearformvisita();
+            this.$router.push("/sop_aux");
         },
         /* ---------------------------------------------------------------------------------------------------------- */
         clearformvisita() {

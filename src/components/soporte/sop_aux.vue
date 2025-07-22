@@ -287,17 +287,4 @@ export default {
     /* Hace que el grupo ocupe todo el ancho del contenedor padre */
 }
 
-table,
-th,
-td,
-tbody,
-thead {
-    border: 1px solid #000;
-    /* Cambia el grosor y color según prefieras */
-}
-
-table {
-    border-collapse: collapse;
-    /* Opcional: para que los bordes no se dupliquen */
-}
 </style>

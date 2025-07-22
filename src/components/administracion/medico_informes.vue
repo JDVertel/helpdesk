@@ -3,7 +3,7 @@
     <h1>Medico Informes</h1>
 
     <hr>
-{{ userData }}
+<h3 style="color: red;">Informe en desarrollo , datos no se encuentran filtrados aun </h3>
     <h5>Seleccione el rango de fechas a mostrar</h5>
     <div class="row">
         <div class="col-6 col-md-4">

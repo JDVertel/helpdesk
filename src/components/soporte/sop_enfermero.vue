@@ -99,9 +99,7 @@
 
                             <td>
                                 <div class="col-4">
-                                    <button type="button" class="btn btn-danger btn-sm" @click="removeRegEncuesta(encuesta.id)" v-if="encuesta.status_tomamuestras == ''">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
+                                    
                                 </div>
                             </td>
                         </tr>
@@ -110,27 +108,8 @@
             </div>
         </div>
         <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
-            <h5>Encuestas Activas</h5>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Descripcion</th>
-                        <th scope="col">Fecha vigencia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <RouterLink class="btn btn-primary btn-sm" to="/sop_encuesta">
-                                <i class="bi bi-check-square"></i>
-                            </RouterLink>
-                        </td>
-                        <td>Extramural</td>
-                        <td>15/12/2025</td>
-                    </tr>
-                </tbody>
-            </table>
+         <h6>Modulo no diponible para enfermero</h6>
+   
         </div>
     </div>
 </div>

@@ -32,7 +32,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/sop_agendamiento/:idEncuesta, :tipo",
+    path: "/sop_agendamiento/:idEncuesta/:tipo",
     name: "sop_agendamiento",
     component: () => import("../components/soporte/sop_agendamiento.vue"),
     meta: { requiresAuth: true },

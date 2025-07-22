@@ -16,9 +16,14 @@ export default createStore({
         dataips: [],
         encuestasFiltradas: [],
         agendas: [],
-        token: null,
-        uid: null,
-        userData: {},
+        token: localStorage.getItem('token') || null,
+        uid: localStorage.getItem('uid') || null,
+        userData: (() => {
+            try {
+                const data = localStorage.getItem('userData');
+                return data ? JSON.parse(data) : {};
+            } catch (e) { return {}; }
+        })(),
         user: null,
         epss: [],
         accessToken: null, // Para manejar el token de acceso
@@ -912,13 +917,13 @@ export default createStore({
                     // Filtrar por idempleado si se proporcionó
                     if (idempleado && encuesta.idEnfermeroAtiende !== idempleado) return false;
 
-                    // Filtrar por cargo si se proporcionó
+                    // Filtrar por cargo si se proporcionó (status)
                     if (cargo && encuesta.status_gest_medica !== true) return false;
                     if (cargo && encuesta.status_gest_aux !== true) return false;
                     if (cargo && encuesta.status_gest_enfermera !== true) return false;
 
-
-
+                    // Filtro adicional: tipoActividad debe incluir al menos un objeto con profesional que contenga el cargo
+             
 
                     return true; // Si pasa todos los filtros, incluir
                 });
@@ -1192,6 +1197,8 @@ export default createStore({
         login({ commit }, { token, uid }) {
             commit("setToken", token);
             commit("setUid", uid);
+            localStorage.setItem('token', token);
+            localStorage.setItem('uid', uid);
         },
 
         async userLogout({ commit }) {
@@ -1213,16 +1220,19 @@ export default createStore({
             try {
                 const docRef = doc(db, "users", uid);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
-                    commit("setUserData", docSnap.data());
+                    const userData = docSnap.data();
+                    commit("setUserData", userData);
+                    localStorage.setItem('userData', JSON.stringify(userData));
                 } else {
                     console.log("No existe documento para este UID");
                     commit("clearUserData");
+                    localStorage.removeItem('userData');
                 }
             } catch (error) {
                 console.error("Error al obtener datos de Firestore:", error);
                 commit("clearUserData");
+                localStorage.removeItem('userData');
             }
         },
         cerrarEncuesta: async ({ commit }, { id, cargo, user, fecha = Date.now() }) => {
@@ -1252,34 +1262,24 @@ export default createStore({
                     [dateStatus]: moment(fecha).format("YYYY-MM-DD HH:mm:ss"),
                     idProfesionalAtiende: user, // Si no lo necesitas, puedes quitarlo
                 });
-                return data;
             } catch (error) {
-                console.error("Error en Action cerrarEncuesta:", error.response?.data || error.message);
-                throw error;
+                console.error("Error al cerrar encuesta:", error);
             }
-        }
-
-
-
-
-
+        },
     },
     mutations: {
         setUsuarios(state, usuarios) {
             state.usuarios = usuarios;
         },
-
         setEncuestas(state, encuestas) {
             state.encuestas = encuestas;
         },
-
         setComunasBarrios(state, comunasBarrios) {
             state.comunasBarrios = comunasBarrios;
         },
         setEps(state, eps) {
             state.epss = eps;
         },
-
         setdatosips(state, datosips) {
             state.dataips = datosips;
         },
@@ -1289,23 +1289,39 @@ export default createStore({
         setAgendas(state, agendas) {
             state.agendas = agendas;
         },
-
         setToken(state, token) {
             state.token = token;
+            if (token) {
+                localStorage.setItem('token', token);
+            } else {
+                localStorage.removeItem('token');
+            }
         },
         setUid(state, uid) {
             state.uid = uid;
+            if (uid) {
+                localStorage.setItem('uid', uid);
+            } else {
+                localStorage.removeItem('uid');
+            }
         },
         clearAuth(state) {
             state.token = null;
             state.uid = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('uid');
         },
-        /*  */
         setUserData(state, data) {
             state.userData = data;
+            if (data) {
+                localStorage.setItem('userData', JSON.stringify(data));
+            } else {
+                localStorage.removeItem('userData');
+            }
         },
         clearUserData(state) {
-            state.userData = null;
+            state.userData = {};
+            localStorage.removeItem('userData');
         },
         CLEAR_ALL_STATE(state) {
             state.accessToken = null;
@@ -1317,10 +1333,6 @@ export default createStore({
         setEncuestasToday(state, encuestas) {
             state.encuestasToday = encuestas;
         },
-        setEps(state, eps) {
-            state.epss = eps;
-        },
-
         setEncuestaslabbyId(state, encuestas) {
             state.encuestasFiltradasLabById = encuestas;
         },
@@ -1346,16 +1358,13 @@ export default createStore({
         setEnfermerosByGrupo(state, enfermeros) {
             state.enfermerosByGrupo = enfermeros;
         },
-
         setEncuestasProf(state, encuestas) {
             state.EncuestasProf = encuestas;
         },
-
     },
     getters: {
         getUserData: (state) => state.userData,
         getAllEpss: (state) => state.epss,
         getInfoEncuestasById: (state) => state.InfoEncuestasById,
-
     },
 });

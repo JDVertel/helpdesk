@@ -1,6 +1,13 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
-<div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4">
+
+  <div v-if="guardando" class="overlay-guardando">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Guardando...</span>
+    </div>
+    <div class="texto-guardando">Guardando listado, por favor espere...</div>
+  </div>
+  <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4" :aria-busy="guardando">
     <div class="container-fluid  rounded shadow-sm py-3 mb-3 paciente p-1">
 
         <div class="row align-items-stretch fila-con-columnas p-1">
@@ -60,7 +67,7 @@
         </div>
     </div>
     <div class="footer my-3 text-end">
-        <button class="btn btn-success btn-sm" @click="cerrarVisita()" v-if="dataips!=''">
+        <button class="btn btn-success btn-sm" @click="cerrarVisita()" v-if="InfoEncuestasById !== ''">
             <i class="bi bi-clipboard2-check"></i> Cerrar Visita
         </button>
     </div>
@@ -160,6 +167,7 @@ export default {
             datosfinal: [],
             cantidad: 1, // Valor por defecto para la cantidad
             detalle: "", // Detalle del cup seleccionado
+            guardando: false, // Para mostrar el overlay/spinner
         };
     },
 
@@ -279,6 +287,8 @@ export default {
             } else {
                 alert("Seleccione una opción válida.");
             }
+            this.cantidad = 1; // Reiniciar cantidad
+            this.detalle = ""; // Reiniciar detalle 
         },
         //gestiona los parametros de la ruta de almacenamiento
         integrarCup(id) {
@@ -293,6 +303,7 @@ export default {
         },
         //confirma la seleccion de cups arma paquete para entregar al storage
         async confirmarSeleccion() {
+            this.guardando = true;
             let data = {
                 key: this.keyActividad,
                 cups: this.cupsArray,
@@ -303,9 +314,14 @@ export default {
                 cantidad: this.cantidad,
                 detalle: this.detalle
             };
-            await this.adicionarCups(data);
-            this.clear();
-            this.recargar();
+            try {
+                await this.adicionarCups(data);
+                this.clear();
+                await this.recargar();
+               
+            } finally {
+                this.guardando = false;
+            }
         },
 
         actividadesConMedico(tipoActividad) {
@@ -378,6 +394,13 @@ export default {
                         alert("Deben estar cerradas las actividades por Auxiliar y Médico antes de cerrar la visita.");
                     }
                 }
+                 if (this.userData.cargo === 'Auxiliar de enfermeria') {
+                    this.$router.push('/sop_aux');
+                } else if (this.userData.cargo === 'Enfermero') {
+                    this.$router.push('/sop_enf');
+                } else if (this.userData.cargo === 'Medico') {
+                    this.$router.push('/sop_profesional');
+                }
             }
         }
     },
@@ -406,6 +429,13 @@ export default {
 </script>
 
 <style>
+.texto-guardando {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+
 select {
     width: 200px;
     white-space: nowrap;
@@ -419,5 +449,24 @@ select {
     border-radius: 5px;
     margin-bottom: 20px;
     border-radius: 15px;
+}
+
+.overlay-guardando {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.7);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.texto-guardando {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #333;
 }
 </style>

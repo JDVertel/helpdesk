@@ -16,6 +16,31 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+<div class="container">
+      <h4>Asignacion de dia para agendamiento</h4>
+                <div class="col-12 col-md-6">
+                    <p class="lh-1">
+                        Seleccione el grupo extramural y fecha para la cual que desea asignarle la
+                        programacion de visita
+                    </p>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="fechaVisita" class="form-label">Fecha de visita</label>
+                                <input type="date" class="form-control" id="fechaVisita" placeholder="name@example.com" v-model="fechaagenda" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="gruposdetrabajo" class="form-label">Grupo de trabajo</label>
+                            <input type="number" class="form-control" id="gruposdetrabajo" placeholder="#grupo" v-model="grupotrabajo" />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" @click="asignar">
+                        Asignar
+                    </button>
+                </div></div>
+
                 <h4>Detalle de Agenda</h4>
                 <hr />
                 <table class="table table-sm">
@@ -57,29 +82,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                <h4>Asignacion de dia para agendamiento</h4>
-                <div class="col-12 col-md-6">
-                    <p class="lh-1">
-                        Seleccione el grupo extramural y fecha para la cual que desea asignarle la
-                        programacion de visita
-                    </p>
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label for="fechaVisita" class="form-label">Fecha de visita</label>
-                                <input type="date" class="form-control" id="fechaVisita" placeholder="name@example.com" v-model="fechaagenda" />
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <label for="gruposdetrabajo" class="form-label">Grupo de trabajo</label>
-                            <input type="number" class="form-control" id="gruposdetrabajo" placeholder="#grupo" v-model="grupotrabajo" />
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-sm" @click="asignar">
-                        Asignar
-                    </button>
-                </div>
+          
             </div>
             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
                 ...

@@ -1,5 +1,7 @@
 <template>
 <div class="container-fluid">
+
+<h3 style="color: red;">Informe en desarrollo , datos no se encuentran filtrados aun </h3>
     <h1>Informes Enfermero</h1>
 
     <hr>
