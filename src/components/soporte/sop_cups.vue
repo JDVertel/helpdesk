@@ -1,13 +1,13 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
 
-  <div v-if="guardando" class="overlay-guardando">
+<div v-if="guardando" class="overlay-guardando">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Guardando...</span>
+        <span class="visually-hidden">Guardando...</span>
     </div>
     <div class="texto-guardando">Guardando listado, por favor espere...</div>
-  </div>
-  <div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4" :aria-busy="guardando">
+</div>
+<div v-for="itemE in InfoEncuestasById" :key="itemE.id" class="mb-4" :aria-busy="guardando">
     <div class="container-fluid  rounded shadow-sm py-3 mb-3 paciente p-1">
 
         <div class="row align-items-stretch fila-con-columnas p-1">
@@ -39,7 +39,7 @@
                     <div class="col-12 col-md-2  mb-2 mb-md-0 Actividades horizontal">
                         <h6 class="fw-semibold">Actividad:</h6>
                         <small>{{ actividad.nombre }}</small><br>
-                        <button class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup(actividad.id)" :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
+                        <button class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="integrarCup({ id: actividad.id, nombre: actividad.nombre })" :disabled="!userData || !userData.cargo || (cupsEPS && cupsEPS.length === 0)">
                             <i class="bi bi-bookmark-heart"></i>
                         </button>
                     </div>
@@ -47,16 +47,18 @@
                         <h6 class="fw-semibold">Cups Asignados:</h6>
                         <span v-for="cup in actividad.cups" :key="cup.id">
                             <span v-for="itex in (cup.cups || [])" :key="itex?.id">
-                                <div class="row align-items-center mb-1">
-                                    <div class="col-2">
-                                        <button class="btn btn-danger btn-sm m-1" v-if="itex && itex.Profesional === userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-10">
-                                        <small class="fw-medium">{{ itex.DescripcionCUP }}</small>
-                                        <span class="badge bg-danger ms-1">Cant: {{ itex.cantidad }}</span>
-                                        <span class="badge bg-info ms-1 text-dark">Detalle: {{ itex.detalle }}</span>
+                                <div v-if="itex">
+                                    <div class="row align-items-center mb-1">
+                                        <div class="col-2">
+                                            <button class="btn btn-danger btn-sm m-1" v-if="itex.Profesional === userData.cargo" @click="eliminarCUP(itemE.id, actividad.id, itex.id)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-10">
+                                            <small class="fw-medium">{{ itex.DescripcionCUP }}</small>
+                                            <span class="badge bg-danger ms-1">Cant: {{ itex.cantidad }}</span>
+                                            <span class="badge bg-info ms-1 text-dark">Detalle: {{ itex.detalle }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </span>
@@ -82,7 +84,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Seleccione el CUP que desea asignar a la actividad
+                    Seleccione el CUP que desea asignar a <strong>{{ actividadSeleccionadaNombre }}</strong>
                     <div class="row">
                         <div class="mb-3">
                             <br />
@@ -168,6 +170,7 @@ export default {
             cantidad: 1, // Valor por defecto para la cantidad
             detalle: "", // Detalle del cup seleccionado
             guardando: false, // Para mostrar el overlay/spinner
+            actividadSeleccionadaNombre: '',
         };
     },
 
@@ -291,15 +294,15 @@ export default {
             this.detalle = ""; // Reiniciar detalle 
         },
         //gestiona los parametros de la ruta de almacenamiento
-        integrarCup(id) {
+        integrarCup(obj) {
             this.clear();
-
+            this.actividadSeleccionadaNombre = obj.nombre;
             if (this.userData && this.userData.cargo) {
                 this.keyActividad = this.userData.cargo;
             } else {
                 this.keyActividad = this.userData.cargo;
             }
-            this.idItem = id;
+            this.idItem = obj.id;
         },
         //confirma la seleccion de cups arma paquete para entregar al storage
         async confirmarSeleccion() {
@@ -318,7 +321,7 @@ export default {
                 await this.adicionarCups(data);
                 this.clear();
                 await this.recargar();
-               
+
             } finally {
                 this.guardando = false;
             }
@@ -372,9 +375,11 @@ export default {
             await this.getEncuestaById(this.idEncuesta);
         },
         cerrarVisita() {
+
             // Confirmar que el usuario quiere cerrar la visita
             if (confirm("¿Estás seguro de que deseas cerrar las actividades de la visita?")) {
                 const cargo = this.userData.cargo;
+                // Buscar el registro renderizado
 
                 // Si el usuario es Auxiliar de enfermería o Médico, cerrar directamente
                 if (cargo === 'Auxiliar de enfermeria' || cargo === 'Medico') {
@@ -385,19 +390,21 @@ export default {
                 }
                 // Si el usuario es Enfermero, verificar que las actividades de Auxiliar y Médico ya estén cerradas
                 else if (cargo === 'Enfermero') {
-                    if (this.encuestas[0].status_gest_aux === true && this.encuestas[0].status_gest_medica === true) {
+                    if (this.InfoEncuestasById[0].status_gest_aux === true && this.InfoEncuestasById[0].status_gest_medica === true) {
                         this.cerrarEncuesta({
                             id: this.idEncuesta,
                             cargo: cargo
                         });
+
                     } else {
-                        alert("Deben estar cerradas las actividades por Auxiliar y Médico antes de cerrar la visita.");
+                        alert("Deben estar cerradas las actividades por Auxiliar y Médico antes de cerrar la visita...");
+
                     }
                 }
-                 if (this.userData.cargo === 'Auxiliar de enfermeria') {
+                if (this.userData.cargo === 'Auxiliar de enfermeria') {
                     this.$router.push('/sop_aux');
                 } else if (this.userData.cargo === 'Enfermero') {
-                    this.$router.push('/sop_enf');
+                    this.$router.push('/sop_enfermero');
                 } else if (this.userData.cargo === 'Medico') {
                     this.$router.push('/sop_profesional');
                 }
@@ -430,11 +437,10 @@ export default {
 
 <style>
 .texto-guardando {
-  margin-top: 1rem;
-  font-size: 1.2rem;
-  color: #333;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #333;
 }
-
 
 select {
     width: 200px;
@@ -452,21 +458,22 @@ select {
 }
 
 .overlay-guardando {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255,255,255,0.7);
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
 .texto-guardando {
-  margin-top: 1rem;
-  font-size: 1.2rem;
-  color: #333;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #333;
 }
 </style>

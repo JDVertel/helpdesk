@@ -191,7 +191,7 @@
             </div>
             <!--     medicos:{{ medicosByGrupo }} <br>
         enf:{{ enfermerosByGrupo }} <br> -->
-            <button type="submit" class="btn btn-primary" v-if="userData" :disabled="enviando">Guardar Demanda inducida</button>
+            <button type="submit" class="btn btn-primary" v-if="userData" :disabled="enviando"><i class="bi bi-floppy"></i> Guardar Demanda inducida</button>
         </form>
     </div>
 </div>
@@ -515,7 +515,9 @@ export default {
 </script>
 
 <style>
-html, body, #app {
+html,
+body,
+#app {
     height: 100%;
 }
 

@@ -172,8 +172,8 @@
                 <tbody>
                     <tr>
                         <td>
-                            <RouterLink class="btn btn-secondary btn-sm" to="/sop_encuesta">
-                                <i class="bi bi-check-square"></i>
+                            <RouterLink class="btn btn-warning btn-sm" to="/sop_encuesta">
+                         <i class="bi bi-file-earmark-plus-fill"></i> Agregar
                             </RouterLink>
                         </td>
                         <td>Extramural</td>

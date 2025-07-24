@@ -508,29 +508,39 @@ export default createStore({
 
 
         /* -------------------------------------------------------------------------- */
-        getUser: async ({ commit }, id) => {
-            try {
-                const { data } = await firebase_api.get(`/usuarios/${id}.json`);
-                return data;
-            } catch (error) {
-                console.error("Error en Action_getUser:", error);
-                throw error;
-            }
-        },
-        getAllUsers: async ({ commit }) => {
-            try {
-                const { data } = await firebase_api.get("/usuarios.json");
-                const usuarios = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    ...value,
-                }));
-                commit("setUsuarios", usuarios);
-                return usuarios;
-            } catch (error) {
-                console.error("Error en Action_getAllUsers:", error);
-                throw error;
-            }
-        },
+        /*         getUser: async ({ commit }, id) => {
+                    try {
+                        const { data } = await firebase_api.get(`/usuarios/${id}.json`);
+                        return data;
+                    } catch (error) {
+                        console.error("Error en Action_getUser:", error);
+                        throw error;
+                    }
+                },
+        
+                getAllUsers: async ({ commit }) => {
+                    console.log("ejecutando funcion de usuario");
+                    try {
+                        const { data } = await firebase_api.get("/usuarios.json");
+                        if (!data || typeof data !== 'object') {
+                            console.warn('getAllUsers: datos vacíos o inválidos', data);
+                            commit("setUsuarios", []);
+                            return;
+                        }
+                        const usuarios = Object.entries(data).map(([key, value]) => ({
+                            id: key,
+                            ...value,
+                        }));
+                        commit("setUsuarios", usuarios);
+                        return usuarios;
+                    } catch (error) {
+                        console.error("Error en Action_getAllUsers:", error);
+                        throw error;
+                    }
+                }, */
+
+
+
 
         getAllEpss: async ({ commit }) => {
             try {
@@ -796,7 +806,7 @@ export default createStore({
             }
         },
 
-       
+
         /*  */
         GetAllRegistersbyRangeAux: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
@@ -846,7 +856,7 @@ export default createStore({
 
         GetAllRegistersbyRangeMed: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
-            console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
+          //  console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
             try {
                 if (!fechaInicio || !fechaFin) {
                     throw new Error("Debes proporcionar ambas fechas para el filtro.");
@@ -875,7 +885,14 @@ export default createStore({
                     if (cargo && encuesta.status_gest_medica !== true) return false;
                     if (cargo && encuesta.status_gest_enfermera !== true) return false;
 
-
+                    // Agregar actividadesRealizadas solo con las que coincidan con el cargo
+                    if (encuesta.tipoActividad && typeof encuesta.tipoActividad === 'object') {
+                        encuesta.actividadesRealizadas = Object.values(encuesta.tipoActividad).filter(act => {
+                            return act.Profesional && act.Profesional.includes(cargo);
+                        });
+                    } else {
+                        encuesta.actividadesRealizadas = [];
+                    }
 
                     return true; // Si pasa todos los filtros, incluir
                 });
@@ -923,7 +940,7 @@ export default createStore({
                     if (cargo && encuesta.status_gest_enfermera !== true) return false;
 
                     // Filtro adicional: tipoActividad debe incluir al menos un objeto con profesional que contenga el cargo
-             
+
 
                     return true; // Si pasa todos los filtros, incluir
                 });
@@ -1235,7 +1252,12 @@ export default createStore({
                 localStorage.removeItem('userData');
             }
         },
-        cerrarEncuesta: async ({ commit }, { id, cargo, user, fecha = Date.now() }) => {
+
+        /* ----------------------------------------CERRAR ENCUESTA------------------------------------- */
+
+
+        cerrarEncuesta: async ({ commit }, { id, cargo, fecha = Date.now() }) => {
+            // console.log("Objeto fecha:", fecha, "ID Encuesta:", id, "Cargo:", cargo);
             let varStatus = '';
             let dateStatus = '';
             let cargoTexto = '';
@@ -1260,7 +1282,7 @@ export default createStore({
                 const { data } = await firebase_api.patch(`/Encuesta/${id}.json`, {
                     [varStatus]: true,
                     [dateStatus]: moment(fecha).format("YYYY-MM-DD HH:mm:ss"),
-                    idProfesionalAtiende: user, // Si no lo necesitas, puedes quitarlo
+
                 });
             } catch (error) {
                 console.error("Error al cerrar encuesta:", error);

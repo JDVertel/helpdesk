@@ -21,8 +21,12 @@
         </div>
     </div>
     <br />
-    <div class="table-responsive" v-if="activacion">
+    <button class="btn btn-primary btn-sm mb-2" v-if="activacion" @click="copiarTabla">
+        <i class="bi bi-clipboard"></i> Copiar tabla
+    </button>
+    <div class="table-responsive" v-if="activacion" style="max-height: 70vh; overflow-y: auto;">
         <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
+
             <thead>
                 <tr>
                     <th colspan="5" style="background: #d0e6f7">DATOS DE IPS</th>
@@ -56,7 +60,7 @@
                     </th>
                     <!-- REMISION -->
                     <th style="writing-mode: vertical-lr">
-                        REQUIERE REMISION A PROCEDIMIENTOS (Si/No)
+                        A PROCEDIMIENTOS (Si/No) <br> REQUIERE REMISION
                     </th>
                     <th style="writing-mode: vertical-lr">NOMBRE</th>
                     <th style="writing-mode: vertical-lr">CARGO</th>
@@ -145,10 +149,37 @@ export default {
                 fechaInicio: this.fechaInicio,
                 fechaFin: this.fechaFin,
                 idempleado: this.userData.numDocumento,
-                cargo:this.userData.cargo,
+                cargo: this.userData.cargo,
             };
             this.GetAllRegistersbyRangeAux(rango);
             this.activacion = true;
+        },
+        copiarTabla() {
+            // Selecciona la tabla por referencia
+            const tabla = this.$el.querySelector("table");
+            if (!tabla) return;
+            let texto = '';
+            // Encabezados y filas
+            const filas = tabla.querySelectorAll('tr');
+            filas.forEach(fila => {
+                let celdas = Array.from(fila.querySelectorAll('th,td'));
+                texto += celdas.map(celda => celda.innerText.replace(/\n/g, ' ')).join('\t') + '\n';
+            });
+            // Copiar al portapapeles
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('Tabla copiada al portapapeles');
+                });
+            } else {
+                // Fallback para navegadores antiguos
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Tabla copiada al portapapeles');
+            }
         },
         obtenerNombresTipoActividad(encuesta) {
             if (!encuesta.tipoActividad) return [];

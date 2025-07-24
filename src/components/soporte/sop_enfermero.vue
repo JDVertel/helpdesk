@@ -45,21 +45,29 @@
                             <small> <strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
                         </small></div>
                     <!--  -->
-                    <div class="col-12 col-md-3 Riesgos p-1"> <small> <strong>P Riesgo: </strong>{{ encuesta.poblacionRiesgo }}</small></div>
+
                     <!--  -->
-                    <div class="col-12 col-md-3 Actividades p-1"> <small>
+                    <div class="col-12 col-md-5 Actividades p-1"> <small>
                             <strong> Actividades:</strong>
-                            {{ this.nombresActividades(encuesta.tipoActividad) }}</small></div>
+                            {{ this.nombresActividades(encuesta.tipoActividad) }}</small>
+                        <hr>
+                        <small> <strong>P Riesgo: </strong>{{ encuesta.poblacionRiesgo }}</small></div>
                     <!--  -->
 
-                    <div class="col-12 col-md-3 p-1 cupsAsignados">
+                    <div class="col-12 col-md-4 p-1 cupsAsignados">
 
                         <div class="row">
-                            <div class="col-6 col-md-3">
-
-                                gestion medica: {{ encuesta.status_gest_medica }} gestion auxiliar:{{ encuesta.status_gest_aux }}
+                            <div class="col-6">
+                                <div>
+                                    <span class="badge" :class="encuesta.status_gest_medica ? 'bg-success' : 'bg-secondary'">
+                                        Gestión médica: {{ encuesta.status_gest_medica ? 'Completada' : 'Pendiente' }}
+                                    </span>
+                                    <span class="badge ms-1" :class="encuesta.status_gest_aux ? 'bg-success' : 'bg-secondary'">
+                                        Gestión auxiliar: {{ encuesta.status_gest_aux ? 'Completada' : 'Pendiente' }}
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-6 col-md-3">
+                            <div class="col-6">
                                 <div>
                                     <button type="button" class="btn btn-danger btn-sm" @click="cupsGestion(encuesta.id)">
                                         <i class="bi bi-calendar2-heart-fill">
@@ -90,7 +98,9 @@
                     <tbody class="table-group-divider">
                         <tr v-for="(encuesta, index) in this.encuestasToday" :key="index">
                             <td>
-                                Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }}
+                                <small>Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }}</small>
+                                <hr />
+                                <small><strong>F Encuesta:</strong> {{ encuesta.fecha }}</small>
                                 <hr />
                                 Actividades:{{ this.nombresActividades(encuesta.tipoActividad) }}
                                 <hr />
@@ -99,7 +109,7 @@
 
                             <td>
                                 <div class="col-4">
-                                    
+
                                 </div>
                             </td>
                         </tr>
@@ -108,8 +118,8 @@
             </div>
         </div>
         <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
-         <h6>Modulo no diponible para enfermero</h6>
-   
+            <h6>Modulo no diponible para enfermero</h6>
+
         </div>
     </div>
 </div>

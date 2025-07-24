@@ -26,6 +26,14 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/sop_agendas",
+    name: "sop_agendas",
+    component: () => import("../components/soporte/sop_agendas.vue"),
+    meta: { requiresAuth: true },
+  },
+
+
+  {
     path: "/sop_aux",
     name: "sop_aux",
     component: () => import("../components/soporte/sop_aux.vue"),

@@ -1,9 +1,10 @@
 <template>
 <div class="container-fluid">
+
     <h1>Medico Informes</h1>
 
     <hr>
-<h3 style="color: red;">Informe en desarrollo , datos no se encuentran filtrados aun </h3>
+
     <h5>Seleccione el rango de fechas a mostrar</h5>
     <div class="row">
         <div class="col-6 col-md-4">
@@ -15,13 +16,16 @@
             <input type="date" id="fechaFin" class="form-control" v-model="fechaFin" required />
         </div>
         <div class="col-12 col-md-4">
-            <button type="button" class="btn btn-warning btn-sm mt-4" @click="generarInforme()" >
+            <button type="button" class="btn btn-warning btn-sm mt-4" @click="generarInforme()">
                 Generar Informe
             </button>
         </div>
     </div>
+    <button class="btn btn-primary btn-sm mb-2" v-if="activacion" @click="copiarTabla">
+        <i class="bi bi-clipboard"></i> Copiar tabla
+    </button>
     <br />
-    <div class="table-responsive" v-if="activacion">
+    <div class="table-responsive" v-if="activacion" style="max-height: 60vh; overflow-y: auto;">
         <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
             <thead>
                 <tr>
@@ -83,7 +87,7 @@
                     <td>{{ usuario.desplazamiento }}</td>
                     <!-- TIPO ACTIVIDAD REALIZADA -->
                     <td v-for="col in columnasTipoActividad" :key="col" style="text-align: center">
-                        <span v-if="obtenerNombresTipoActividad(usuario).includes(col)">X</span>
+                        <span v-if="usuario.actividadesRealizadas && usuario.actividadesRealizadas.some(act => act.nombre === col)">X</span>
                     </td>
                     <!-- POBLACIÓN DE RIESGO -->
                     <td v-for="col in columnasPoblacionRiesgo" :key="col" style="text-align: center">
@@ -115,7 +119,7 @@ export default {
             /* ----------------------------------------------------------- */
             fechaInicio: "",
             fechaFin: "",
-            activacion:false,
+            activacion: false,
             columnasTipoActividad: [
                 "Consulta PYMS",
                 "Consulta Morbilidad",
@@ -141,6 +145,33 @@ export default {
         };
     },
     methods: {
+        copiarTabla() {
+            // Selecciona la tabla por referencia
+            const tabla = this.$el.querySelector("table");
+            if (!tabla) return;
+            let texto = '';
+            // Encabezados
+            const filas = tabla.querySelectorAll('tr');
+            filas.forEach(fila => {
+                let celdas = Array.from(fila.querySelectorAll('th,td'));
+                texto += celdas.map(celda => celda.innerText.replace(/\n/g, ' ')).join('\t') + '\n';
+            });
+            // Copiar al portapapeles
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('Tabla copiada al portapapeles');
+                });
+            } else {
+                // Fallback para navegadores antiguos
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Tabla copiada al portapapeles');
+            }
+        },
         ...mapActions(["GetAllRegistersbyRangeMed"]),
 
         /* metodo para cargar los datos del profesional, y los datos de la ips */
@@ -161,9 +192,7 @@ export default {
 
     },
     computed: {
-        ...mapState(["encuestasFiltradas", "dataips", "userData","uid"]),
-
-
+        ...mapState(["encuestasFiltradas", "dataips", "userData", "uid"]),
 
     },
 
