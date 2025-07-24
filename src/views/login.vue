@@ -16,7 +16,7 @@
             </div>
             <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
         </form>
-       <div class="row">
+      <!--  <div class="row">
             <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
             <div class="col-4">Linarusso*2025.</div>
             <div class="col-3">Admin</div>
@@ -36,10 +36,8 @@
             <div class="col-4">1111111111</div>
             <div class="col-3">aux</div>
         </div> 
-
-        <hr />
-
-        <hr />
+ -->
+  
 
         <router-link to="/"> <i class="bi bi-house"></i></router-link>
 
@@ -132,4 +130,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+body, .loginform {
+  min-height: 100vh;
+  background: url('@/assets/images/fondo_extramurapp.png') no-repeat center center fixed;
+  background-size: cover;
+}
+</style>

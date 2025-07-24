@@ -2,6 +2,13 @@
 <div class="container-fluid">
     <h5><i class="bi bi-calendar2-check"></i> Agendamiento de visita</h5>
     <hr>
+    {{ userData?.nombre }}
+    <hr>
+    <span v-if="encuestas && encuestas.length && encuestas[0]">
+      {{ encuestas[0].nombre1 }},{{ encuestas[0].apellido1 }}
+    </span>
+    <span v-else class="text-danger">No hay datos de paciente disponibles</span>
+    <hr>
     <div class="container mb-4">
         <div class="container-fluid tomademuestras">
             <div class="row" v-if="this.tipo === 'tomamuestras'">
@@ -148,7 +155,7 @@ import {
 export default {
     data: () => {
         return {
-            tipo:"",
+            tipo: "",
             dateIDAgenda: "",
             dateIDvisita: "",
             idEncuesta: "",
@@ -169,7 +176,7 @@ export default {
             "getAgendasTomaLabById",
             "getAgendasVisitaById",
             "eliminarAgenda",
-           
+
         ]),
 
         generarHorasValidasLab() {
@@ -196,7 +203,7 @@ export default {
             return horas;
         },
         /* --------------------------------------------------------------------------------------------------------- */
-        guardarAgendamientoTomaLab() {
+        async guardarAgendamientoTomaLab() {
             if (this.dateIDAgenda === "" || this.horalab === "" || this.userData.grupo === "") {
                 alert("Error en los datos, loguearse nuevamente.");
                 return;
@@ -207,18 +214,23 @@ export default {
                 idEncuesta: this.idEncuesta,
                 horalab: this.horalab, // hora seleccionada
                 grupo: this.userData.grupo, // grupo del usuario quien agenda
+                paciente: this.encuestas[0].nombre1 + " " + this.encuestas[0].apellido1, // nombre del paciente
+                encuestador: this.userData.nombre,
+                barrio: this.encuestas[0].barrioVeredacomuna.barrio,
+                direccion: this.encuestas[0].direccion,
             };
-            this.guardarAgendaT(datos);
+            await this.guardarAgendaT(datos);
             alert("Agendamiento toma de muestras guardado");
             this.clearformlab();
-                this.$router.push("/sop_aux");
+            await this.$router.push("/sop_aux");
+            // Esperar a que el componente destino refresque los datos en mounted
         },
         clearformlab() {
             this.dateIDAgenda = "";
             this.horalab = "";
         },
 
-        guardarAgendamientoVisitas() {
+        async guardarAgendamientoVisitas() {
             if (
                 this.dateIDvisita === "" ||
                 this.horavisita === "" ||
@@ -229,15 +241,20 @@ export default {
             }
             let datos = {
                 idAgenda: this.dateIDvisita.id, // id de la fecha que se selecciona
-                fechaAgenda: this.dateIDvisita.fecha,// id pasado desde la seleccion de la encuesta para vincular los datos
+                fechaAgenda: this.dateIDvisita.fecha, // id pasado desde la seleccion de la encuesta para vincular los datos
                 idEncuesta: this.idEncuesta,
                 horavisita: this.horavisita, // hora seleccionada
                 grupo: this.userData.grupo,
+                paciente: this.encuestas[0].nombre1 + " " + this.encuestas[0].apellido1, // nombre del paciente
+                encuestador: this.userData.nombre,
+                barrio: this.encuestas[0].barrioVeredacomuna.barrio,
+                direccion: this.encuestas[0].direccion,
             };
-            this.guardarAgendaV(datos);
+            await this.guardarAgendaV(datos);
             alert("Agendamiento visita guardado");
             this.clearformvisita();
-            this.$router.push("/sop_aux");
+            await this.$router.push("/sop_aux");
+            // Esperar a que el componente destino refresque los datos en mounted
         },
         /* ---------------------------------------------------------------------------------------------------------- */
         clearformvisita() {
@@ -274,6 +291,7 @@ export default {
         ...mapState([
             "agendas",
             "userData",
+            "encuestas",
             "encuestasFiltradasLabById",
             "encuestasFiltradasVisitaById",
         ]),
