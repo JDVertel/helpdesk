@@ -18,8 +18,8 @@
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <div class="row">
-                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
-                        <h6 v-if="userData">{{ userData.cargo || "" }}</h6>
+                        <h6 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h6>
+ 
                     </div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -27,9 +27,8 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-
                         <li class="nav-item active" aria-current="page">
-                            <strong><i class="bi bi-people-fill"></i> Equipo</strong>
+                            <strong><i class="bi bi-heart-pulse"></i> Asistencial</strong>
                         </li>
 
                         <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
@@ -39,7 +38,7 @@
                         </li>
                         <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
                             <router-link class="nav-link" to="/sop_agendas" @click="onNavLinkClick">
-                               <i class="bi bi-calendar2-date"></i> Agendas
+                                <i class="bi bi-calendar2-date"></i> Agendas
                             </router-link>
                         </li>
 
@@ -80,12 +79,6 @@
                             </li>
 
                             <li class="nav-item">
-                                <router-link class="nav-link" to="/admin_encuestas" @click="onNavLinkClick">
-                                    <i class="bi bi-file-earmark-text-fill"></i> Encuestas
-                                </router-link>
-                            </li>
-
-                            <li class="nav-item">
                                 <router-link class="nav-link" to="/admin_programavisitas" @click="onNavLinkClick">
                                     <i class="bi bi-car-front"></i> Prog Visitas
                                 </router-link>
@@ -117,7 +110,7 @@
                         </template>
 
                         <li class="nav-item">
-                            <router-link class="nav-link" to="/" @click="onNavLinkClick">
+                            <router-link class="nav-link" to="/homeviews" @click="onNavLinkClick">
                                 <i class="bi bi-house-door-fill"></i> Home
                             </router-link>
                         </li>
@@ -188,5 +181,68 @@ export default {
 </script>
 
 <style scoped>
+/* Mantener colores de fondo originales y mejorar visualización */
+.navbar.bg-body-tertiary {
+    background-color: #212529 !important;
+    /* Fondo oscuro original Bootstrap */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
 
+.offcanvas {
+    background-color: #23272b !important;
+    /* Fondo offcanvas oscuro */
+}
+
+.offcanvas-title,
+.offcanvas-header h6 {
+    color: #fff;
+    text-shadow: 1px 1px 4px #000;
+}
+
+.navbar-nav .nav-link,
+.navbar-nav strong,
+.navbar-nav .nav-item {
+    color: #fff !important;
+    text-shadow: 1px 1px 4px #000;
+    font-size: 1.13rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.navbar-nav .nav-link.router-link-exact-active {
+    color: #ffc107 !important;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+}
+
+.navbar-nav i {
+    font-size: 1.5rem;
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+
+.logout-btn {
+    color: #fff !important;
+    background: #dc3545;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5em 1.2em;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 1px 1px 6px #0002;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: #b52a37;
+}
+
+.sidebar-version {
+    color: #bbb !important;
+}
+
+.blanco {
+    color: #fff !important;
+    text-shadow: 1px 1px 4px #000;
+}
 </style>

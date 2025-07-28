@@ -1,11 +1,11 @@
 <template>
 <div>
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
-    <h5>Aux</h5>
+
     <div class="row">
         <div class="col-6 center">
             <h6 class="display-6">{{ cantEncuestas }}</h6>
-            <p>Totales</p>
+            <p>Pendientes</p>
         </div>
         <div class="col-6 center">
             <h6 class="display-6">{{ encuestasToday.length }}</h6>
@@ -37,7 +37,7 @@
             <div class="container-fluid">
                 <h4>Detalle de Actividades</h4>
                 <hr />
-                <div class="container-fluid" style="max-height: 600px; overflow-y: auto">
+                <div class="container-fluid" style="max-height: 500px; overflow-y: auto">
                     <div v-for="(encuesta, index) in encuestas" :key="index">
                         <div class="row">
                             <div class="col-12 col-md-2 paciente">

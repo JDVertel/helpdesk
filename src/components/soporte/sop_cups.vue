@@ -1,6 +1,6 @@
 <template>
 <!-- {{ InfoEncuestasById }} -->
-
+<!-- {{ dataencuesta.eps }} -->
 <div v-if="guardando" class="overlay-guardando">
     <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Guardando...</span>
@@ -189,8 +189,9 @@ export default {
 
         //logica para obtener los cups filtrados por EPS y profesional
         dataencuesta() {
-            return this.encuestas.length > 0 ? this.encuestas[0] : null;
+            return this.InfoEncuestasById.length > 0 ? this.InfoEncuestasById[0] : null;
         },
+
         cupsEPS() {
             if (
                 !this.cups ||

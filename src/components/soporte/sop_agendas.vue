@@ -4,15 +4,15 @@
 
         <h4>Detalle de Agendas</h4>
         <hr />
-        <div style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-sm">
-                <thead class="table-dark">
+        <div style="max-height: 700px; overflow-y: auto;">
+            <table class="table table-sm agenda-sticky">
+                <thead>
                     <tr>
                         <th scope="col">Fecha</th>
                         <th scope="col">Grupo</th>
                         <th scope="col">Toma de muestras</th>
                         <th scope="col">Visitas</th>
-           
+
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +25,9 @@
                                     <tr>
                                         <th scope="col">Hora</th>
                                         <th scope="col">Paciente</th>
-                                        <th scope="col">Auxiliar</th>
+                                        <th scope="col">(grupo)Auxiliar</th>
+                                        <th scope="col">Barrio</th>
+                                        <th scope="col">Direccion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,7 +35,9 @@
                                         <tr v-for="(muestra, i) in agenda.tomademuestras" :key="i">
                                             <td>{{ muestra.horalab || '-' }}</td>
                                             <td>{{ muestra.paciente || '-' }}</td>
-                                            <td>{{ muestra.encuestador || '-' }}</td>
+                                            <td>({{ muestra.grupo || '-' }})-{{ muestra.encuestador || '-' }}</td>
+                                            <td>{{ muestra.barrio || '-' }}</td>
+                                            <td>{{ muestra.direccion || '-' }}</td>
                                         </tr>
                                     </template>
                                     <template v-else>
@@ -50,7 +54,9 @@
                                     <tr>
                                         <th scope="col">Hora</th>
                                         <th scope="col">Paciente</th>
-                                        <th scope="col">Auxiliar</th>
+                                        <th scope="col">(grupo)Auxiliar</th>
+                                        <th scope="col">Barrio</th>
+                                        <th scope="col">Direccion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,7 +64,10 @@
                                         <tr v-for="(visita, i) in agenda.visitamedica" :key="i">
                                             <td>{{ visita.horavisita || '-' }}</td>
                                             <td>{{ visita.paciente || '-' }}</td>
-                                            <td>{{ visita.encuestador || '-' }}</td>
+                                            <td>({{ visita.grupo || '-' }})-{{ visita.encuestador || '-' }}</td>
+                                            <td>{{ visita.barrio || '-' }}</td>
+                                            <td>{{ visita.direccion || '-' }}</td>
+
                                         </tr>
                                     </template>
                                     <template v-else>
@@ -69,7 +78,7 @@
                                 </tbody>
                             </table>
                         </td>
-                    
+
                     </tr>
                     <!-- Eliminar fila extra de botón eliminar -->
                 </tbody>
@@ -127,6 +136,19 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
+.tabla-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.agenda-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #212529;
+  color: #fff;
+}
+.agenda-sticky thead {
+  z-index: 2;
+}
 </style>

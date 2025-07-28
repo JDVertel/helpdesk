@@ -1,7 +1,7 @@
 <template>
 <div>
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
-    <h5>Enfermero</h5>
+ 
     <div class="row">
         <div class="col-6 center">
             <h6 class="display-6">{{ cantEncuestas }}</h6>
