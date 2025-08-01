@@ -1,13 +1,13 @@
 <template>
 <div class="container loginform">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
-       
-     <img src="@/assets/images/logo_extramurapp.png" alt="Logo Extramuralapp" class="login-logo-bg" />
+
+        <img src="@/assets/images/logo_extramurapp.png" alt="Logo Extramuralapp" class="login-logo-bg" />
         <h2 class="text-center mb-4">Iniciar Sesión</h2>
 
         <form @submit.prevent="handleLogin">
             <div class="mb-3">
-                 <i class="bi bi-person-circle text-center"></i> <label for="email" class="form-label"> Email</label>
+                <i class="bi bi-person-circle text-center"></i> <label for="email" class="form-label"> Email</label>
                 <input v-model="email" type="email" class="form-control" id="email" placeholder="Ingresa tu email" autocomplete="username" required />
             </div>
             <div class="mb-3">
@@ -16,7 +16,7 @@
             </div>
             <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
         </form>
-       <div class="row">
+        <!--        <div class="row">
             <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
             <div class="col-4">Linarusso*2025.</div>
             <div class="col-3">Admin</div>
@@ -36,12 +36,9 @@
             <div class="col-4">1111111111</div>
             <div class="col-3">aux</div>
         </div> 
+ -->
 
-  
-
-      
-
-        <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p> 
+        <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
     </div>
 </div>
 </template>
@@ -132,8 +129,8 @@ export default {
 
 <style scoped>
 .loginform {
-  min-height: 100vh;
-  background: url('@/assets/images/fondo_extramurapp.png') no-repeat center center fixed;
-  background-size: cover;
+    min-height: 100vh;
+    background: url('@/assets/images/fondo_extramurapp.png') no-repeat center center fixed;
+    background-size: cover;
 }
 </style>
