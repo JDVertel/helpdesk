@@ -5,7 +5,7 @@
         <h1>admin ips</h1>
         <p>Datos de radicacion</p>
 
-        >> {{ dataips }}
+  
 
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Nombre: {{ dataips.nombre }} </li>

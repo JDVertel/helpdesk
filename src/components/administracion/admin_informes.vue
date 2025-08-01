@@ -1,17 +1,20 @@
 <template>
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-2 datos">
+    <div v-if="cargandoInforme" class="overlay-spinner">
+        <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <div class="mt-3 h4">Generando informe, por favor espere...</div>
+    </div>
 
     <h1><i class="bi bi-clipboard2-data h1"></i>Informes Administrativos</h1>
-    <div class="row">
-
+    <div v-if="mostrarFormulario" class="row">
         <div class="col-12 col-md-2">
-            <label class="form-label">tipo informe</label>
-            <select class="form-select" aria-label="Default select example" v-model="tipoinforme">
+            <label class="form-label">Seleccione el tipo de informe</label>
+            <select class="form-select" aria-label="Default select example" v-model="tipoinforme" @change="clearFormInformes()">
                 <option selected>Seleccione</option>
                 <option value="1">Seguimiento</option>
-          <!--       <option value="2">General</option>
-                <option value="3">Actividades del Profesional</option> -->
-
+                <option value="2">General</option>
             </select>
         </div>
         <div class="col-6 col-md-2" v-if="tipoinforme == '3'">
@@ -21,7 +24,6 @@
                 <option :value="profesional.numDocumento" v-for="profesional in profesionales" :key="profesional.id">({{profesional.cargo}}){{ profesional.nombre }}</option>
             </select>
         </div>
-
         <div class="col-6 col-md-2">
             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
             <input type="date" id="fechaInicio" class="form-control" v-model="fechaInicio" required />
@@ -30,25 +32,28 @@
             <label for="fechaFin" class="form-label">Fecha de Fin</label>
             <input type="date" id="fechaFin" class="form-control" v-model="fechaFin" required />
         </div>
-
         <div class="col-12 col-md-2 mt-3">
             <button type="button" class="btn btn-warning  mt-3" @click="generarInforme()">
                 <i class="bi bi-clipboard2-data h6"></i> Generar Informe
             </button>
         </div>
     </div>
-    <!-- {{ EncuestasAdmin }}
- -->
 
+    <br>
     <div>
-        <h1>Listado de Pacientes</h1>
-        <div class="table-responsive">
-            <!-- Botón de copiar tabla eliminado -->
+        <h5>Listado de Pacientes finalizados</h5>
+
+        <button class="btn btn-outline-primary mb-2" @click="copiarHtmlTabla">
+            <i class="bi bi-clipboard"></i> Copiar tabla
+        </button>
+        <div class="table-responsive" ref="tablaHtml">
+
             <table class="table table-bordered table-striped table-sm align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
+                        <th>Grupo</th>
+                        <th>Paciente</th>
+                        <th>Sexo</th>
                         <th>Documento</th>
                         <th>Fecha Nac.</th>
                         <th>EPS</th>
@@ -56,8 +61,7 @@
                         <th>Dirección</th>
                         <th>Barrio</th>
                         <th>Comuna</th>
-                        <th>Cita Médica</th>
-                        <th>Toma Muestras</th>
+                        <th>lab/visit</th>
                         <th>Gest. Aux</th>
                         <th>Gest. Enfermera</th>
                         <th>Gest. Médica</th>
@@ -67,65 +71,106 @@
                 </thead>
                 <tbody>
                     <tr v-for="(paciente, idx) in EncuestasAdmin" :key="paciente.id">
-                        <td>{{ idx + 1 }}</td>
+                        <!-- Campos principales del paciente -->
+                        <td>{{ paciente.grupo }}</td>
                         <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
-                        <td>{{ paciente.numdoc }}</td>
+                        <td>{{ paciente.sexo }}</td>
+                        <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
                         <td>{{ paciente.fechaNac }}</td>
                         <td>{{ paciente.eps }}</td>
                         <td>{{ paciente.regimen }}</td>
                         <td>{{ paciente.direccion }}</td>
                         <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
                         <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                        <td>{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
-                        <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}</td>
-                        <td>{{ paciente.status_gest_aux ? 'Sí' : 'No' }}</td>
-                        <td>{{ paciente.status_gest_enfermera ? 'Sí' : 'No' }}</td>
-                        <td>{{ paciente.status_gest_medica ? 'Sí' : 'No' }}</td>
+                        <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                        <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                        <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                        <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
                         <td>{{ paciente.requiereRemision }}</td>
-                        <td>
-                            <div>
-                                <div v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="actividadKey" class="actividad-section">
-                                    <h5>{{ actividad.nombre }}</h5>
-                                    <table class="tabla-procedimientos table-bordered table-striped table-sm align-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>Profesional</th>
-                                                <th>Nombre</th>
-                                                <th>Descripción CUP</th>
-                                                <th>Cantidad</th>
-                                                <th>Detalle</th>
-                                                <th>EPS</th>
-                                                <th>Grupo</th>
-                                                <th>Homolog</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <template v-for="profesional in actividad.Profesional" :key="profesional">
-                                                <template v-if="actividad.cups && actividad.cups[profesional]">
-                                                    <tr v-for="(cup, cupId) in actividad.cups[profesional].cups" :key="cupId">
-                                                        <td>{{ profesional }}</td>
-                                                        <td>{{ actividad.cups[profesional].nombre || '-' }}</td>
-                                                        <td>{{ cup.DescripcionCUP }}</td>
-                                                        <td>{{ cup.cantidad }}</td>
-                                                        <td>{{ cup.detalle || '-' }}</td>
-                                                        <td>{{ cup.Eps ? cup.Eps.join(', ') : '-' }}</td>
-                                                        <td>{{ cup.Grupo || '-' }}</td>
-                                                        <td>{{ cup.Homolog || '-' }}</td>
-                                                    </tr>
-                                                </template>
-                                                <template v-else>
-                                                    <tr>
-                                                        <td>{{ profesional }}</td>
-                                                        <td colspan="7">No hay procedimientos asignados.</td>
-                                                    </tr>
-                                                </template>
-                                            </template>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </td>
+                        <!-- Renderiza cada resultado de procedimiento como una fila individual -->
+                        <template v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="'act-'+actividadKey">
+                            <template v-if="actividad.Profesional && Array.isArray(actividad.Profesional) && actividad.Profesional.length">
+                                <template v-for="profesional in actividad.Profesional" :key="'prof-'+profesional">
+                                    <template v-if="actividad.cups && actividad.cups[profesional]">
+                                        <tr v-for="(cup, cupId) in actividad.cups[profesional]?.cups || []" :key="'cup-'+cupId">
+                                            <!-- Replicar los campos principales del paciente -->
+                                            <td>{{ paciente.grupo }}</td>
+                                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                                            <td>{{ paciente.sexo }}</td>
+                                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                                            <td>{{ paciente.fechaNac }}</td>
+                                            <td>{{ paciente.eps }}</td>
+                                            <td>{{ paciente.regimen }}</td>
+                                            <td>{{ paciente.direccion }}</td>
+                                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                            <td>{{ paciente.requiereRemision }}</td>
+                                            <!-- Campos de la segunda tabla -->
+                                            <td>{{ actividad.nombre }}</td>
+                                            <td>{{ profesional }}</td>
+                                            <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
+                                            <td>{{ cup && cup.cantidad !== undefined ? cup.cantidad : '-' }}</td>
+                                            <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
+                                            <td>{{ cup && cup.DescripcionCUP !== undefined ? cup.DescripcionCUP : '-' }}</td>
+                                            <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
+                                            <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <tr>
+                                            <!-- Replicar los campos principales del paciente -->
+                                            <td>{{ paciente.grupo }}</td>
+                                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                                            <td>{{ paciente.sexo }}</td>
+                                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                                            <td>{{ paciente.fechaNac }}</td>
+                                            <td>{{ paciente.eps }}</td>
+                                            <td>{{ paciente.regimen }}</td>
+                                            <td>{{ paciente.direccion }}</td>
+                                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                            <td>{{ paciente.requiereRemision }}</td>
+                                            <!-- Campos de la segunda tabla -->
+                                            <td>{{ actividad.nombre }}</td>
+                                            <td>{{ profesional }}</td>
+                                            <td colspan="6">No hay procedimientos asignados.</td>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <!-- Replicar los campos principales del paciente -->
+                                    <td>{{ paciente.grupo }}</td>
+                                    <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                                    <td>{{ paciente.sexo }}</td>
+                                    <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                                    <td>{{ paciente.fechaNac }}</td>
+                                    <td>{{ paciente.eps }}</td>
+                                    <td>{{ paciente.regimen }}</td>
+                                    <td>{{ paciente.direccion }}</td>
+                                    <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                    <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                    <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                                    <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                                    <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                                    <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                    <td>{{ paciente.requiereRemision }}</td>
+                                    <!-- Campos de la segunda tabla -->
+                                    <td>{{ actividad.nombre }}</td>
+                                    <td>Sin profesionales registrados</td>
+                                    <td colspan="6">No hay procedimientos asignados.</td>
+                                </tr>
+                            </template>
+                        </template>
                     </tr>
                 </tbody>
             </table>
@@ -140,6 +185,20 @@
 .table-responsive {
     overflow-x: auto;
     min-width: 100%;
+}
+
+.overlay-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 </style>
 
@@ -157,9 +216,39 @@ export default {
             profesionalselect: "",
             profesionales: [],
             detallesVisibles: [], // Para controlar la visibilidad de detalles por fila
+            mostrarFormulario: true,
         };
     },
     methods: {
+        copiarHtmlTabla() {
+            // Copia el contenido HTML del div .table-responsive al portapapeles
+            const tablaDiv = this.$refs.tablaHtml;
+            if (tablaDiv) {
+                const html = tablaDiv.innerHTML;
+                // Usar Clipboard API para copiar como texto/html
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const blob = new Blob([html], {
+                        type: 'text/html'
+                    });
+                    const item = new window.ClipboardItem({
+                        'text/html': blob
+                    });
+                    navigator.clipboard.write([item]).then(() => {
+                        this.$toast && this.$toast.success ? this.$toast.success('Tabla HTML copiada al portapapeles') : alert('Tabla HTML copiada al portapapeles');
+                    }).catch(() => {
+                        this.$toast && this.$toast.error ? this.$toast.error('No se pudo copiar la tabla HTML') : alert('No se pudo copiar la tabla HTML');
+                    });
+                } else {
+                    // Fallback: copiar como texto plano
+                    navigator.clipboard.writeText(html).then(() => {
+                        this.$toast && this.$toast.success ? this.$toast.success('Tabla HTML copiada como texto al portapapeles') : alert('Tabla HTML copiada como texto al portapapeles');
+                    }).catch(() => {
+                        this.$toast && this.$toast.error ? this.$toast.error('No se pudo copiar la tabla') : alert('No se pudo copiar la tabla');
+                    });
+                }
+            }
+        },
+
         /*  */
 
         getActividadesPlanas(paciente) {
@@ -209,41 +298,49 @@ export default {
         /*  */
         ...mapActions(["consultarUsuariosFirestore", "GetRegistersbyRangeCerrados", "GetRegistersbyRangeGeneral", "GetAllRegistersbyRangeAndProf"]),
 
-        generarInforme() {
+        async generarInforme() {
+            this.cargandoInforme = true;
+            this.$store.commit('setEncuestasAdmin', []);
             try {
-                //informe de seguimiento (finicio-ffin)
                 if (this.fechaInicio && this.fechaFin && this.tipoinforme == "1") {
                     let parametros = {
                         finicial: this.fechaInicio,
-                        ffinal: this.fechaFin,
+                        ffinal: this.fechaFin
                     };
-                    this.GetRegistersbyRangeCerrados(parametros);
-
-                    //informe general (finicio-ffin)
+                    await this.GetRegistersbyRangeCerrados(parametros);
                 } else if (this.fechaInicio && this.fechaFin && this.tipoinforme == "2") {
                     let parametros = {
                         finicial: this.fechaInicio,
-                        ffinal: this.fechaFin,
+                        ffinal: this.fechaFin
                     };
-                    this.GetRegistersbyRangeGeneral(parametros);
-
+                    await this.GetRegistersbyRangeGeneral(parametros);
                 } else if (this.profesionalselect && this.fechaInicio && this.fechaFin && this.tipoinforme == "3") {
                     let parametros = {
                         idprof: this.profesionalselect,
                         finicial: this.fechaInicio,
-                        ffinal: this.fechaFin,
+                        ffinal: this.fechaFin
                     };
-                    this.GetAllRegistersbyRangeAndProf(parametros);
+                    await this.GetAllRegistersbyRangeAndProf(parametros);
                 } else {
                     this.$toast.error("Debe seleccionar un profesional y un rango de fechas");
                 }
             } catch (error) {
                 console.error("Error al generar el informe:", error);
+            } finally {
+                this.cargandoInforme = false;
             }
+        },
+
+        clearFormInformes() {
+            this.$store.commit('setEncuestasAdmin', [])
+            this.fechaInicio = "";
+            this.fechaFin = "";
+            this.profesionalselect = "";
         },
 
         toggleDetalles(idx) {
             this.$set(this.detallesVisibles, idx, !this.detallesVisibles[idx]);
+
         },
     },
 
@@ -251,6 +348,12 @@ export default {
         ...mapState(["userData", "EncuestasAdmin"]),
 
     },
+    onload() {
+        this.$store.commit('setEncuestasAdmin', []);
+        this.detallesVisibles = [];
+        this.clearFormInformes();
+    },
+
     mounted() {
         this.consultarUsuariosFirestore().then(profesionales => {
             this.profesionales = profesionales;
@@ -260,6 +363,10 @@ export default {
             () => this.EncuestasAdmin,
             (nuevo) => {
                 this.detallesVisibles = Array.isArray(nuevo) ? Array(nuevo.length).fill(false) : [];
+                // Cierra el spinner cuando los datos realmente se actualizan
+                if (this.cargandoInforme && Array.isArray(nuevo) && nuevo.length > 0) {
+                    this.cargandoInforme = false;
+                }
             }, {
                 immediate: true,
                 deep: false
