@@ -38,41 +38,13 @@
         </div>
     </div>
     <!-- {{ EncuestasAdmin }}
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-            </tr>
-        </tbody>
-    </table> -->
+ -->
 
     <div>
         <h1>Listado de Pacientes</h1>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-sm align-middle">
+            <!-- Botón de copiar tabla eliminado -->
+            <table class="table table-bordered table-striped table-sm align-middle">
                 <thead class="table-light">
                     <tr>
                         <th>#</th>
@@ -113,8 +85,8 @@
                         <td>
                             <div>
                                 <div v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="actividadKey" class="actividad-section">
-                                    <h2>{{ actividad.nombre }}</h2>
-                                    <table class="tabla-procedimientos">
+                                    <h5>{{ actividad.nombre }}</h5>
+                                    <table class="tabla-procedimientos table-bordered table-striped table-sm align-middle">
                                         <thead>
                                             <tr>
                                                 <th>Profesional</th>
