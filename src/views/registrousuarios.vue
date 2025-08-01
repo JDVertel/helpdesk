@@ -1,6 +1,8 @@
 <template>
 <div>
     <p v-if="message" :class="messageType">{{ message }}</p>
+    <div class="container">
+  
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
@@ -17,30 +19,33 @@
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <h1>Listado de usuarios del sistema</h1>
             <!--       {{ this.users }} -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>nombre</th>
-                     <!--    <th>rol</th> -->
-                        <th>cargo</th>
-                        <th>Grupo</th>
-                        <th>opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(user, index) in this.users" :key="index">
-                        <td>{{ user.nombre }}</td>
-                     <!--    <td>{{ user.rol }}</td> -->
-                        <td>{{ user.cargo }}</td>
-                        <td>{{ user.grupo }}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" @click="resetPassword(user.email)">
-                                <i class="bi bi-key-fill"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <div style="max-height: 700px; overflow-y: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>nombre</th>
+                            <!--    <th>rol</th> -->
+                            <th>cargo</th>
+                            <th>Grupo</th>
+                            <th>opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(user, index) in this.users" :key="index">
+                            <td>{{ user.nombre }}</td>
+                            <!--    <td>{{ user.rol }}</td> -->
+                            <td>{{ user.cargo }}</td>
+                            <td>{{ user.grupo }}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" @click="resetPassword(user.email)">
+                                    <i class="bi bi-key-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
             <h1>Crear Nuevo Usuario (por Administrador)</h1>
@@ -78,7 +83,7 @@
                             <option value="Enfermero">Enfermero</option>
                             <option value="Medico">Medico</option>
                             <option value="admin">Administrador</option>
-                          
+
                         </select>
                     </div>
                 </div>
@@ -95,6 +100,7 @@
             ...
         </div>
     </div>
+      </div>
 </div>
 </template>
 

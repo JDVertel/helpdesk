@@ -35,7 +35,7 @@
                                         <tr v-for="(muestra, i) in agenda.tomademuestras" :key="i">
                                             <td>{{ muestra.horalab || '-' }}</td>
                                             <td>{{ muestra.paciente || '-' }}</td>
-                                            <td>({{ muestra.grupo || '-' }})-{{ muestra.encuestador || '-' }}</td>
+                                            <td>({{ muestra.grupo || '-' }})-{{ muestra.encuestador || '-' }} <hr>Medico: {{ muestra.medico || '-' }} </td>
                                             <td>{{ muestra.barrio || '-' }}</td>
                                             <td>{{ muestra.direccion || '-' }}</td>
                                         </tr>

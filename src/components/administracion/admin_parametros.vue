@@ -11,17 +11,20 @@
                 EPS
             </button>
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">
-             CUPS
+                CUPS
             </button>
-        
+
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <!-- Comunas/Barrios -->
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <br />
+            <div class="container">
+
             <h6>Opciones disponibles para las encuestas Comunas/Barrios </h6>
             <br />
+
             <div class="row">
                 <div class="col-4">
                     <input type="number" class="form-control form-control-sm" placeholder="Comuna" v-model="comuna" />
@@ -35,28 +38,31 @@
                     </button>
                 </div>
             </div>
+            </div>
             <br />
-            <div style="max-height: 600px; overflow-y: auto;">
-                <table class="table table-sm mb-4">
-                    <thead>
-                        <tr>
-                            <th scope="col">Comuna</th>
-                            <th scope="col">Barrio</th>
-                            <th scope="col">Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(comuna, index) in comunasBarrios" :key="comuna.id || index">
-                            <td>{{ comuna.comuna }}</td>
-                            <td>{{ comuna.barrio }}</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm" @click="deleteBarrio(comuna.id)" aria-label="Eliminar barrio" type="button">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="container">
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <table class="table table-sm mb-4">
+                        <thead>
+                            <tr>
+                                <th scope="col">Comuna</th>
+                                <th scope="col">Barrio</th>
+                                <th scope="col">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(comuna, index) in comunasBarrios" :key="comuna.id || index">
+                                <td>{{ comuna.comuna }}</td>
+                                <td>{{ comuna.barrio }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" @click="deleteBarrio(comuna.id)" aria-label="Eliminar barrio" type="button">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <!-- EPS -->
@@ -64,94 +70,94 @@
             <br />
             <div class="container">
 
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingOne">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-      Eps disponibles en Demanda Inducida
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-       
-                <div class="row">
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <input type="text" class="form-control form-control-sm" placeholder="Nombre de la Eps" v-model="epsname"/>
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Eps disponibles en Demanda Inducida
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Nombre de la Eps" v-model="epsname" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-warning btn-sm" @click="saveEps">Guardar</button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre de EPS</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(ot, index) in epss" :key="ot.id || index">
+                                                <td>{{ ot.eps }}</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm" @click="EpsDelete(ot.id)" aria-label="Eliminar EPS" type="button">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-warning btn-sm" @click="saveEps">Guardar</button>
-                    </div>
-                </div>
-                <hr />
-                <div style="max-height: 300px; overflow-y: auto;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre de EPS</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(ot, index) in epss" :key="ot.id || index">
-                                <td>{{ ot.eps }}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" @click="EpsDelete(ot.id)" aria-label="Eliminar EPS" type="button">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-Eps disponibles en Caracterizacion
-      </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-      
-                <div class="row">
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <input type="text" class="form-control form-control-sm" placeholder="Nombre de la Eps" v-model="epsname"/>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Eps disponibles en Caracterizacion
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Nombre de la Eps" v-model="epsname" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-warning btn-sm" @click="saveEps">Guardar</button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre de EPS</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(ot, index) in epss" :key="ot.id || index">
+                                                <td>{{ ot.eps }}</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm" @click="EpsDelete(ot.id)" aria-label="Eliminar EPS" type="button">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-warning btn-sm" @click="saveEps">Guardar</button>
-                    </div>
-                </div>
-                <hr />
-                <div style="max-height: 300px; overflow-y: auto;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre de EPS</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(ot, index) in epss" :key="ot.id || index">
-                                <td>{{ ot.eps }}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" @click="EpsDelete(ot.id)" aria-label="Eliminar EPS" type="button">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-      </div>
-    </div>
-  </div>
-<!--   <div class="accordion-item">
+                    <!--   <div class="accordion-item">
     <h2 class="accordion-header" id="headingThree">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
         Accordion Item #3
@@ -163,7 +169,7 @@ Eps disponibles en Caracterizacion
       </div>
     </div>
   </div> -->
-</div>
+                </div>
 
                 <br />
 
@@ -217,7 +223,10 @@ Eps disponibles en Caracterizacion
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import {
+    mapState,
+    mapActions
+} from "vuex";
 export default {
     data() {
         return {

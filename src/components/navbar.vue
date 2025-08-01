@@ -27,9 +27,9 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item active" aria-current="page">
+                     <!--    <li class="nav-item active" aria-current="page">
                             <strong><i class="bi bi-heart-pulse"></i> Asistencial</strong>
-                        </li>
+                        </li> -->
 
                         <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
                             <router-link class="nav-link" to="/sop_aux" @click="onNavLinkClick">
@@ -74,9 +74,9 @@
                         </li>
 
                         <template v-if="userData && userData.cargo === 'admin'">
-                            <li class="nav-item active" aria-current="page">
+                    <!--         <li class="nav-item active" aria-current="page">
                                 <strong><i class="bi bi-gear-fill"></i> Admin</strong>
-                            </li>
+                            </li> -->
 
                             <li class="nav-item">
                                 <router-link class="nav-link" to="/admin_programavisitas" @click="onNavLinkClick">

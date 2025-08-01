@@ -6,6 +6,10 @@ const db = getFirestore();
 const auth = getAuth();
 import router from "../router/index.js"; // Asegúrate de que la ruta sea correcta
 import moment from "moment"; // Asegúrate de tener moment.js instalado
+
+
+
+
 export default createStore({
     state: {
         encuestasFiltradasLabById: [],
@@ -514,6 +518,20 @@ export default createStore({
 
         /* ---------------------------------------GET------------------------------------- */
 
+        async consultarUsuariosFirestore({ commit }) {
+            try {
+                const db = getFirestore();
+                const querySnapshot = await getDocs(collection(db, "users"));
+                // Si quieres guardar los usuarios en el state, haz un commit aquí
+                // commit('setUsuariosFirestore', usuarios);
+                // O retorna los datos si solo los necesitas en el componente
+                return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (error) {
+                console.error("Error consultando usuarios Firestore:", error);
+                throw error;
+            }
+        },
+
 
         selectCupsByActividad: async ({ commit }, { enc, act }) => {
             console.log("ejecutando procesos, esto entra ", enc, act);
@@ -530,44 +548,80 @@ export default createStore({
                 throw error;
             }
         },
+        /* ------------------------------------------------------------------------------------- */
 
+        GetRegistersbyRangeCerrados: async ({ commit }, parametros) => {
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
 
+                // Filtrar por fecha y status_gest_enfermera === true
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.fecha >= parametros.finicial &&
+                        encuesta.fecha <= parametros.ffinal &&
+                        encuesta.status_gest_enfermera === true
+                );
 
-        /* -------------------------------------------------------------------------- */
-        /*         getUser: async ({ commit }, id) => {
-                    try {
-                        const { data } = await firebase_api.get(`/usuarios/${id}.json`);
-                        return data;
-                    } catch (error) {
-                        console.error("Error en Action_getUser:", error);
-                        throw error;
-                    }
-                },
-        
-                getAllUsers: async ({ commit }) => {
-                    console.log("ejecutando funcion de usuario");
-                    try {
-                        const { data } = await firebase_api.get("/usuarios.json");
-                        if (!data || typeof data !== 'object') {
-                            console.warn('getAllUsers: datos vacíos o inválidos', data);
-                            commit("setUsuarios", []);
-                            return;
-                        }
-                        const usuarios = Object.entries(data).map(([key, value]) => ({
-                            id: key,
-                            ...value,
-                        }));
-                        commit("setUsuarios", usuarios);
-                        return usuarios;
-                    } catch (error) {
-                        console.error("Error en Action_getAllUsers:", error);
-                        throw error;
-                    }
-                }, */
+                commit("setEncuestasAdmin", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetRegistersbyRangeCerrados:", error);
+                throw error;
+            }
+        },
 
+        GetRegistersbyRangeGeneral: async ({ commit }, parametros) => {
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
 
+                // Filtrar por fecha
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.fecha >= parametros.finicial && encuesta.fecha <= parametros.ffinal
+                );
 
+                commit("setEncuestasAdmin", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetRegistersbyRangeGeneral:", error);
+                throw error;
+            }
+        },
 
+        GetAllRegistersbyRangeAndProf: async ({ commit }, parametros) => {
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                // Filtrar por fecha y profesional
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.fecha >= parametros.finicial &&
+                        encuesta.fecha <= parametros.ffinal &&
+                        (encuesta.idEnfermeroAtiende === parametros.idprof ||
+                            encuesta.idMedicoAtiende === parametros.idprof ||
+                            encuesta.idEncuestador === parametros.idprof)
+                );
+
+                commit("setEncuestasAdmin", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetAllRegistersbyRangeAndProf:", error);
+                throw error;
+            }
+        },
+        /* ------------------------------------------------------------------------------------- */
         getAllEpss: async ({ commit }) => {
             try {
                 const { data } = await firebase_api.get("/eps.json");
@@ -1409,6 +1463,9 @@ export default createStore({
         setEncuestasProf(state, encuestas) {
             state.EncuestasProf = encuestas;
         },
+        setEncuestasAdmin(state, encuestas) {
+            state.EncuestasAdmin = encuestas;
+        }
     },
     getters: {
         getUserData: (state) => state.userData,

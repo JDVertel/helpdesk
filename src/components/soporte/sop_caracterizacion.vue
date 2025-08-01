@@ -451,13 +451,13 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput" v-model="Oizquierdo" placeholder="" />
+                        <input type="text" class="form-control" id="floatingInput" v-model="Oizquierdo" placeholder="" />
                         <label for="floatingInput">Ojo Izquierdo ( fracción de Snellen)</label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput" v-model="Oderecho" placeholder="" />
+                        <input type="text" class="form-control" id="floatingInput" v-model="Oderecho" placeholder="" />
                         <label for="floatingInput">Ojo Derecho ( fracción de Snellen)</label>
                     </div>
                 </div>
@@ -720,7 +720,9 @@ export default {
                 "Sobrin@",
                 "Suegr@",
                 "Ti@",
-                "yern@",
+                "Yern@",
+                "Espos@",
+                "Padre"
             ],
 
             OpcionesRiesgos: [{
