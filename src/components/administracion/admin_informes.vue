@@ -16,7 +16,12 @@
                 <option value="1">Seguimiento</option>
                 <option value="2">General</option>
             </select>
+            <br>
+            <p v-if="tipoinforme == '2'">*Todas las encuestas registradas entre las fechas seleccionadas independiente del estado</p>
+
+            <p v-if="tipoinforme == '1'">*Todas las encuestas cerradas por la enfermera entre las fechas seleccionadas</p>
         </div>
+
         <div class="col-6 col-md-2" v-if="tipoinforme == '3'">
             <label class="form-label">Profesional</label>
             <select class="form-select" aria-label="Default select example" v-model="profesionalselect">
@@ -46,136 +51,137 @@
         <button class="btn btn-outline-primary mb-2" @click="copiarHtmlTabla">
             <i class="bi bi-clipboard"></i> Copiar tabla
         </button>
-        <div class="table-responsive" ref="tablaHtml">
+        <div class="container-fluid">
+            <div class="table-responsive" ref="tablaHtml">
 
-            <table class="table table-bordered table-striped table-sm align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Grupo</th>
-                        <th>Paciente</th>
-                        <th>Sexo</th>
-                        <th>Documento</th>
-                        <th>Fecha Nac.</th>
-                        <th>EPS</th>
-                        <th>Régimen</th>
-                        <th>Dirección</th>
-                        <th>Barrio</th>
-                        <th>Comuna</th>
-                        <th>lab/visit</th>
-                        <th>Gest. Aux</th>
-                        <th>Gest. Enfermera</th>
-                        <th>Gest. Médica</th>
-                        <th>Remisión</th>
-                        <th>Procedimientos y Actividades</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(paciente, idx) in EncuestasAdmin" :key="paciente.id">
-                        <!-- Campos principales del paciente -->
-                        <td>{{ paciente.grupo }}</td>
-                        <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
-                        <td>{{ paciente.sexo }}</td>
-                        <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
-                        <td>{{ paciente.fechaNac }}</td>
-                        <td>{{ paciente.eps }}</td>
-                        <td>{{ paciente.regimen }}</td>
-                        <td>{{ paciente.direccion }}</td>
-                        <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
-                        <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                        <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
-                        <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
-                        <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
-                        <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                        <td>{{ paciente.requiereRemision }}</td>
-                        <!-- Renderiza cada resultado de procedimiento como una fila individual -->
-                        <template v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="'act-'+actividadKey">
-                            <template v-if="actividad.Profesional && Array.isArray(actividad.Profesional) && actividad.Profesional.length">
-                                <template v-for="profesional in actividad.Profesional" :key="'prof-'+profesional">
-                                    <template v-if="actividad.cups && actividad.cups[profesional]">
-                                        <tr v-for="(cup, cupId) in actividad.cups[profesional]?.cups || []" :key="'cup-'+cupId">
-                                            <!-- Replicar los campos principales del paciente -->
-                                            <td>{{ paciente.grupo }}</td>
-                                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
-                                            <td>{{ paciente.sexo }}</td>
-                                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
-                                            <td>{{ paciente.fechaNac }}</td>
-                                            <td>{{ paciente.eps }}</td>
-                                            <td>{{ paciente.regimen }}</td>
-                                            <td>{{ paciente.direccion }}</td>
-                                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
-                                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                                            <td>{{ paciente.requiereRemision }}</td>
-                                            <!-- Campos de la segunda tabla -->
-                                            <td>{{ actividad.nombre }}</td>
-                                            <td>{{ profesional }}</td>
-                                            <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
-                                            <td>{{ cup && cup.cantidad !== undefined ? cup.cantidad : '-' }}</td>
-                                            <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
-                                            <td>{{ cup && cup.DescripcionCUP !== undefined ? cup.DescripcionCUP : '-' }}</td>
-                                            <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
-                                            <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
-                                        </tr>
-                                    </template>
-                                    <template v-else>
-                                        <tr>
-                                            <!-- Replicar los campos principales del paciente -->
-                                            <td>{{ paciente.grupo }}</td>
-                                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
-                                            <td>{{ paciente.sexo }}</td>
-                                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
-                                            <td>{{ paciente.fechaNac }}</td>
-                                            <td>{{ paciente.eps }}</td>
-                                            <td>{{ paciente.regimen }}</td>
-                                            <td>{{ paciente.direccion }}</td>
-                                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
-                                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
-                                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                                            <td>{{ paciente.requiereRemision }}</td>
-                                            <!-- Campos de la segunda tabla -->
-                                            <td>{{ actividad.nombre }}</td>
-                                            <td>{{ profesional }}</td>
-                                            <td colspan="6">No hay procedimientos asignados.</td>
-                                        </tr>
-                                    </template>
-                                </template>
-                            </template>
-                            <template v-else>
-                                <tr>
-                                    <!-- Replicar los campos principales del paciente -->
-                                    <td>{{ paciente.grupo }}</td>
-                                    <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
-                                    <td>{{ paciente.sexo }}</td>
-                                    <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
-                                    <td>{{ paciente.fechaNac }}</td>
-                                    <td>{{ paciente.eps }}</td>
-                                    <td>{{ paciente.regimen }}</td>
-                                    <td>{{ paciente.direccion }}</td>
-                                    <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
-                                    <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                                    <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
-                                    <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
-                                    <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
-                                    <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                                    <td>{{ paciente.requiereRemision }}</td>
-                                    <!-- Campos de la segunda tabla -->
-                                    <td>{{ actividad.nombre }}</td>
-                                    <td>Sin profesionales registrados</td>
-                                    <td colspan="6">No hay procedimientos asignados.</td>
-                                </tr>
-                            </template>
+                <table class="table table-bordered table-striped table-sm align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Paciente</th>
+                            <th>Sexo</th>
+                            <th>Documento</th>
+                            <th>Fecha Nac.</th>
+                            <th>EPS</th>
+                            <th>Régimen</th>
+                            <th>Dirección</th>
+                            <th>Barrio</th>
+                            <th>Comuna</th>
+                            <th>lab/visit</th>
+                            <th>Gest. Aux</th>
+                            <th>Gest. Enfermera</th>
+                            <th>Gest. Médica</th>
+                            <th>Remisión</th>
+                            <th>Procedimientos y Actividades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(paciente, idx) in EncuestasAdmin" :key="paciente.id">
+                            <!-- Campos principales del paciente -->
+                            <td>{{ paciente.grupo }}</td>
+                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                            <td>{{ paciente.sexo }}</td>
+                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                            <td>{{ paciente.fechaNac }}</td>
+                            <td>{{ paciente.eps }}</td>
+                            <td>{{ paciente.regimen }}</td>
+                            <td>{{ paciente.direccion }}</td>
+                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                            <td>{{ paciente.requiereRemision }}</td>
+                            <!-- Renderiza cada resultado de procedimiento como una fila individual -->
+                            <template v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="'act-'+actividadKey">
+                                <template v-if="actividad.Profesional && Array.isArray(actividad.Profesional) && actividad.Profesional.length">
+                                    <template v-for="profesional in actividad.Profesional" :key="'prof-'+profesional">
+                                        <template v-if="actividad.cups && actividad.cups[profesional]">
+                        <tr v-for="(cup, cupId) in actividad.cups[profesional]?.cups || []" :key="'cup-'+cupId">
+                            <!-- Replicar los campos principales del paciente -->
+                            <td>{{ paciente.grupo }}</td>
+                            <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                            <td>{{ paciente.sexo }}</td>
+                            <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                            <td>{{ paciente.fechaNac }}</td>
+                            <td>{{ paciente.eps }}</td>
+                            <td>{{ paciente.regimen }}</td>
+                            <td>{{ paciente.direccion }}</td>
+                            <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                            <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                            <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                            <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                            <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                            <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                            <td>{{ paciente.requiereRemision }}</td>
+                            <!-- Campos de la segunda tabla -->
+                            <td>{{ actividad.nombre }}</td>
+                            <td>{{ profesional }}</td>
+                            <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
+                            <td>{{ cup && cup.cantidad !== undefined ? cup.cantidad : '-' }}</td>
+                            <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
+                            <td>{{ cup && cup.DescripcionCUP !== undefined ? cup.DescripcionCUP : '-' }}</td>
+                            <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
+                            <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
+                        </tr>
                         </template>
-                    </tr>
-                </tbody>
-            </table>
+                        <template v-else>
+                            <tr>
+                                <!-- Replicar los campos principales del paciente -->
+                                <td>{{ paciente.grupo }}</td>
+                                <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                                <td>{{ paciente.sexo }}</td>
+                                <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                                <td>{{ paciente.fechaNac }}</td>
+                                <td>{{ paciente.eps }}</td>
+                                <td>{{ paciente.regimen }}</td>
+                                <td>{{ paciente.direccion }}</td>
+                                <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                                <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                                <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                                <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                <td>{{ paciente.requiereRemision }}</td>
+                                <!-- Campos de la segunda tabla -->
+                                <td>{{ actividad.nombre }}</td>
+                                <td>{{ profesional }}</td>
+                                <td colspan="6">No hay procedimientos asignados.</td>
+                            </tr>
+                        </template>
+                        </template>
+                        </template>
+                        <template v-else>
+                            <tr>
+                                <!-- Replicar los campos principales del paciente -->
+                                <td>{{ paciente.grupo }}</td>
+                                <td>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</td>
+                                <td>{{ paciente.sexo }}</td>
+                                <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
+                                <td>{{ paciente.fechaNac }}</td>
+                                <td>{{ paciente.eps }}</td>
+                                <td>{{ paciente.regimen }}</td>
+                                <td>{{ paciente.direccion }}</td>
+                                <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                <td>{{ paciente.Agenda_tomademuestras?.cita_tomamuestras ? 'Sí' : 'No' }}/{{ paciente.Agenda_Visitamedica?.cita_visitamedica ? 'Sí' : 'No' }}</td>
+                                <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
+                                <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
+                                <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                <td>{{ paciente.requiereRemision }}</td>
+                                <!-- Campos de la segunda tabla -->
+                                <td>{{ actividad.nombre }}</td>
+                                <td>Sin profesionales registrados</td>
+                                <td colspan="6">No hay procedimientos asignados.</td>
+                            </tr>
+                        </template>
+                        </template>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 
 </div>

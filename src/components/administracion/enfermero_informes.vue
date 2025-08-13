@@ -169,7 +169,7 @@ export default {
                 alert('Tabla copiada al portapapeles');
             }
         },
-        ...mapActions(["GetAllRegistersbyRange"]),
+        ...mapActions(["GetAllRegistersbyRangeEnf"]),
 
         /* metodo para cargar los datos del profesional, y los datos de la ips */
         generarInforme() {
@@ -177,7 +177,7 @@ export default {
                 fechaInicio: this.fechaInicio,
                 fechaFin: this.fechaFin,
             };
-            this.GetAllRegistersbyRange(rango);
+            this.GetAllRegistersbyRangeEnf(rango);
             this.activacion = true;
         },
         obtenerNombresTipoActividad(encuesta) {

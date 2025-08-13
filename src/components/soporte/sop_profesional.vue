@@ -1,5 +1,11 @@
 <template>
 <div>
+    <div v-if="cargando" class="spinner-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <div class="spinner-message">Por favor espere, cargando información...</div>
+    </div>
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
 
     <div class="row">
@@ -19,22 +25,13 @@
                 Abiertas
             </button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="today-tab" data-bs-toggle="tab" data-bs-target="#today-tab-pane" type="button" role="tab" aria-controls="wait-tab-pane" aria-selected="true">
-                Diarias
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="wait-tab" data-bs-toggle="tab" data-bs-target="#wait-tab-pane" type="button" role="tab" aria-controls="today-tab-pane" aria-selected="true">
-                + Registro
-            </button>
-        </li>
+
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-            <h5>Encuestas Pendientes x visita</h5>
+            <h5>Encuestas Pendientes por gestionar</h5>
             <br />
-            <div style="max-height: 650px; overflow-y: auto; mt-3">
+            <div style="max-height: 600px; overflow-y: auto; mt-3">
                 <div v-for="(encuesta, index) in encuestas" :key="index">
                     <div class="row">
 
@@ -116,45 +113,12 @@
                         </div>
                         <hr>
                     </div>
-                    <!--  -->
+
                 </div>
 
             </div>
         </div>
-        <div class="tab-pane fade" id="today-tab-pane" role="tabpanel" aria-labelledby="today-tab" tabindex="0">
-            <h5>Encuestas Diarias</h5>
-            <div class="table-responsive" style="max-height:600px; overflow-y: auto;">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">Detalle</th>
 
-                            <th scope="col">Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        <tr v-for="(encuesta, index) in this.encuestasToday" :key="index">
-                            <td>
-                                Paciente: {{ encuesta.nombre1 }} {{ encuesta.apellido1 }}
-                                <hr />
-                                Actividades:{{ this.nombresActividades(encuesta.tipoActividad) }}
-                                <hr />
-                                P Riesgo: {{ encuesta.poblacionRiesgo }}
-                            </td>
-
-                            <td>
-                                <div class="col-4">
-
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
-
-        </div>
     </div>
 </div>
 </template>
@@ -180,6 +144,7 @@ export default {
             fechaActual: "",
             mapUsuarios: {}, // id -> nombre completo
             users: [],
+            cargando: true,
         };
     },
 
@@ -323,25 +288,47 @@ export default {
 
     mounted: async function () {
         this.fechaActual = moment().format("YYYY-MM-DD");
+        try {
+            //encuestas diarias + contador
+            await this.getAllRegistersByFecha({
+                idUsuario: this.userData.numDocumento,
+                fecha: this.fechaActual,
+            });
 
-        //encuestas diarias + contador
-        await this.getAllRegistersByFecha({
-            idUsuario: this.userData.numDocumento,
-            fecha: this.fechaActual,
-        });
+            //encuestas abiertas
+            await this.getAllRegistersByFechaStatus({
+                idUsuario: this.userData.numDocumento,
+            });
 
-        //encuestas abiertas
-        await this.getAllRegistersByFechaStatus({
-            idUsuario: this.userData.numDocumento,
-        });
-
-        //total de encuestas del usuario . para contador
-        await this.getAllRegistersByIduserProf({
-            idUsuario: this.userData.numDocumento,
-        });
-        this.fetchUsers();
+            //total de encuestas del usuario . para contador
+            await this.getAllRegistersByIduserProf({
+                idUsuario: this.userData.numDocumento,
+            });
+            await this.fetchUsers();
+        } finally {
+            this.cargando = false;
+        }
     },
 }
 </script>
 
-<style></style>
+<style>
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255,255,255,0.8);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.spinner-message {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+}
+</style>

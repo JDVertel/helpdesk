@@ -31,7 +31,12 @@ const routes = [
     component: () => import("../components/soporte/sop_agendas.vue"),
     meta: { requiresAuth: true },
   },
-
+  {
+    path: "/sop_facturacion",
+    name: "sop_facturacion",
+    component: () => import("../components/soporte/sop_facturacion.vue"),
+    meta: { requiresAuth: true },
+  },
 
   {
     path: "/sop_aux",

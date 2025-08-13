@@ -1,6 +1,7 @@
 import firebase_api from "@/api/ApiFirebase.js";
+import persistedState from './persistedstate';
 import { createStore } from "vuex";
-import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, collectionGroup } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore();
 const auth = getAuth();
@@ -35,9 +36,12 @@ export default createStore({
         encuestasToday: [], // Para manejar la cantidad de encuestas diarias
         InfoEncuestasById: [],
         cupsbyActividad: {},
-        EncuestasProf: [], // Para manejar la información de CUPS por actividad   
+        EncuestasProf: [],
+        EncuestasFact: [],
+        EncuestasFactAprov: [], // Para manejar la información de CUPS por actividad
         // Puedes agregar más estados según sea necesario
     },
+    // plugins: [persistedState],
 
     actions: {
         /* ----------------------------------------AUTH------------------------------------- */
@@ -211,6 +215,18 @@ export default createStore({
             }
         },
 
+        aprovicionarP: async ({ commit }, data) => {
+            const { idEnc, idProf } = data;
+            try {
+                const response = await firebase_api.patch(`/Encuesta/${data.idEnc}.json`, { asigfact: idProf });
+                console.log("Paciente aprovisionado:", response.data);
+                return response.data;
+            } catch (error) {
+                console.error("Error al aprovisionar paciente:", error);
+                throw error;
+            }
+        },
+
         guardarAgendaT: async ({ commit }, datos) => {
             // Validación de datos obligatorios
             if (!datos || !datos.idAgenda || !datos.idEncuesta || !datos.fechaAgenda || !datos.horalab || !datos.grupo || !datos.encuestador || !datos.paciente || !datos.barrio || !datos.direccion) {
@@ -244,8 +260,17 @@ export default createStore({
                         tomademuestrasExistentes = [tomademuestrasExistentes];
                     }
                 }
-                // Agregar nuevo registro
-                tomademuestrasExistentes.push(agenda.tomademuestras);
+                // Verificar duplicados antes de agregar
+                const existe = tomademuestrasExistentes.some(item =>
+                    item.horalab === agenda.tomademuestras.horalab &&
+                    item.paciente === agenda.tomademuestras.paciente &&
+                    item.idEncuesta === agenda.tomademuestras.idEncuesta
+                );
+                if (!existe) {
+                    tomademuestrasExistentes.push(agenda.tomademuestras);
+                } else {
+                    console.warn("Cita de toma de muestras duplicada detectada, no se agrega.");
+                }
 
                 if (response.data) {
                     // Actualizar agenda existente
@@ -315,8 +340,17 @@ export default createStore({
                         visitamedicaExistentes = [visitamedicaExistentes];
                     }
                 }
-                // Agregar nuevo registro
-                visitamedicaExistentes.push(agenda.visitamedica);
+                // Verificar duplicados antes de agregar
+                const existe = visitamedicaExistentes.some(item =>
+                    item.horavisita === agenda.visitamedica.horavisita &&
+                    item.paciente === agenda.visitamedica.paciente &&
+                    item.idEncuesta === agenda.visitamedica.idEncuesta
+                );
+                if (!existe) {
+                    visitamedicaExistentes.push(agenda.visitamedica);
+                } else {
+                    console.warn("Cita de visita médica duplicada detectada, no se agrega.");
+                }
 
                 if (response.data) {
                     // Actualizar agenda existente
@@ -548,7 +582,29 @@ export default createStore({
                 throw error;
             }
         },
-        /* ------------------------------------------------------------------------------------- */
+        /* ------------------------ inicio admin informes------------------------------------ */
+        GetRegistersbyRangeGeneral: async ({ commit }, parametros) => {
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                // Filtrar por fecha
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.fecha >= parametros.finicial &&
+                        encuesta.fecha <= parametros.ffinal
+                );
+
+                commit("setEncuestasAdmin", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetRegistersbyRangeGeneral:", error);
+                throw error;
+            }
+        },
 
         GetRegistersbyRangeCerrados: async ({ commit }, parametros) => {
             try {
@@ -561,8 +617,8 @@ export default createStore({
                 // Filtrar por fecha y status_gest_enfermera === true
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
-                        encuesta.fecha >= parametros.finicial &&
-                        encuesta.fecha <= parametros.ffinal &&
+                        encuesta.fechagestEnfermera >= parametros.finicial &&
+                        encuesta.fechagestEnfermera <= parametros.ffinal &&
                         encuesta.status_gest_enfermera === true
                 );
 
@@ -574,7 +630,34 @@ export default createStore({
             }
         },
 
-        GetRegistersbyRangeGeneral: async ({ commit }, parametros) => {
+        /* ------------------------ fin admin informes------------------------------------ */
+
+
+        GetRegistersbyRangeGeneralFact: async ({ commit }, parametros) => {
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+                // Filtrar por fecha y que asigfact no sea true
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+                        encuesta.fecha >= parametros.finicial &&
+                        encuesta.fecha <= parametros.ffinal &&
+                        encuesta.asigfact === '' ||
+                        encuesta.asigfact === null ||
+                        encuesta.asigfact === undefined
+                );
+                commit("setEncuestasFact", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetRegistersbyRangeGeneral:", error);
+                throw error;
+            }
+        },
+
+        GetRegistersbyRangeGeneralFactAprov: async ({ commit }, iduser) => {
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).map(([key, value]) => ({
@@ -582,16 +665,15 @@ export default createStore({
                     ...value,
                 }));
 
-                // Filtrar por fecha
+                // Filtrar por fecha y que asigfact sea true
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
-                        encuesta.fecha >= parametros.finicial && encuesta.fecha <= parametros.ffinal
+                        encuesta.asigfact === iduser
                 );
-
-                commit("setEncuestasAdmin", encuestasFiltradas);
+                commit("setEncuestasFactAprov", encuestasFiltradas);
                 return encuestasFiltradas;
             } catch (error) {
-                console.error("Error en Action_GetRegistersbyRangeGeneral:", error);
+                console.error("Error en Action_GetRegistersbyRangeGeneralFactAprov:", error);
                 throw error;
             }
         },
@@ -820,7 +902,7 @@ export default createStore({
                     commit("setcantEncuestas", 0);
                     return 0;
                 }
-                /* aqui esta el problema */
+
                 const encuestas = Object.entries(data).filter(([_, value]) =>
                     value.idMedicoAtiende === idUsuario && value.status_gest_medica === false
                 ).map(([key, value]) => ({
@@ -832,7 +914,8 @@ export default createStore({
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
                         encuesta.idMedicoAtiende === idUsuario &&
-                        encuesta.status_gest_medica === false
+                        encuesta.status_gest_medica === false &&
+                        encuesta.status_gest_aux === true
                 );
 
                 console.log(encuestasFiltradas);
@@ -870,7 +953,9 @@ export default createStore({
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
                         encuesta.idEnfermeroAtiende === idUsuario &&
-                        encuesta.status_gest_enfermera === false
+                        encuesta.status_gest_enfermera === false &&
+                        encuesta.status_gest_medica === true &&
+                        encuesta.status_gest_aux === true
                 );
 
                 console.log(encuestasFiltradas);
@@ -887,7 +972,7 @@ export default createStore({
         },
 
 
-        /*  */
+        /*  consulta auxiliar */
         GetAllRegistersbyRangeAux: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
             console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
@@ -933,7 +1018,7 @@ export default createStore({
                 throw error;
             }
         },
-
+/* consulta medico */
         GetAllRegistersbyRangeMed: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
             //  console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
@@ -954,17 +1039,15 @@ export default createStore({
                 }));
 
                 const encuestasFiltradas = encuestas.filter((encuesta) => {
-                    const fecha = encuesta.fecha;
-                    if (!fecha) return false;
+                    const fecha = encuesta.fechagestMedica;
 
+
+                    if (!fecha) return false;
                     // Filtrar rango de fechas
                     if (!(fecha >= fechaInicio && fecha <= fechaFin)) return false;
-
                     // Filtrar por idempleado si se proporcionó
                     if (idempleado && encuesta.idMedicoAtiende !== idempleado) return false;
                     if (cargo && encuesta.status_gest_medica !== true) return false;
-                    if (cargo && encuesta.status_gest_enfermera !== true) return false;
-
                     // Agregar actividadesRealizadas solo con las que coincidan con el cargo
                     if (encuesta.tipoActividad && typeof encuesta.tipoActividad === 'object') {
                         encuesta.actividadesRealizadas = Object.values(encuesta.tipoActividad).filter(act => {
@@ -984,7 +1067,7 @@ export default createStore({
                 throw error;
             }
         },
-
+/* consulta enfermero */
         GetAllRegistersbyRangeEnf: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
             console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
@@ -1005,7 +1088,7 @@ export default createStore({
                 }));
 
                 const encuestasFiltradas = encuestas.filter((encuesta) => {
-                    const fecha = encuesta.fecha;
+                    const fecha = encuesta.fechagestEnfermera;
                     if (!fecha) return false;
 
                     // Filtrar rango de fechas
@@ -1081,8 +1164,12 @@ export default createStore({
         getdataips: async ({ commit }, id) => {
             try {
                 const { data } = await firebase_api.get(`/ips/${id}.json`);
-                commit("setdatosips", data);
-                console.log(data);
+                if (data && Object.keys(data).length > 0) {
+                    commit("setdatosips", data);
+                } else {
+                    // No sobrescribas si no hay datos válidos
+                }
+                console.log("getdataips:", data);
             } catch (error) {
                 console.error("Error en Action_getdataips:", error);
                 throw error;
@@ -1465,6 +1552,12 @@ export default createStore({
         },
         setEncuestasAdmin(state, encuestas) {
             state.EncuestasAdmin = encuestas;
+        },
+        setEncuestasFact(state, encuestas) {
+            state.EncuestasFact = encuestas;
+        },
+        setEncuestasFactAprov(state, encuestas) {
+            state.EncuestasFactAprov = encuestas;
         }
     },
     getters: {

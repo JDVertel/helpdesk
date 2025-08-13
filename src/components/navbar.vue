@@ -27,9 +27,11 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                     <!--    <li class="nav-item active" aria-current="page">
-                            <strong><i class="bi bi-heart-pulse"></i> Asistencial</strong>
-                        </li> -->
+                    <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
+                            <router-link class="nav-link" to="/sop_facturacion" @click="onNavLinkClick">
+                                <i class="bi bi-person-circle"></i> Facturador
+                            </router-link>
+                        </li>
 
                         <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
                             <router-link class="nav-link" to="/sop_aux" @click="onNavLinkClick">
@@ -74,9 +76,7 @@
                         </li>
 
                         <template v-if="userData && userData.cargo === 'admin'">
-                    <!--         <li class="nav-item active" aria-current="page">
-                                <strong><i class="bi bi-gear-fill"></i> Admin</strong>
-                            </li> -->
+        
 
                             <li class="nav-item">
                                 <router-link class="nav-link" to="/admin_programavisitas" @click="onNavLinkClick">
@@ -122,7 +122,7 @@
                         </li>
                     </ul>
                     <div class="sidebar-version" style="position:absolute;bottom:10px;left:0;width:100%;text-align:center;font-size:0.95rem;color:#333;opacity:0.7;">
-                        Version 1.2
+                      <p>Version 1.3 - 13/08/2025</p>  
                     </div>
                 </div>
             </div>

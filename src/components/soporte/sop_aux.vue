@@ -1,5 +1,11 @@
 <template>
-<div>
+<div v-if="cargando" class="spinner-overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <div class="spinner-message">Por favor espere, cargando información...</div>
+</div>
+<div v-if="!cargando">
     <h1 class="display-6 center">{{ userData.cargo }}</h1>
 
     <div class="row">
@@ -43,14 +49,17 @@
                             <div class="col-12 col-md-2 paciente">
                                 <small>
                                     <strong>Paciente: {{ encuesta.nombre1 }} {{ encuesta.nombre2 }}
-                                        {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong> <hr>
-                                    <strong>Eps:</strong>{{ encuesta.eps }} <hr>
+                                        {{ encuesta.apellido1 }} {{ encuesta.apellido2 }}</strong>
+                                    <hr>
+                                    <strong>Eps:</strong>{{ encuesta.eps }}
+                                    <hr>
                                     <strong>F Nacimiento:</strong> {{ encuesta.fechaNac }}
-                        
+
                                 </small>
                             </div>
                             <div class="col-12 col-md-3 Riesgos">
-                                        <small><strong>F Encuesta:</strong> <strong>{{ encuesta.fecha }}</strong></small> <hr>
+                                <small><strong>F Encuesta:</strong> <strong>{{ encuesta.fecha }}</strong></small>
+                                <hr>
                                 <small>
                                     <strong>P Riesgo:</strong> {{ encuesta.poblacionRiesgo }}</small>
                             </div>
@@ -173,7 +182,7 @@
                     <tr>
                         <td>
                             <RouterLink class="btn btn-warning btn-sm" to="/sop_encuesta">
-                         <i class="bi bi-file-earmark-plus-fill"></i> Agregar
+                                <i class="bi bi-file-earmark-plus-fill"></i> Agregar
                             </RouterLink>
                         </td>
                         <td>Extramural</td>
@@ -195,6 +204,7 @@ import moment from "moment";
 export default {
     data() {
         return {
+            cargando: true,
             fechaActual: "",
         };
     },
@@ -264,27 +274,48 @@ export default {
     },
     async mounted() {
         this.fechaActual = moment().format("YYYY-MM-DD");
-
-        //encuestas diarias + contador
-        await this.getAllRegistersByFecha({
-            idUsuario: this.userData.numDocumento,
-            fecha: this.fechaActual,
-        });
-
-        //encuestas abiertas
-        await this.getAllRegistersByFechaStatus({
-            idUsuario: this.userData.numDocumento,
-        });
+        try {
+            //encuestas diarias + contador
+            await this.getAllRegistersByFecha({
+                idUsuario: this.userData.numDocumento,
+                fecha: this.fechaActual,
+            });
+            //encuestas abiertas
+            await this.getAllRegistersByFechaStatus({
+                idUsuario: this.userData.numDocumento,
+            });
+        } finally {
+            this.cargando = false;
+        }
     },
 };
 </script>
 
 <style>
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-message {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
 .btn-group {
     display: flex !important;
     justify-content: space-between;
     width: 100%;
     /* Hace que el grupo ocupe todo el ancho del contenedor padre */
 }
-
 </style>
