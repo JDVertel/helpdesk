@@ -479,20 +479,20 @@ export default createStore({
             }
         },
 
+        asigFacturacion: async ({ commit }, datafact) => {
+            const { rol, cup, idEncuesta, idFacturador, numFactura, idActividad, cupId } = datafact;
+
+            await firebase_api.patch(`/Encuesta/${idEncuesta}/tipoActividad/${idActividad}/cups/${rol}/cups/${cupId}.json`, {
+                FactNum: numFactura,
+                FactProf: idFacturador
+            });
+        },
 
         generarId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         },
 
 
-        generarId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-        },
-
-
-        generarId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-        },
 
         adicionarCups: async ({ commit }, entradasC) => {
             try {
@@ -634,20 +634,23 @@ export default createStore({
 
 
         GetRegistersbyRangeGeneralFact: async ({ commit }, parametros) => {
+
             try {
                 const { data } = await firebase_api.get("/Encuesta.json");
                 const encuestas = Object.entries(data).map(([key, value]) => ({
                     id: key,
                     ...value,
                 }));
-                // Filtrar por fecha y que asigfact no sea true
+
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
                         encuesta.fecha >= parametros.finicial &&
                         encuesta.fecha <= parametros.ffinal &&
-                        encuesta.asigfact === '' ||
-                        encuesta.asigfact === null ||
-                        encuesta.asigfact === undefined
+                        (
+                            encuesta.asigfact === '' ||
+                            encuesta.asigfact === null ||
+                            encuesta.asigfact === undefined
+                        )
                 );
                 commit("setEncuestasFact", encuestasFiltradas);
                 return encuestasFiltradas;
@@ -1018,7 +1021,7 @@ export default createStore({
                 throw error;
             }
         },
-/* consulta medico */
+        /* consulta medico */
         GetAllRegistersbyRangeMed: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
             //  console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);
@@ -1039,15 +1042,17 @@ export default createStore({
                 }));
 
                 const encuestasFiltradas = encuestas.filter((encuesta) => {
-                    const fecha = encuesta.fechagestMedica;
-
-
+                    const fecha = encuesta.fecha;
                     if (!fecha) return false;
+
                     // Filtrar rango de fechas
                     if (!(fecha >= fechaInicio && fecha <= fechaFin)) return false;
+
                     // Filtrar por idempleado si se proporcionó
                     if (idempleado && encuesta.idMedicoAtiende !== idempleado) return false;
                     if (cargo && encuesta.status_gest_medica !== true) return false;
+                    if (cargo && encuesta.status_gest_enfermera !== true) return false;
+
                     // Agregar actividadesRealizadas solo con las que coincidan con el cargo
                     if (encuesta.tipoActividad && typeof encuesta.tipoActividad === 'object') {
                         encuesta.actividadesRealizadas = Object.values(encuesta.tipoActividad).filter(act => {
@@ -1067,7 +1072,7 @@ export default createStore({
                 throw error;
             }
         },
-/* consulta enfermero */
+        /* consulta enfermero */
         GetAllRegistersbyRangeEnf: async ({ commit }, rango) => {
             const { fechaInicio, fechaFin, idempleado, cargo } = rango;
             console.log("data que entra xxx", fechaFin, fechaInicio, idempleado, cargo);

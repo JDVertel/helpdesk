@@ -176,6 +176,8 @@ export default {
             let rango = {
                 fechaInicio: this.fechaInicio,
                 fechaFin: this.fechaFin,
+                idempleado: this.userData.numDocumento,
+                cargo: this.userData.cargo,
             };
             this.GetAllRegistersbyRangeEnf(rango);
             this.activacion = true;
