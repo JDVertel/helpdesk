@@ -27,7 +27,7 @@
 
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item" v-if="userData && (userData.cargo === 'Auxiliar de enfermeria')">
+                    <li class="nav-item" v-if="userData && (userData.cargo === 'Fact')">
                             <router-link class="nav-link" to="/sop_facturacion" @click="onNavLinkClick">
                                 <i class="bi bi-person-circle"></i> Facturador
                             </router-link>

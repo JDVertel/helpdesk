@@ -328,15 +328,16 @@
                                                                         <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
                                                                         <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
                                                                         <td>
-                                                                            <!-- aqui validar la variable que va a tomar el valor cuando se almacene -->
+
                                                                             <template v-if="cup && cup.FactNum !== undefined">
                                                                                 {{ cup.FactNum }}
                                                                             </template>
                                                                             <template v-else>
                                                                                 <div class="input-group mb-3">
                                                                                     <input type="text" class="form-control" :disabled="facturaDisabled[cupId]" v-model="facturaInputs[cupId]" :placeholder="facturaDisabled[cupId] ? facturaInputs[cupId] : '#factura'" aria-label="Recipient’s username" aria-describedby="button-addon2">
-                                                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="desactivarInput(cupId)" :disabled="!facturaInputs[cupId] || facturaDisabled[cupId]">
-                                                                                        <i :class="['bi', 'bi-bookmark-check-fill', facturaDisabled[cupId] ? 'text-primary' : '']" @click="regFactCup(profesional ,cup.Homolog, facturaInputs[cupId], actividad.id, cup.id)"></i>
+                                                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                                                                        @click="regFactCup(profesional ,cup.Homolog, facturaInputs[cupId], actividad.id, cup.id)">
+                                                                                        <i :class="['bi', 'bi-bookmark-check-fill', facturaDisabled[cupId] ? 'text-primary' : '']"></i>
                                                                                     </button>
                                                                                 </div>
 
@@ -372,7 +373,9 @@
                         Close
                     </button>
 
-                    <button type="button" class="btn btn-primary">Guardar2</button>
+                    <button v-if="conteoCupsFactNum.totalCups === conteoCupsFactNum.totalFactNum && conteoCupsFactNum.totalCups > 0" class="btn btn-primary" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
+                        Guardar2
+                    </button>
 
                 </div>
             </div>
@@ -392,7 +395,7 @@ export default {
         return {
             fechaFin: "",
             fechaInicio: "",
-            cargando: true,
+            cargando: false,
             activeTab: "pendientes", // Control de pestaña activa
             aprovDisabled: {}, // Estado de desactivación por paciente
             pacienteIdModal: null,
@@ -401,8 +404,7 @@ export default {
             cupl: null,
             tipodoc: "",
             numdoc: "",
-
-        };
+        }
     },
     computed: {
         ...mapState([
@@ -462,7 +464,8 @@ export default {
             "GetRegistersbyRangeGeneralFactByID",
             "aprovicionarP",
             "getEncuestaById",
-            "asigFacturacion"
+            "asigFacturacion",
+            "cerrarFacturacion"
         ]),
         /*  */
 
@@ -516,50 +519,131 @@ export default {
         },
         setPacienteId(id) {
             this.pacienteIdModal = id;
-            this.getEncuestaById(id);
+            this.getEncuestaById(id).then(() => {
+                // Inicializar los inputs y disabled para todos los cupId presentes
+                if (this.InfoEncuestasById && Array.isArray(this.InfoEncuestasById)) {
+                    this.InfoEncuestasById.forEach(paciente => {
+                        if (paciente.tipoActividad && typeof paciente.tipoActividad === 'object') {
+                            Object.values(paciente.tipoActividad).forEach(actividad => {
+                                if (actividad.cups && typeof actividad.cups === 'object') {
+                                    Object.values(actividad.cups).forEach(profesionalObj => {
+                                        if (profesionalObj.cups && typeof profesionalObj.cups === 'object') {
+                                            Object.keys(profesionalObj.cups).forEach(cupId => {
+                                                if (!(cupId in this.facturaInputs)) {
+                                                    this.facturaInputs[cupId] = '';
+                                                }
+                                                if (!(cupId in this.facturaDisabled)) {
+                                                    this.facturaDisabled[cupId] = false;
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        },
+        async regFactCup(rol, cup, numfact, idActividad, idcup) {
+            this.cargando = true;
+            let timeoutDisparado = false;
+            let spinnerTimeout = setTimeout(() => {
+                if (this.cargando) {
+                    timeoutDisparado = true;
+                    this.cargando = false;
+                    this.facturaDisabled[idcup] = false;
+                    alert('Error: El proceso de guardado está tardando demasiado. Intente nuevamente.');
+                    console.warn('[regFactCup] Timeout: spinner forzado a false');
+                }
+            }, 10000); // 10 segundos de espera máxima
+            console.log('[regFactCup] INICIO', { rol, cup, numfact, idActividad, idcup });
+            let guardadoExitoso = false;
+            try {
+                // Asegurar reactividad antes de guardar
+                if (!(idcup in this.facturaInputs)) {
+                    this.facturaInputs[idcup] = numfact;
+                }
+                if (!(idcup in this.facturaDisabled)) {
+                    this.facturaDisabled[idcup] = false;
+                }
+                const datafact = {
+                    rol,
+                    cup,
+                    idActividad,
+                    idEncuesta: this.pacienteIdModal,
+                    idFacturador: this.userData.numDocumento,
+                    numFactura: numfact,
+                    cupId: idcup
+                };
+                console.log('[regFactCup] Antes de asigFacturacion', datafact);
+                const res = await this.asigFacturacion(datafact);
+                if (res && res.success === false) {
+                    throw new Error(res.message || 'No se pudo guardar el registro.');
+                }
+                guardadoExitoso = true;
+                console.log('[regFactCup] Guardado exitoso en asigFacturacion');
+                await this.getEncuestaById(this.pacienteIdModal);
+                console.log('[regFactCup] Datos recargados con getEncuestaById');
+                // Solo bloquear el campo tras guardar
+                this.facturaDisabled[idcup] = true;
+                console.log('[regFactCup] Campo bloqueado tras guardar');
+            } catch (error) {
+                console.error('[regFactCup] ERROR:', error);
+                this.facturaDisabled[idcup] = false;
+                this.cargando = false;
+                if (!timeoutDisparado) {
+                    alert('Error al guardar: ' + (error?.message || error));
+                }
+            } finally {
+                this.cargando = false;
+                clearTimeout(spinnerTimeout);
+                if (!guardadoExitoso && !timeoutDisparado) {
+                    this.facturaDisabled[idcup] = false;
+                    alert('No se pudo guardar el registro. Intente nuevamente.');
+                }
+                console.log('[regFactCup] FIN, cargando:', this.cargando);
+            }
         },
 
-        regFactCup(rol, cup, numfact, idActividad, idcup) {
-            const datafact = {
-                rol: rol,
-                cup: cup,
-                idActividad: idActividad,
-                idEncuesta: this.pacienteIdModal,
-                idFacturador: this.userData.numDocumento,
-                numFactura: numfact,
-                cupId: idcup
-            };
-
-            /*   console.log(datafact); */
-            this.asigFacturacion(datafact)
-            // Aquí llamarías a la acción de Vuex para registrar la factura 
-        },
+        cerrarfact(id) {
+            this.cerrarFacturacion(id)
+            alert("Factura cerrada");
+            this.GetRegistersbyRangeGeneralFactAprov(
+                this.userData.numDocumento
+            ).finally(() => {
+                this.cargando = false;
+            });
+        }
 
     },
     mounted() {
-        this.cargando = true;
+        this.cargando = true
         this.GetRegistersbyRangeGeneralFactAprov(
             this.userData.numDocumento
         ).finally(() => {
-            this.cargando = false;
-        });
-    },
-};
+            this.cargando = false
+        })
+    }
+}
 </script>
 
 <style>
+
+/* Spinner overlay universal para evitar problemas en pantalla completa */
 .spinner-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 20000;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    pointer-events: auto;
 }
 
 .spinner-message {

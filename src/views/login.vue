@@ -38,7 +38,7 @@
         </div> 
         <div class="row">
          <div class="col-5">Juliettmunoz20@gmail.com</div>
-            <div class="col-4">Vas0427</div>
+            <div class="col-4">1096183730ju</div>
             <div class="col-3">Fact</div>
         </div>
 

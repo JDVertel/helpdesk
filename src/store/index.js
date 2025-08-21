@@ -218,11 +218,22 @@ export default createStore({
         aprovicionarP: async ({ commit }, data) => {
             const { idEnc, idProf } = data;
             try {
-                const response = await firebase_api.patch(`/Encuesta/${data.idEnc}.json`, { asigfact: idProf });
+                const response = await firebase_api.patch(`/Encuesta/${data.idEnc}.json`, { asigfact: idProf, status_facturacion: false });
                 console.log("Paciente aprovisionado:", response.data);
                 return response.data;
             } catch (error) {
                 console.error("Error al aprovisionar paciente:", error);
+                throw error;
+            }
+        },
+
+        cerrarFacturacion: async ({ commit }, idEnc) => {
+            try {
+                const response = await firebase_api.patch(`/Encuesta/${idEnc}.json`, { status_facturacion: true });
+                console.log("Facturación cerrada:", response.data);
+                return response.data;
+            } catch (error) {
+                console.error("Error al cerrar facturación:", error);
                 throw error;
             }
         },
@@ -698,7 +709,8 @@ export default createStore({
                 // Filtrar por fecha y que asigfact sea true
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
-                        encuesta.asigfact === iduser
+                        encuesta.asigfact === iduser &&
+                        encuesta.status_facturacion === false
                 );
                 commit("setEncuestasFactAprov", encuestasFiltradas);
                 return encuestasFiltradas;
