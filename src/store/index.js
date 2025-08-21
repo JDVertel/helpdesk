@@ -659,6 +659,33 @@ export default createStore({
                 throw error;
             }
         },
+        /* ------------------------------------------------------------------------------------- */
+        GetRegistersbyRangeGeneralFactByID: async ({ commit }, parametros) => {
+
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const encuestas = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                const encuestasFiltradas = encuestas.filter(
+                    (encuesta) =>
+
+                    (
+                        encuesta.numdoc === parametros.numdoc &&
+                        encuesta.tipodoc === parametros.tipodoc
+
+                    )
+                );
+                commit("setEncuestasFact", encuestasFiltradas);
+                return encuestasFiltradas;
+            } catch (error) {
+                console.error("Error en Action_GetRegistersbyRangeGeneral:", error);
+                throw error;
+            }
+        },
+
 
         GetRegistersbyRangeGeneralFactAprov: async ({ commit }, iduser) => {
             try {
@@ -680,6 +707,8 @@ export default createStore({
                 throw error;
             }
         },
+
+
 
         GetAllRegistersbyRangeAndProf: async ({ commit }, parametros) => {
             try {

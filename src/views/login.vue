@@ -36,6 +36,11 @@
             <div class="col-4">1111111111</div>
             <div class="col-3">aux</div>
         </div> 
+        <div class="row">
+         <div class="col-5">Juliettmunoz20@gmail.com</div>
+            <div class="col-4">Vas0427</div>
+            <div class="col-3">Fact</div>
+        </div>
 
 
         <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>

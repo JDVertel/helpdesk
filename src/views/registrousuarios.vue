@@ -76,7 +76,7 @@
                         </div>
                         <div class="col col-12 col-md-4 mb-3" v-if="cargo === 'Auxiliar de enfermeria' || cargo === 'Enfermero' || cargo === 'Medico'">
                             <label for="grupo"># Grupo</label>
-                            <input type="number" id="grupo" v-model="grupo" required />
+                            <input type="number" id="grupo" v-model="grupo" />
                         </div>
 
                     </div>
@@ -141,7 +141,6 @@ export default {
                 !this.userEmail ||
                 !this.nombre ||
                 !this.numDocumento ||
-                !this.grupo ||
                 !this.cargo
             ) {
                 this.message = "Por favor, completa todos los campos obligatorios.";

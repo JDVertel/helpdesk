@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid">
-    <h1><i class="bi bi-clipboard-check"></i> Facturación</h1>
+    <h1> Facturación</h1>
     <div v-if="cargando" class="spinner-overlay">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
@@ -24,7 +24,6 @@
         <div class="tab-content" id="nav-tabContent">
             <div v-show="activeTab === 'pendientes'" class="tab-pane fade show active" id="nav-home" role="tabpanel" tabindex="0">
 
-                <!--  {{ EncuestasFactAprov }} -->
                 <div class="table-responsive" ref="tablaHtml">
                     <table class="table table-bordered table-striped table-sm align-middle">
                         <thead class="table-light">
@@ -75,20 +74,60 @@
             </div>
             <div v-show="activeTab === 'aprovisionar'" class="tab-pane fade show active" id="nav-profile" role="tabpanel" tabindex="0">
                 <div class="container mt-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="input-group">
-                                <span class="input-group-text">Rango de fechas de la consulta</span>
-                                <input type="date" aria-label="First name" class="form-control" v-model="fechaInicio" />
-                                <input type="date" aria-label="Last name" class="form-control" v-model="fechaFin" />
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Consulta x Fechas</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Consulta x Documento</button>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                            <div class="row mt-3">
+
+                                <div class="col-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rango de fechas de la consulta</span>
+                                        <input type="date" aria-label="First name" class="form-control" v-model="fechaInicio" />
+                                        <input type="date" aria-label="Last name" class="form-control" v-model="fechaFin" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-warning" @click="getdataEncuestas(fechaInicio, fechaFin)">
+                                        Buscar
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <button type="button" class="btn btn-warning" @click="getdataEncuestas(fechaInicio, fechaFin)">
-                                Buscar
-                            </button>
+                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                            <div class="row mt-3">
+                                <div class="col-4"> <label for="tipodoc" class="form-label">Tipo de Documento</label> <select id="tipodoc" v-model="tipodoc" class="form-select" required>
+                                        <option value="">Seleccione</option>
+                                        <option value="RC">Registro Civil</option>
+                                        <option value="TI">Tarjeta de Identidad</option>
+                                        <option value="CC">Cédula de Ciudadanía</option>
+                                        <option value="CE">Cédula de Extranjería</option>
+                                        <option value="NV">Certificado nacido vivo</option>
+                                        <option value="PA">Pasaporte</option>
+                                        <option value="PE">Permiso Especial de Permanencia</option>
+                                        <option value="MS">Menos sin identificacion</option>
+                                        <option value="AS">Adulto sin identificacion</option>
+                                        <option value="PT">Permiso por proteccion temporal</option>
+                                    </select></div>
+                                <div class="col-4"> <label for="numdoc" class="form-label">Número de Documento</label> <input type="text" aria-label="First name" class="form-control" v-model="numdoc" /></div>
+                                <div class="col-4"><button type="button" class="btn btn-warning mt-5" @click="getdataEncuestasById(tipodoc,numdoc)">
+                                        Buscar
+                                    </button></div>
+                            </div>
                         </div>
+
                     </div>
+
+                    <br>
+
                 </div>
                 <br />
                 <p>Registro</p>
@@ -154,8 +193,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
-                        Facturar CUPS
+                        <i class="bi bi-clipboard-check"></i> Facturar CUPS
                     </h1>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="container-fluid">
@@ -246,10 +286,13 @@
                         <!-- *************************************************************************************************************** -->
                         <div class="container-fluid ">
                             <table class="table table-bordered table-striped table-sm align-middle">
+                                {{ conteoCupsFactNum }}
                                 <thead class="table-light table-bordered">
                                     <tr>
                                         <th>Procedimientos y Actividades</th>
+
                                     </tr>
+
                                 </thead>
                                 <tbody>
                                     <tr v-for="(paciente, idx) in InfoEncuestasById" :key="paciente.id">
@@ -257,7 +300,7 @@
                                             <table class="table table-bordered table-striped table-sm align-middle">
                                                 <thead>
                                                     <tr>
-                                                  
+
                                                         <th>Actividad</th>
                                                         <th>Rol</th>
                                                         <th>Profesional</th>
@@ -275,7 +318,7 @@
                                                             <template v-for="profesional in actividad.Profesional" :key="'prof-' + profesional">
                                                                 <template v-if="actividad.cups && actividad.cups[profesional]">
                                                                     <tr v-for="(cup, cupId) in actividad.cups[profesional]?.cups || []" :key="'cup-' + cupId">
-                                                                    
+
                                                                         <td>{{ actividad.nombre }}</td>
                                                                         <td>{{ profesional }} </td>
                                                                         <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
@@ -285,7 +328,7 @@
                                                                         <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
                                                                         <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
                                                                         <td>
-                                                                        <!-- aqui validar la variable que va a tomar el valor cuando se almacene -->
+                                                                            <!-- aqui validar la variable que va a tomar el valor cuando se almacene -->
                                                                             <template v-if="cup && cup.FactNum !== undefined">
                                                                                 {{ cup.FactNum }}
                                                                             </template>
@@ -328,7 +371,9 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
+
+                    <button type="button" class="btn btn-primary">Guardar2</button>
+
                 </div>
             </div>
         </div>
@@ -353,7 +398,9 @@ export default {
             pacienteIdModal: null,
             facturaDisabled: {}, // Estado de desactivación por cupId
             facturaInputs: {}, // Valores de factura por cupId
-            cupl: null
+            cupl: null,
+            tipodoc: "",
+            numdoc: "",
 
         };
     },
@@ -364,15 +411,62 @@ export default {
             "EncuestasFactAprov",
             "InfoEncuestasById",
         ]),
+
+        conteoCupsFactNum() {
+            let totalCups = 0;
+            let totalFactNum = 0;
+
+            if (!this.InfoEncuestasById || !Array.isArray(this.InfoEncuestasById)) {
+                return {
+                    totalCups,
+                    totalFactNum
+                };
+            }
+
+            this.InfoEncuestasById.forEach(paciente => {
+                if (!paciente.tipoActividad || typeof paciente.tipoActividad !== 'object') return;
+
+                Object.values(paciente.tipoActividad).forEach(actividad => {
+                    if (!actividad.cups || typeof actividad.cups !== 'object') return;
+
+                    // Para cada profesional en cups
+                    Object.values(actividad.cups).forEach(profesionalObj => {
+                        if (!profesionalObj.cups || typeof profesionalObj.cups !== 'object') return;
+
+                        const cupsObj = profesionalObj.cups;
+
+                        // Contar todos los cups (propiedades dentro de cupsObj)
+                        const keysCups = Object.keys(cupsObj);
+                        totalCups += keysCups.length;
+
+                        keysCups.forEach(keyCup => {
+                            const cup = cupsObj[keyCup];
+                            if (cup && cup.FactNum != null && cup.FactNum !== '') {
+                                totalFactNum++;
+                            }
+                        });
+                    });
+                });
+            });
+
+            return {
+                totalCups,
+                totalFactNum
+            };
+        }
     },
     methods: {
         ...mapActions([
             "GetRegistersbyRangeGeneralFact",
             "GetRegistersbyRangeGeneralFactAprov",
+            "GetRegistersbyRangeGeneralFactByID",
             "aprovicionarP",
             "getEncuestaById",
             "asigFacturacion"
         ]),
+        /*  */
+
+        /*  */
         async getPendientes() {
             this.cargando = true;
             await this.GetRegistersbyRangeGeneralFactAprov(
@@ -388,6 +482,21 @@ export default {
                     ffinal: fechaFin,
                 };
                 await this.GetRegistersbyRangeGeneralFact(parametros);
+            } catch (error) {
+                console.error("Error al consultar encuestas:", error);
+            } finally {
+                this.cargando = false;
+            }
+        },
+
+        async getdataEncuestasById(tipodoc, numdoc) {
+            this.cargando = true;
+            try {
+                let parametros = {
+                    tipodoc: tipodoc,
+                    numdoc: numdoc,
+                };
+                await this.GetRegistersbyRangeGeneralFactByID(parametros);
             } catch (error) {
                 console.error("Error al consultar encuestas:", error);
             } finally {
@@ -410,7 +519,7 @@ export default {
             this.getEncuestaById(id);
         },
 
-        regFactCup(rol, cup, numfact, idActividad,idcup) {
+        regFactCup(rol, cup, numfact, idActividad, idcup) {
             const datafact = {
                 rol: rol,
                 cup: cup,
@@ -421,10 +530,11 @@ export default {
                 cupId: idcup
             };
 
-          /*   console.log(datafact); */
+            /*   console.log(datafact); */
             this.asigFacturacion(datafact)
             // Aquí llamarías a la acción de Vuex para registrar la factura 
-        }
+        },
+
     },
     mounted() {
         this.cargando = true;
