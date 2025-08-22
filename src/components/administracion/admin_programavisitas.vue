@@ -44,7 +44,7 @@
                 <h4>Detalle de Agenda</h4>
                 <hr />
                 <div class="agenda-table-scroll">
-                    <table class="table table-sm">
+                    <table class="table table-bordered table-sm">
                         <thead class="table-dark sticky-header">
                             <tr>
                                 <th scope="col">Fecha</th>
@@ -59,7 +59,7 @@
                                 <td>{{ agenda.fecha }}</td>
                                 <td>{{ agenda.grupo }}</td>
                                 <td>
-                                    <table class="table table-sm table-warning">
+                                    <table class="table table-bordered table-sm table-warning">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Hora</th>
@@ -88,7 +88,7 @@
                                     </table>
                                 </td>
                                 <td>
-                                    <table class="table table-sm table-success">
+                                    <table class="table table-bordered table-sm table-success">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Hora</th>

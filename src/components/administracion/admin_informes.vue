@@ -120,7 +120,7 @@
                             <td>{{ profesional }}</td>
                             <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
                             <td>{{ cup && cup.cantidad !== undefined ? cup.cantidad : '-' }}</td>
-                            <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
+                            <td>Fact:{{ cup && cup.FactNum !== undefined ? cup.FactNum : '-' }}</td>
                               <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
                             <td>{{ cup && cup.DescripcionCUP !== undefined ? cup.DescripcionCUP : '-' }}</td>
                             <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>

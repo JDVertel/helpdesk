@@ -1,49 +1,50 @@
 <template>
-<div class="container loginform">
-    <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
+<div class="login-layout">
+    <div class="login-left-panel"></div>
+    <div class="login-right-panel">
+        <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
+            <img src="@/assets/images/logo_extramurapp.png" alt="Logo Extramuralapp" class="login-logo-bg" />
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            <form @submit.prevent="handleLogin">
+                <div class="mb-3">
+                    <i class="bi bi-person-circle text-center"></i> <label for="email" class="form-label"> Email</label>
+                    <input v-model="email" type="email" class="form-control" id="email" placeholder="Ingresa tu email" autocomplete="username" required />
+                </div>
+                <div class="mb-3">
+                    <i class="bi bi-key"></i> <label for="password" class="form-label"> Contraseña</label>
+                    <input v-model="password" type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required />
+                </div>
+                <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
+            </form>
+            <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
 
-        <img src="@/assets/images/logo_extramurapp.png" alt="Logo Extramuralapp" class="login-logo-bg" />
-        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            <!--      <div class="row">
+                        <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
+                        <div class="col-4">Linarusso*2025.</div>
+                        <div class="col-3">Admin</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">juandavidvertelh@gmail.com</div>
+                        <div class="col-4">1234567890</div>
+                        <div class="col-3">med</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">correolinarussoflorez@hotmail.es</div>
+                        <div class="col-4">Linarusso*2025.</div>
+                        <div class="col-3">enfermera</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">juandavidvertel@hotmail.com</div>
+                        <div class="col-4">1111111111</div>
+                        <div class="col-3">aux</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">Juliettmunoz20@gmail.com</div>
+                        <div class="col-4">1096183730ju</div>
+                        <div class="col-3">Fact</div>
+                    </div> -->
 
-        <form @submit.prevent="handleLogin">
-            <div class="mb-3">
-                <i class="bi bi-person-circle text-center"></i> <label for="email" class="form-label"> Email</label>
-                <input v-model="email" type="email" class="form-control" id="email" placeholder="Ingresa tu email" autocomplete="username" required />
-            </div>
-            <div class="mb-3">
-                <i class="bi bi-key"></i> <label for="password" class="form-label"> Contraseña</label>
-                <input v-model="password" type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required />
-            </div>
-            <button type="submit" class="buttonLogin mb-3 w-100">Entrar</button>
-        </form>
-               <div class="row">
-            <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
-            <div class="col-4">Linarusso*2025.</div>
-            <div class="col-3">Admin</div>
         </div>
-        <div class="row">
-            <div class="col-5">juandavidvertelh@gmail.com</div>
-            <div class="col-4">1234567890</div>
-            <div class="col-3">med</div>
-        </div>
-        <div class="row">
-            <div class="col-5">correolinarussoflorez@hotmail.es</div>
-            <div class="col-4">Linarusso*2025.</div>
-            <div class="col-3">enfermera</div>
-        </div>
-        <div class="row">
-            <div class="col-5">juandavidvertel@hotmail.com</div>
-            <div class="col-4">1111111111</div>
-            <div class="col-3">aux</div>
-        </div> 
-        <div class="row">
-         <div class="col-5">Juliettmunoz20@gmail.com</div>
-            <div class="col-4">1096183730ju</div>
-            <div class="col-3">Fact</div>
-        </div>
-
-
-        <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
     </div>
 </div>
 </template>
@@ -133,9 +134,74 @@ export default {
 </script>
 
 <style scoped>
-.loginform {
-    min-height: 100vh;
-    background: url('@/assets/images/fondo_extramurapp.png') no-repeat center center fixed;
+html,
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+.login-layout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+.login-left-panel {
+    width: 70vw;
+    height: 100vh;
+    background: url('@/assets/images/fondo_extramurapp.jpg');
     background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.login-right-panel {
+    width: 30vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.login-right-panel .card {
+    margin-right: 2vw;
+}
+
+@media (max-width: 767px) {
+    .login-left-panel {
+        display: none !important;
+    }
+
+    .login-right-panel {
+        width: 100vw;
+        height: 100vh;
+        background: url('@/assets/images/fondo_extramurapp.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden !important;
+    }
+
+    .login-right-panel .card {
+        margin: 0;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.12);
+        width: 90vw;
+        max-width: 400px;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
 }
 </style>

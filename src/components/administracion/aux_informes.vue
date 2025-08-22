@@ -25,7 +25,7 @@
         <i class="bi bi-clipboard"></i> Copiar tabla
     </button>
     <div class="table-responsive" v-if="activacion" style="max-height: 70vh; overflow-y: auto;">
-        <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
+    <table class="table table-bordered table-striped table-sm" style="border-collapse: collapse; width: 100%">
 
             <thead>
                 <tr>

@@ -655,8 +655,8 @@ export default createStore({
 
                 const encuestasFiltradas = encuestas.filter(
                     (encuesta) =>
-                        encuesta.fecha >= parametros.finicial &&
-                        encuesta.fecha <= parametros.ffinal &&
+                        encuesta.fechagestEnfermera >= parametros.finicial &&
+                        encuesta.fechagestEnfermera <= parametros.ffinal &&
                         (
                             encuesta.asigfact === '' ||
                             encuesta.asigfact === null ||
@@ -685,7 +685,12 @@ export default createStore({
 
                     (
                         encuesta.numdoc === parametros.numdoc &&
-                        encuesta.tipodoc === parametros.tipodoc
+                        encuesta.tipodoc === parametros.tipodoc &&
+                        (
+                            encuesta.asigfact === '' ||
+                            encuesta.asigfact === null ||
+                            encuesta.asigfact === undefined
+                        )
 
                     )
                 );

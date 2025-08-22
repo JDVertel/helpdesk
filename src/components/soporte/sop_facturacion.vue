@@ -34,6 +34,7 @@
                                 <th>Sexo</th>
                                 <th>Documento</th>
                                 <th>Fecha Nac.</th>
+                                <th>Edad</th>
                                 <th>EPS</th>
                                 <th>Régimen</th>
                                 <th>Dirección</th>
@@ -41,7 +42,7 @@
                                 <th>Comuna</th>
                                 <th>Fecha Demanda</th>
                                 <th>Remisión</th>
-                                <th>Opciones</th>
+                                <th>Facturar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,6 +56,7 @@
                                 <td>{{ paciente.sexo }}</td>
                                 <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
                                 <td>{{ paciente.fechaNac }}</td>
+                                <td>{{ calcularEdad(paciente.fechaNac) }}</td>
                                 <td>{{ paciente.eps }}</td>
                                 <td>{{ paciente.regimen }}</td>
                                 <td>{{ paciente.direccion }}</td>
@@ -132,10 +134,10 @@
                 <br />
                 <p>Registro</p>
                 <div class="table-responsive" ref="tablaHtml">
-                    <table class="table table-bordered table-striped table-sm align-middle">
+                    <table class="table table-bordered table-striped table-sm align-middle table-success">
                         <thead class="table-light">
                             <tr>
-                                <th>id</th>
+                               <!--  <th>id</th> -->
                                 <th>Grupo</th>
                                 <th>Paciente</th>
                                 <th>Sexo</th>
@@ -147,13 +149,14 @@
                                 <th>Barrio</th>
                                 <th>Comuna</th>
                                 <th>Fecha Demanda</th>
+                                <th>Fecha cierre Enf</th>
                                 <th>Remisión</th>
                                 <th>Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(paciente, idx) in EncuestasFact" :key="paciente.id">
-                                <td>{{paciente.id }}</td>
+                                <!-- <td>{{paciente.id }}</td> -->
                                 <td>{{ paciente.grupo }}</td>
                                 <td>
                                     {{ paciente.nombre1 }} {{ paciente.nombre2 }}
@@ -168,6 +171,7 @@
                                 <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
                                 <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
                                 <td>{{ paciente.fecha }}</td>
+                                  <td>{{ paciente.fechagestEnfermera }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <td>
                                     <button type="button" class="btn btn-warning btn-sm" :disabled="aprovDisabled[paciente.id]" @click="
@@ -199,15 +203,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="container-fluid">
-                    <table class="table table-bordered table-striped table-sm align-middle">
+                    <table class="table table-bordered table-striped table-sm align-middle table-success">
                         <thead class="table-light">
                             <tr>
-                                <th>idEnc</th>
+                                <!-- <th>idEnc</th> -->
                                 <th>Grupo</th>
                                 <th>Paciente</th>
                                 <th>Sexo</th>
                                 <th>Documento</th>
                                 <th>Fecha Nac.</th>
+                                <th>Edad</th>
                                 <th>EPS</th>
                                 <th>Régimen</th>
                                 <th>Dirección</th>
@@ -215,15 +220,16 @@
                                 <th>Comuna</th>
                                 <th>lab/visit</th>
                                 <th>Gest. Aux</th>
-                                <th>Gest. Enfermera</th>
+                                
                                 <th>Gest. Médica</th>
-                                <th>Remisión</th>
+                                <th>Gest. Enfermera</th>
+                                <th>Teléfono</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                             <tr v-for="(paciente, idx) in InfoEncuestasById" :key="paciente.id">
                                 <!-- Campos principales del paciente -->
-                                <td>{{ pacienteIdModal}}</td>
+                                <!-- <td>{{ pacienteIdModal}}</td> -->
                                 <td>{{ paciente.grupo }}</td>
                                 <td>
                                     {{ paciente.nombre1 }} {{ paciente.apellido1 }}
@@ -232,6 +238,7 @@
                                 <td>{{ paciente.sexo }}</td>
                                 <td>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</td>
                                 <td>{{ paciente.fechaNac }}</td>
+                                <td>{{ calcularEdad(paciente.fechaNac) }}</td>
                                 <td>{{ paciente.eps }}</td>
                                 <td>{{ paciente.regimen }}</td>
                                 <td>{{ paciente.direccion }}</td>
@@ -255,13 +262,7 @@
                           : "No"
                       }}
                                 </td>
-                                <td>
-                                    {{
-                        paciente.status_gest_enfermera
-                          ? paciente.fechagestEnfermera
-                          : "No"
-                      }}
-                                </td>
+                      
                                 <td>
                                     {{
                         paciente.status_gest_medica
@@ -269,7 +270,14 @@
                           : "No"
                       }}
                                 </td>
-                                <td>{{ paciente.requiereRemision }}</td>
+                                          <td>
+                                    {{
+                        paciente.status_gest_enfermera
+                          ? paciente.fechagestEnfermera
+                          : "No"
+                      }}
+                                </td>
+                                <td>{{ paciente.telefono }}</td>
                                 <!-- Renderiza cada resultado de procedimiento como una fila individual -->
                             </tr>
                         </tbody>
@@ -286,7 +294,7 @@
                         <!-- *************************************************************************************************************** -->
                         <div class="container-fluid ">
                             <table class="table table-bordered table-striped table-sm align-middle">
-                                {{ conteoCupsFactNum }}
+                               <!--  {{ conteoCupsFactNum }} -->
                                 <thead class="table-light table-bordered">
                                     <tr>
                                         <th>Procedimientos y Actividades</th>
@@ -373,8 +381,8 @@
                         Close
                     </button>
 
-                    <button v-if="conteoCupsFactNum.totalCups === conteoCupsFactNum.totalFactNum && conteoCupsFactNum.totalCups > 0" class="btn btn-primary" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
-                        Guardar2
+                    <button v-if="conteoCupsFactNum.totalCups === conteoCupsFactNum.totalFactNum && conteoCupsFactNum.totalCups > 0" class="btn btn-danger" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
+                       <i class="bi bi-check2-circle"></i>  Cerrar Paciente
                     </button>
 
                 </div>
@@ -518,7 +526,12 @@ export default {
             this.facturaDisabled[cupId] = true;
         },
         setPacienteId(id) {
+            // Vaciar todas las variables relevantes al abrir el modal
             this.pacienteIdModal = id;
+            this.facturaInputs = {};
+            this.facturaDisabled = {};
+            this.cargando = false;
+            // Si tienes más variables que deban vaciarse, agrégalas aquí
             this.getEncuestaById(id).then(() => {
                 // Inicializar los inputs y disabled para todos los cupId presentes
                 if (this.InfoEncuestasById && Array.isArray(this.InfoEncuestasById)) {
@@ -614,7 +627,20 @@ export default {
             ).finally(() => {
                 this.cargando = false;
             });
-        }
+        },
+
+         calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    const dia = hoy.getDate() - nacimiento.getDate();
+
+    if (mes < 0 || (mes === 0 && dia < 0)) {
+      edad--;
+    }
+    return edad;
+  }
 
     },
     mounted() {

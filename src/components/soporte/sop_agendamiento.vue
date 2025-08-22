@@ -2,10 +2,15 @@
 <div class="container-fluid">
     <h5><i class="bi bi-calendar2-check"></i> Agendamiento de visita</h5>
     <hr>
-    {{ userData?.nombre }}
-    <hr>
+
+ 
     <span v-if="encuestas && encuestas.length && encuestas[0]">
-      {{ encuestas[0].nombre1 }},{{ encuestas[0].apellido1 }}
+        <div class="alert alert-success" role="alert">
+
+            Nombre: {{ encuestas[0].nombre1 }}  {{ encuestas[0].nombre2 }}, <br> Apellido: {{ encuestas[0].apellido1 }} {{ encuestas[0].apellido2 }}
+            <br>   Profesional: {{ userData?.nombre }}
+
+        </div>
     </span>
     <span v-else class="text-danger">No hay datos de paciente disponibles</span>
     <hr>

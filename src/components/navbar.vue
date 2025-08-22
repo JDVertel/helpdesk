@@ -122,7 +122,7 @@
                         </li>
                     </ul>
                     <div class="sidebar-version" style="position:absolute;bottom:10px;left:0;width:100%;text-align:center;font-size:0.95rem;color:#333;opacity:0.7;">
-                      <p>Version 1.3 - 13/08/2025</p>  
+                      <p>Version 1.4 - 21/08/2025</p>  
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@
     </button>
     <br />
     <div class="table-responsive" v-if="activacion" style="max-height: 60vh; overflow-y: auto;">
-        <table class="table-bordered table-striped table-sm" border="1" style="border-collapse: collapse; width: 100%">
+    <table class="table table-bordered table-striped table-sm" style="border-collapse: collapse; width: 100%">
             <thead>
                 <tr>
                     <th colspan="5" style="background: #d0e6f7">DATOS DE IPS</th>

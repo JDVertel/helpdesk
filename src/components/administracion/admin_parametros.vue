@@ -42,7 +42,7 @@
             <br />
             <div class="container">
                 <div style="max-height: 600px; overflow-y: auto;">
-                    <table class="table table-sm mb-4">
+                    <table class="table table-bordered table-sm mb-4">
                         <thead>
                             <tr>
                                 <th scope="col">Comuna</th>
@@ -92,7 +92,7 @@
                                 </div>
                                 <hr />
                                 <div style="max-height: 300px; overflow-y: auto;">
-                                    <table class="table">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Nombre de EPS</th>
@@ -135,7 +135,7 @@
                                 </div>
                                 <hr />
                                 <div style="max-height: 300px; overflow-y: auto;">
-                                    <table class="table">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Nombre de EPS</th>
@@ -192,7 +192,7 @@
             </div>
             <hr />
             <div style="max-height: 600px; overflow-y: auto;">
-                <table class="table">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Nombre</th>

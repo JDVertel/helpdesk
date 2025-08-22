@@ -20,7 +20,7 @@
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
             <br>
             <h6>Proyectos gestionado en HelpDesk</h6>
-            <table class="table table-striped table sm">
+            <table class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
                         <th>Nombre</th>
