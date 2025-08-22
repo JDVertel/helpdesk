@@ -41,7 +41,7 @@
                                 <th>Barrio</th>
                                 <th>Comuna</th>
                                 <th>Fecha Demanda</th>
-                                <th>Remisión</th>
+                                <th>Fecha cierre</th>
                                 <th>Facturar</th>
                             </tr>
                         </thead>
@@ -63,7 +63,7 @@
                                 <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
                                 <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
                                 <td>{{ paciente.fecha }}</td>
-                                <td>{{ paciente.requiereRemision }}</td>
+                                <td>{{ paciente.fechagestEnfermera }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="setPacienteId(paciente.id)">
                                         <i class="bi bi-bookmark-check-fill"></i>
@@ -378,7 +378,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Cerrar
                     </button>
 
                     <button v-if="conteoCupsFactNum.totalCups === conteoCupsFactNum.totalFactNum && conteoCupsFactNum.totalCups > 0" class="btn btn-danger" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">

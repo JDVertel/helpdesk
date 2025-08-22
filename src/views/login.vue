@@ -18,7 +18,7 @@
             </form>
             <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
 
-            <!--      <div class="row">
+                 <div class="row">
                         <div class="col-5">enfermeralinarussoflorez@gmail.com</div>
                         <div class="col-4">Linarusso*2025.</div>
                         <div class="col-3">Admin</div>
@@ -42,7 +42,7 @@
                         <div class="col-5">Juliettmunoz20@gmail.com</div>
                         <div class="col-4">1096183730ju</div>
                         <div class="col-3">Fact</div>
-                    </div> -->
+                    </div>
 
         </div>
     </div>
