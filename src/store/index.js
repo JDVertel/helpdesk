@@ -229,7 +229,7 @@ export default createStore({
 
         cerrarFacturacion: async ({ commit }, idEnc) => {
             try {
-                const response = await firebase_api.patch(`/Encuesta/${idEnc}.json`, { status_facturacion: true });
+                const response = await firebase_api.patch(`/Encuesta/${idEnc}.json`, { status_facturacion: true , FechaFacturacion: new Date().toISOString() });
                 console.log("Facturación cerrada:", response.data);
                 return response.data;
             } catch (error) {

@@ -71,6 +71,7 @@
                             <th>Gest. Aux</th>
                             <th>Gest. Enfermera</th>
                             <th>Gest. Médica</th>
+                            <th>Fecha Facturación</th>
                             <th>Remisión</th>
                             <th>Procedimientos y Actividades</th>
                         </tr>
@@ -92,6 +93,7 @@
                             <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                             <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                             <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                             <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
                             <td>{{ paciente.requiereRemision }}</td>
                             <!-- Renderiza cada resultado de procedimiento como una fila individual -->
                             <template v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="'act-'+actividadKey">
@@ -114,6 +116,7 @@
                             <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                             <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                             <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                            <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
                             <td>{{ paciente.requiereRemision }}</td>
                             <!-- Campos de la segunda tabla -->
                             <td>{{ actividad.nombre }}</td>
@@ -121,7 +124,7 @@
                             <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
                             <td>{{ cup && cup.cantidad !== undefined ? cup.cantidad : '-' }}</td>
                             <td>Fact:{{ cup && cup.FactNum !== undefined ? cup.FactNum : '-' }}</td>
-                              <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
+                            <td>{{ cup && cup.Homolog !== undefined ? cup.Homolog : '-' }}</td>
                             <td>{{ cup && cup.DescripcionCUP !== undefined ? cup.DescripcionCUP : '-' }}</td>
                             <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
                             <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
@@ -144,6 +147,7 @@
                                 <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                                 <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                                 <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                 <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <!-- Campos de la segunda tabla -->
                                 <td>{{ actividad.nombre }}</td>
@@ -170,6 +174,7 @@
                                 <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                                 <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                                 <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
+                                 <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <!-- Campos de la segunda tabla -->
                                 <td>{{ actividad.nombre }}</td>

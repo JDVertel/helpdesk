@@ -24,7 +24,7 @@
         <div class="tab-content" id="nav-tabContent">
             <div v-show="activeTab === 'pendientes'" class="tab-pane fade show active" id="nav-home" role="tabpanel" tabindex="0">
 
-                <div class="table-responsive" ref="tablaHtml">
+                <div class="table-responsive table-scroll" ref="tablaHtml">
                     <table class="table table-bordered table-striped table-sm align-middle">
                         <thead class="table-light">
                             <tr>
@@ -676,5 +676,10 @@ export default {
     margin-top: 20px;
     font-size: 1.2rem;
     color: #333;
+}
+
+.tabla-scroll {
+    max-height: 300px; /* Ajusta la altura según tu necesidad */
+    overflow-y: auto;
 }
 </style>
