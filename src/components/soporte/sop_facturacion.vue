@@ -137,7 +137,7 @@
                     <table class="table table-bordered table-striped table-sm align-middle table-success">
                         <thead class="table-light">
                             <tr>
-                               <!--  <th>id</th> -->
+                                <!--  <th>id</th> -->
                                 <th>Grupo</th>
                                 <th>Paciente</th>
                                 <th>Sexo</th>
@@ -171,7 +171,7 @@
                                 <td>{{ paciente.barrioVeredacomuna?.barrio }}</td>
                                 <td>{{ paciente.barrioVeredacomuna?.comuna }}</td>
                                 <td>{{ paciente.fecha }}</td>
-                                  <td>{{ paciente.fechagestEnfermera }}</td>
+                                <td>{{ paciente.fechagestEnfermera }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <td>
                                     <button type="button" class="btn btn-warning btn-sm" :disabled="aprovDisabled[paciente.id]" @click="
@@ -220,7 +220,7 @@
                                 <th>Comuna</th>
                                 <th>lab/visit</th>
                                 <th>Gest. Aux</th>
-                                
+
                                 <th>Gest. Médica</th>
                                 <th>Gest. Enfermera</th>
                                 <th>Teléfono</th>
@@ -262,7 +262,7 @@
                           : "No"
                       }}
                                 </td>
-                      
+
                                 <td>
                                     {{
                         paciente.status_gest_medica
@@ -270,7 +270,7 @@
                           : "No"
                       }}
                                 </td>
-                                          <td>
+                                <td>
                                     {{
                         paciente.status_gest_enfermera
                           ? paciente.fechagestEnfermera
@@ -294,7 +294,7 @@
                         <!-- *************************************************************************************************************** -->
                         <div class="container-fluid ">
                             <table class="table table-bordered table-striped table-sm align-middle">
-                               <!--  {{ conteoCupsFactNum }} -->
+                                <!--  {{ conteoCupsFactNum }} -->
                                 <thead class="table-light table-bordered">
                                     <tr>
                                         <th>Procedimientos y Actividades</th>
@@ -325,8 +325,7 @@
                                                         <template v-if="actividad.Profesional && Array.isArray(actividad.Profesional) && actividad.Profesional.length">
                                                             <template v-for="profesional in actividad.Profesional" :key="'prof-' + profesional">
                                                                 <template v-if="actividad.cups && actividad.cups[profesional]">
-                                                                    <tr v-for="(cup, cupId) in actividad.cups[profesional]?.cups || []" :key="'cup-' + cupId">
-
+                                                                    <tr v-for="([cupId, cup]) in Object.entries(actividad.cups[profesional]?.cups || {}).filter(([_, cup]) => cup && Object.keys(cup).length > 0)" :key="'cup-' + cupId">
                                                                         <td>{{ actividad.nombre }}</td>
                                                                         <td>{{ profesional }} </td>
                                                                         <td>{{ actividad.cups[profesional]?.nombre || '-' }}</td>
@@ -336,7 +335,6 @@
                                                                         <td>{{ cup && cup.detalle !== undefined ? cup.detalle : '-' }}</td>
                                                                         <td>{{ cup && cup.Grupo !== undefined ? cup.Grupo : '-' }}</td>
                                                                         <td>
-
                                                                             <template v-if="cup && cup.FactNum !== undefined">
                                                                                 {{ cup.FactNum }}
                                                                             </template>
@@ -344,11 +342,11 @@
                                                                                 <div class="input-group mb-3">
                                                                                     <input type="text" class="form-control" :disabled="facturaDisabled[cupId]" v-model="facturaInputs[cupId]" :placeholder="facturaDisabled[cupId] ? facturaInputs[cupId] : '#factura'" aria-label="Recipient’s username" aria-describedby="button-addon2">
                                                                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                                                                        :disabled="!facturaInputs[cupId] || facturaInputs[cupId].length < 6 || facturaDisabled[cupId]"
                                                                                         @click="regFactCup(profesional ,cup.Homolog, facturaInputs[cupId], actividad.id, cup.id)">
                                                                                         <i :class="['bi', 'bi-bookmark-check-fill', facturaDisabled[cupId] ? 'text-primary' : '']"></i>
                                                                                     </button>
                                                                                 </div>
-
                                                                             </template>
                                                                         </td>
                                                                     </tr>
@@ -381,8 +379,8 @@
                         Cerrar
                     </button>
 
-                    <button v-if="conteoCupsFactNum.totalCups === conteoCupsFactNum.totalFactNum && conteoCupsFactNum.totalCups > 0" class="btn btn-danger" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
-                       <i class="bi bi-check2-circle"></i>  Cerrar Paciente
+                    <button v-if="allCupsWithFactura" class="btn btn-danger" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
+                        <i class="bi bi-check2-circle"></i> Cerrar Paciente
                     </button>
 
                 </div>
@@ -463,7 +461,30 @@ export default {
                 totalCups,
                 totalFactNum
             };
-        }
+        },
+        allCupsWithFactura() {
+            // Solo considerar los cups renderizados (filtrados)
+            if (!this.InfoEncuestasById || !Array.isArray(this.InfoEncuestasById)) return false;
+            let allWithFactura = true;
+            let anyCup = false;
+            this.InfoEncuestasById.forEach(paciente => {
+                if (!paciente.tipoActividad || typeof paciente.tipoActividad !== 'object') return;
+                Object.values(paciente.tipoActividad).forEach(actividad => {
+                    if (!actividad.cups || typeof actividad.cups !== 'object') return;
+                    Object.values(actividad.cups).forEach(profesionalObj => {
+                        if (!profesionalObj.cups || typeof profesionalObj.cups !== 'object') return;
+                        const cupsObj = profesionalObj.cups;
+                        const filteredCups = Object.values(cupsObj).filter(cup => cup && Object.keys(cup).length > 0);
+                        if (filteredCups.length > 0) anyCup = true;
+                        filteredCups.forEach(cup => {
+                            if (!cup.FactNum) allWithFactura = false;
+                        });
+                    });
+                });
+            });
+            return allWithFactura && anyCup;
+        },
+
     },
     methods: {
         ...mapActions([
@@ -570,7 +591,13 @@ export default {
                     console.warn('[regFactCup] Timeout: spinner forzado a false');
                 }
             }, 10000); // 10 segundos de espera máxima
-            console.log('[regFactCup] INICIO', { rol, cup, numfact, idActividad, idcup });
+            console.log('[regFactCup] INICIO', {
+                rol,
+                cup,
+                numfact,
+                idActividad,
+                idcup
+            });
             let guardadoExitoso = false;
             try {
                 // Asegurar reactividad antes de guardar
@@ -629,18 +656,18 @@ export default {
             });
         },
 
-         calcularEdad(fechaNacimiento) {
-    const hoy = new Date();
-    const nacimiento = new Date(fechaNacimiento);
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const mes = hoy.getMonth() - nacimiento.getMonth();
-    const dia = hoy.getDate() - nacimiento.getDate();
+        calcularEdad(fechaNacimiento) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const mes = hoy.getMonth() - nacimiento.getMonth();
+            const dia = hoy.getDate() - nacimiento.getDate();
 
-    if (mes < 0 || (mes === 0 && dia < 0)) {
-      edad--;
-    }
-    return edad;
-  }
+            if (mes < 0 || (mes === 0 && dia < 0)) {
+                edad--;
+            }
+            return edad;
+        }
 
     },
     mounted() {
@@ -655,7 +682,6 @@ export default {
 </script>
 
 <style>
-
 /* Spinner overlay universal para evitar problemas en pantalla completa */
 .spinner-overlay {
     position: fixed;
@@ -679,7 +705,8 @@ export default {
 }
 
 .tabla-scroll {
-    max-height: 300px; /* Ajusta la altura según tu necesidad */
+    max-height: 300px;
+    /* Ajusta la altura según tu necesidad */
     overflow-y: auto;
 }
 </style>
