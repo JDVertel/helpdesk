@@ -133,6 +133,16 @@ const routes = [
     component: () => import("../views/registrousuarios.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/admin_caracterizacion",
+    name: "admin_caracterizacion",
+    component: () => import("../components/administracion/admin_caracterizacion.vue"),
+    meta: { requiresAuth: true },
+  },
+
+
+
+  
   /* Login y registro */
   {
     path: "/login",

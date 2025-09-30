@@ -93,7 +93,7 @@
                             <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                             <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                             <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                             <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
+                            <td>{{ formatearFechaLatina(paciente.FechaFacturacion) ? formatearFechaLatina(paciente.FechaFacturacion) : 'No' }}</td>
                             <td>{{ paciente.requiereRemision }}</td>
                             <!-- Renderiza cada resultado de procedimiento como una fila individual -->
                             <template v-for="(actividad, actividadKey) in paciente.tipoActividad" :key="'act-'+actividadKey">
@@ -116,7 +116,7 @@
                             <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                             <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                             <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                            <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
+                            <td>{{ formatearFechaLatina(paciente.FechaFacturacion) ? formatearFechaLatina(paciente.FechaFacturacion) : 'No' }}</td>
                             <td>{{ paciente.requiereRemision }}</td>
                             <!-- Campos de la segunda tabla -->
                             <td>{{ actividad.nombre }}</td>
@@ -147,7 +147,7 @@
                                 <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                                 <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                                 <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                                 <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
+                                <td>{{ formatearFechaLatina(paciente.FechaFacturacion) ? formatearFechaLatina(paciente.FechaFacturacion) : 'No' }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <!-- Campos de la segunda tabla -->
                                 <td>{{ actividad.nombre }}</td>
@@ -174,7 +174,7 @@
                                 <td>{{ paciente.status_gest_aux ? paciente.fechagestAuxiliar : 'No' }}</td>
                                 <td>{{ paciente.status_gest_enfermera ? paciente.fechagestEnfermera : 'No' }}</td>
                                 <td>{{ paciente.status_gest_medica ? paciente.fechagestMedica : 'No' }}</td>
-                                 <td>{{ paciente.FechaFacturacion ? paciente.FechaFacturacion : 'No' }}</td>
+                                <td>{{ formatearFechaLatina(paciente.FechaFacturacion) ? formatearFechaLatina(paciente.FechaFacturacion) : 'No' }}</td>
                                 <td>{{ paciente.requiereRemision }}</td>
                                 <!-- Campos de la segunda tabla -->
                                 <td>{{ actividad.nombre }}</td>
@@ -259,6 +259,18 @@ export default {
                     });
                 }
             }
+        },
+
+        formatearFechaLatina(fechaISO) {
+            if (!fechaISO) return ''; // En caso de fecha vacía o nula
+            const fecha = new Date(fechaISO);
+            const opciones = {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit'
+            };
+            // Formatea con locales español y ajusta separadores
+            return fecha.toLocaleDateString('es-ES', opciones).replace(/\s/g, '/');
         },
 
         /*  */

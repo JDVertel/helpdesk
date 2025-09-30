@@ -98,7 +98,13 @@
 
                             <li class="nav-item">
                                 <router-link class="nav-link" to="/admin_informes" @click="onNavLinkClick">
-                                    <i class="bi bi-bar-chart-fill"></i> Informes
+                                    <i class="bi bi-file-earmark-medical"></i> Informes
+                                </router-link>
+                            </li>
+
+                               <li class="nav-item">
+                                <router-link class="nav-link" to="/admin_caracterizacion" @click="onNavLinkClick">
+                                    <i class="bi bi-file-person"></i> Reg Caract
                                 </router-link>
                             </li>
 

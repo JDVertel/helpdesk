@@ -38,7 +38,8 @@ export default createStore({
         cupsbyActividad: {},
         EncuestasProf: [],
         EncuestasFact: [],
-        EncuestasFactAprov: [], // Para manejar la información de CUPS por actividad
+        EncuestasFactAprov: [],
+        datosPaciente:[], // Para manejar la información de CUPS por actividad
         // Puedes agregar más estados según sea necesario
     },
     // plugins: [persistedState],
@@ -725,28 +726,7 @@ export default createStore({
             }
         },
 
-        /* GetRegistersbyRangeGeneralFactAprov: async ({ commit }, iduser) => {
-            try {
-                const { data } = await firebase_api.get("/Encuesta.json");
-                const encuestas = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    nombre1: value.nombre1,
-                    nombre2: value.nombre2,
-                    nombre3: value.nombre3,
-                }));
-        
-                const encuestasFiltradas = encuestas.filter(
-                    (encuesta) =>
-                        encuesta.asigfact === iduser && // Ojo, aquí `asigfact` no está en la lista filtrada, si lo necesitas agrega también
-                        encuesta.status_facturacion === false // igual para `status_facturacion`
-                );
-                commit("setEncuestasFactAprov", encuestasFiltradas);
-                return encuestasFiltradas;
-            } catch (error) {
-                console.error("Error en Action_GetRegistersbyRangeGeneralFactAprov:", error);
-                throw error;
-            }
-        }, */
+
 
 
         GetAllRegistersbyRangeAndProf: async ({ commit }, parametros) => {
@@ -848,6 +828,31 @@ export default createStore({
                 throw error;
             }
         },
+        /* ------------------------------ */
+        getAllByPacientesID: async ({ commit }, { tipodoc, numdoc }) => {
+            console.log("datos que entran", tipodoc, numdoc);
+            try {
+                const { data } = await firebase_api.get("/Encuesta.json");
+                const consultaUsuarios = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    ...value,
+                }));
+
+                // Filtrar por idEncuestador y fecha recibidos como parámetros
+                const datospaciente = consultaUsuarios.filter(
+                    (encuesta) =>
+                        encuesta.tipodoc === tipodoc && encuesta.numdoc === numdoc
+                );
+
+                commit("setDatosPaciente", datospaciente);
+                return datospaciente;
+            } catch (error) {
+                console.error("Error en Action_setDatosPPaciente:", error);
+                throw error;
+            }
+        },
+
+        /* ---------------------------------- */
 
         // Encuestas finalizadas en el diarias
         getAllRegistersByFechaProf: async ({ commit }, { doc, fecha }) => {
@@ -1368,7 +1373,17 @@ export default createStore({
             }
         },
 
-
+        deletePaciente: async ({ commit }, id) => {
+            
+            try {
+                if (!id) throw new Error("ID inválido para eliminar");
+                const { data } = await firebase_api.delete(`/Encuesta/${id}.json`);
+                return data;
+            } catch (error) {
+                console.error("Error en Action deletePaciente:", error);
+                throw error;
+            }
+        },
 
         deleteComunaBarrio: async ({ commit }, id) => {
             try {
@@ -1631,7 +1646,10 @@ export default createStore({
         },
         setEncuestasFactAprov(state, encuestas) {
             state.EncuestasFactAprov = encuestas;
-        }
+        },
+        setDatosPaciente(state, datos) {
+            state.datosPaciente = datos;
+        },
     },
     getters: {
         getUserData: (state) => state.userData,
