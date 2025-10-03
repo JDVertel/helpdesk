@@ -13,7 +13,9 @@
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">
                 CUPS
             </button>
-
+            <button class="nav-link" id="nav-pacientes-tab" data-bs-toggle="tab" data-bs-target="#nav-pacientes" type="button" role="tab" aria-controls="nav-pacientes" aria-selected="false">
+                PACIENTES
+            </button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -22,22 +24,22 @@
             <br />
             <div class="container">
 
-            <h6>Opciones disponibles para las encuestas Comunas/Barrios </h6>
-            <br />
+                <h6>Opciones disponibles para las encuestas Comunas/Barrios </h6>
+                <br />
 
-            <div class="row">
-                <div class="col-4">
-                    <input type="number" class="form-control form-control-sm" placeholder="Comuna" v-model="comuna" />
+                <div class="row">
+                    <div class="col-4">
+                        <input type="number" class="form-control form-control-sm" placeholder="Comuna" v-model="comuna" />
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" placeholder="Barrio" v-model="barrio" />
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-warning btn-sm" @click="saveComunaBarrio">
+                            + Guardar
+                        </button>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <input type="text" class="form-control form-control-sm" placeholder="Barrio" v-model="barrio" />
-                </div>
-                <div class="col-4">
-                    <button type="button" class="btn btn-warning btn-sm" @click="saveComunaBarrio">
-                        + Guardar
-                    </button>
-                </div>
-            </div>
             </div>
             <br />
             <div class="container">
@@ -157,18 +159,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--   <div class="accordion-item">
-    <h2 class="accordion-header" id="headingThree">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        Accordion Item #3
-      </button>
-    </h2>
-    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div> -->
+
                 </div>
 
                 <br />
@@ -180,43 +171,138 @@
             <br />
             <h6>CUPS</h6>
             <br />
-            <div class="row">
-                <div class="col-6">
-                    <div class="mb-3">
-                        <input type="text" class="form-control form-control-sm" placeholder="Nombre del nuevo tipo de soporte" />
-                    </div>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-primary btn-sm" @click="saveEps">Guardar</button>
-                </div>
-            </div>
-            <hr />
-            <div style="max-height: 600px; overflow-y: auto;">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Detalle</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+     
+            <h5>Cups registrados en el sistema</h5>
+                        <hr />
+                        <div v-if="cups && cups.length > 0" style="overflow-x: auto; width: 100%;">
+                            <table class="table table-bordered table-sm" style="min-width: 900px;">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descripción CUP</th>
+                                        <th>Grupo</th>
+                                        <th>Homolog</th>
+                                        <th>Profesional</th>
+                                        <th>EPS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="cup in cups" :key="cup.id">
+                                        <td>{{ cup.id }}</td>
+                                        <td>{{ cup.DescripcionCUP }}</td>
+                                        <td>{{ cup.Grupo }}</td>
+                                        <td>{{ cup.Homolog }}</td>
+                                        <td>{{ cup.Profesional }}</td>
+                                        <td>
+                                            <span v-for="(eps, eidx) in cup.Eps" :key="eps">
+                                                {{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
         </div>
-        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
-            ...
+        <div class="tab-pane fade" id="nav-pacientes" role="tabpanel" aria-labelledby="nav-pacientes-tab" tabindex="0">
+            <div class="row">
+
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="tipodoc" class="form-label">Tipo de Documento</label>
+                    <select id="tipodoc" v-model="tipodoc" class="form-select" required>
+                        <option value="">Seleccione</option>
+                        <option value="RC">Registro Civil</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="CE">Cédula de Extranjería</option>
+                        <option value="NV">Certificado nacido vivo</option>
+                        <option value="PA">Pasaporte</option>
+                        <option value="PE">Permiso Especial de Permanencia</option>
+                        <option value="MS">Menos sin identificacion</option>
+                        <option value="AS">Adulto sin identificacion</option>
+                        <option value="PT">Permiso por proteccion temporal</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="numdoc" class="form-label">Número de Documento</label>
+                    <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
+                </div>
+                <div class="col-6 col-md-3">
+                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
+                </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-danger mt-4" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-search"></i> Eliminar</button>
+                        </div>
+            </div>
+            <div class="container-fluid">
+                                <div v-if="datosPaciente && datosPaciente.length > 0" style="overflow-x: auto; width: 100%;">
+                                    <table class="table table-bordered table-sm" style="min-width: 900px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Campo</th>
+                                                <th v-for="paciente in datosPaciente" :key="paciente.id">
+                                                    {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
+                                                    {{ paciente.tipodoc }}-{{ paciente.numdoc }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>EPS</td>
+                                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Fecha Nac.</td>
+                                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{ paciente.fechaNac }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sexo</td>
+                                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Dirección</td>
+                                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{ paciente.direccion }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Comuna</td>
+                                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Barrio</td>
+                                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                            </tr>
+                                            <tr v-for="(actividad, actKey) in datosPaciente[0].tipoActividad" :key="'act-' + actKey">
+                                                <td>{{ actividad.nombre }}</td>
+                                                <td v-for="paciente in datosPaciente" :key="'actcell-' + paciente.id + '-' + actKey">
+                                                    <div v-if="paciente.tipoActividad && paciente.tipoActividad[actKey]">
+                                                        <div>
+                                                            <strong>Profesionales:</strong>
+                                                            <span v-for="(prof, pidx) in paciente.tipoActividad[actKey].Profesional" :key="prof">
+                                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">, </span>
+                                                            </span>
+                                                        </div>
+                                                        <div v-if="paciente.tipoActividad[actKey].cups">
+                                                            <div v-for="(cupsObj, profKey) in paciente.tipoActividad[actKey].cups" :key="profKey">
+                                                                <strong>{{ profKey }}:</strong>
+                                                                <ul class="mb-0">
+                                                                    <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
+                                                                        <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
+                                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span></span><br>
+                                                                        Grupo: {{ cup.Grupo }}<br>
+                                                                        Homolog: {{ cup.Homolog }}<br>
+                                                                        Cantidad: {{ cup.cantidad }}<br>
+                                                                        Detalle: {{ cup.detalle }}
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -233,10 +319,11 @@ export default {
             comuna: "",
             barrio: "",
             epsname: "",
+      
         };
     },
     computed: {
-        ...mapState(["comunasBarrios", "epss"]),
+        ...mapState(["comunasBarrios", "epss", "cups", "datosPaciente"]),
     },
     methods: {
         ...mapActions([
@@ -245,8 +332,21 @@ export default {
             "deleteComunaBarrio",
             "crearEps",
             "getAllEps",
-            "deleteEps"
+            "deleteEps",
+            "getAllCups",
+            "getAllByPacientesID"
         ]),
+
+        consultarP() {
+            if (this.tipodoc === "" || this.numdoc === "") {
+                alert("Por favor, complete todos los campos.");
+                return;
+            }
+            this.getAllByPacientesID({
+                tipodoc: this.tipodoc,
+                numdoc: this.numdoc
+            });
+        },
 
         saveComunaBarrio() {
             if (this.comuna === "" || this.barrio === "") {
@@ -302,10 +402,7 @@ export default {
     mounted() {
         this.getAllComunaBarrios();
         this.getAllEps();
+        this.getAllCups();
     },
 };
 </script>
-
-<style scoped>
-/* Puedes agregar estilos personalizados aquí si lo deseas */
-</style>
