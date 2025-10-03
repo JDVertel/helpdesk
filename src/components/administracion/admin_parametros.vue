@@ -171,37 +171,37 @@
             <br />
             <h6>CUPS</h6>
             <br />
-     
+
             <h5>Cups registrados en el sistema</h5>
-                        <hr />
-                        <div v-if="cups && cups.length > 0" style="overflow-x: auto; width: 100%;">
-                            <table class="table table-bordered table-sm" style="min-width: 900px;">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Descripción CUP</th>
-                                        <th>Grupo</th>
-                                        <th>Homolog</th>
-                                        <th>Profesional</th>
-                                        <th>EPS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="cup in cups" :key="cup.id">
-                                        <td>{{ cup.id }}</td>
-                                        <td>{{ cup.DescripcionCUP }}</td>
-                                        <td>{{ cup.Grupo }}</td>
-                                        <td>{{ cup.Homolog }}</td>
-                                        <td>{{ cup.Profesional }}</td>
-                                        <td>
-                                            <span v-for="(eps, eidx) in cup.Eps" :key="eps">
-                                                {{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <hr />
+            <div v-if="cups && cups.length > 0" style="overflow-x: auto; width: 100%;">
+                <table class="table table-bordered table-sm" style="min-width: 900px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción CUP</th>
+                            <th>Grupo</th>
+                            <th>Homolog</th>
+                            <th>Profesional</th>
+                            <th>EPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="cup in cups" :key="cup.id">
+                            <td>{{ cup.id }}</td>
+                            <td>{{ cup.DescripcionCUP }}</td>
+                            <td>{{ cup.Grupo }}</td>
+                            <td>{{ cup.Homolog }}</td>
+                            <td>{{ cup.Profesional }}</td>
+                            <td>
+                                <span v-for="(eps, eidx) in cup.Eps" :key="eps">
+                                    {{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="tab-pane fade" id="nav-pacientes" role="tabpanel" aria-labelledby="nav-pacientes-tab" tabindex="0">
             <div class="row">
@@ -226,81 +226,83 @@
                     <label for="numdoc" class="form-label">Número de Documento</label>
                     <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
                 </div>
-                <div class="col-6 col-md-3">
-                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
+                <div class="col-6 col-md-2">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
+                        <button class="btn btn-warning mt-4" @click="editarP" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-pencil-square"></i> Editar</button>
+                        <button class="btn btn-danger mt-4" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-trash"></i> Eliminar</button>
+                    </div>
                 </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-danger mt-4" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-search"></i> Eliminar</button>
-                        </div>
+
             </div>
             <div class="container-fluid">
-                                <div v-if="datosPaciente && datosPaciente.length > 0" style="overflow-x: auto; width: 100%;">
-                                    <table class="table table-bordered table-sm" style="min-width: 900px;">
-                                        <thead>
-                                            <tr>
-                                                <th>Campo</th>
-                                                <th v-for="paciente in datosPaciente" :key="paciente.id">
-                                                    {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
-                                                    {{ paciente.tipodoc }}-{{ paciente.numdoc }}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>EPS</td>
-                                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Fecha Nac.</td>
-                                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{ paciente.fechaNac }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sexo</td>
-                                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Dirección</td>
-                                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{ paciente.direccion }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Comuna</td>
-                                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{ paciente.barrioVeredacomuna?.comuna }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Barrio</td>
-                                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{ paciente.barrioVeredacomuna?.barrio }}</td>
-                                            </tr>
-                                            <tr v-for="(actividad, actKey) in datosPaciente[0].tipoActividad" :key="'act-' + actKey">
-                                                <td>{{ actividad.nombre }}</td>
-                                                <td v-for="paciente in datosPaciente" :key="'actcell-' + paciente.id + '-' + actKey">
-                                                    <div v-if="paciente.tipoActividad && paciente.tipoActividad[actKey]">
-                                                        <div>
-                                                            <strong>Profesionales:</strong>
-                                                            <span v-for="(prof, pidx) in paciente.tipoActividad[actKey].Profesional" :key="prof">
-                                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">, </span>
-                                                            </span>
-                                                        </div>
-                                                        <div v-if="paciente.tipoActividad[actKey].cups">
-                                                            <div v-for="(cupsObj, profKey) in paciente.tipoActividad[actKey].cups" :key="profKey">
-                                                                <strong>{{ profKey }}:</strong>
-                                                                <ul class="mb-0">
-                                                                    <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
-                                                                        <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
-                                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span></span><br>
-                                                                        Grupo: {{ cup.Grupo }}<br>
-                                                                        Homolog: {{ cup.Homolog }}<br>
-                                                                        Cantidad: {{ cup.cantidad }}<br>
-                                                                        Detalle: {{ cup.detalle }}
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                <div v-if="datosPaciente && datosPaciente.length > 0" style="overflow-x: auto; width: 100%;">
+                    <table class="table table-bordered table-sm" style="min-width: 900px;">
+                        <thead>
+                            <tr>
+                                <th>Campo</th>
+                                <th v-for="paciente in datosPaciente" :key="paciente.id">
+                                    {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
+                                    {{ paciente.tipodoc }}-{{ paciente.numdoc }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>EPS</td>
+                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fecha Nac.</td>
+                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{ paciente.fechaNac }}</td>
+                            </tr>
+                            <tr>
+                                <td>Sexo</td>
+                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo }}</td>
+                            </tr>
+                            <tr>
+                                <td>Dirección</td>
+                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{ paciente.direccion }}</td>
+                            </tr>
+                            <tr>
+                                <td>Comuna</td>
+                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                            </tr>
+                            <tr>
+                                <td>Barrio</td>
+                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                            </tr>
+                            <tr v-for="(actividad, actKey) in datosPaciente[0].tipoActividad" :key="'act-' + actKey">
+                                <td>{{ actividad.nombre }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'actcell-' + paciente.id + '-' + actKey">
+                                    <div v-if="paciente.tipoActividad && paciente.tipoActividad[actKey]">
+                                        <div>
+                                            <strong>Profesionales:</strong>
+                                            <span v-for="(prof, pidx) in paciente.tipoActividad[actKey].Profesional" :key="prof">
+                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">, </span>
+                                            </span>
+                                        </div>
+                                        <div v-if="paciente.tipoActividad[actKey].cups">
+                                            <div v-for="(cupsObj, profKey) in paciente.tipoActividad[actKey].cups" :key="profKey">
+                                                <strong>{{ profKey }}:</strong>
+                                                <ul class="mb-0">
+                                                    <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
+                                                        <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
+                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span></span><br>
+                                                        Grupo: {{ cup.Grupo }}<br>
+                                                        Homolog: {{ cup.Homolog }}<br>
+                                                        Cantidad: {{ cup.cantidad }}<br>
+                                                        Detalle: {{ cup.detalle }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -319,7 +321,7 @@ export default {
             comuna: "",
             barrio: "",
             epsname: "",
-      
+
         };
     },
     computed: {
