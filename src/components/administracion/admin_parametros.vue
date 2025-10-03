@@ -227,11 +227,9 @@
                     <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
                 </div>
                 <div class="col-6 col-md-2">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
-                        <button class="btn btn-warning mt-4" @click="editarP" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-pencil-square"></i> Editar</button>
-                        <button class="btn btn-danger mt-4" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-trash"></i> Eliminar</button>
-                    </div>
+
+                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
+
                 </div>
 
             </div>
@@ -240,11 +238,23 @@
                     <table class="table table-bordered table-sm" style="min-width: 900px;">
                         <thead>
                             <tr>
-                                <th>Campo</th>
-                                <th v-for="paciente in datosPaciente" :key="paciente.id">
-                                    {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
-                                    {{ paciente.tipodoc }}-{{ paciente.numdoc }}
-                                </th>
+                                <th>Nombre</th>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <th v-for="paciente in datosPaciente" :key="paciente.id">
+                                            {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
+                                            {{ paciente.tipodoc }}-{{ paciente.numdoc }}
+                                        </th>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+
+                                            <button class="btn btn-warning mt-4" @click="editarP" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-pencil-square"></i> Editar</button>
+                                            <button class="btn btn-danger mt-4" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-trash"></i> Eliminar</button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </tr>
                         </thead>
                         <tbody>
