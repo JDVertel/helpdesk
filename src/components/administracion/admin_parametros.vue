@@ -169,15 +169,82 @@
         <!-- Tipo Actividades -->
         <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
             <br />
-            <h6>CUPS</h6>
+            <h6>CUPS del sistema</h6>
             <br />
+            <div class="container-fluid">
+                <!-- boton modal -->
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    + Nuevo CUPS
+                </button>
 
-            <h5>Cups registrados en el sistema</h5>
-            <hr />
+            </div>
+
+            <!-- modal  crear editar CUPS-->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear y Editar cups </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label f class="form-label">Nombre Procedimiento</label>
+                                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="CUP">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label f class="form-label">Codigo CUPS</label>
+                                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="CUP">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+
+                                    <label f class="form-label">Grupo</label>
+                                    <select class="form-select" aria-label="Default select example">
+
+                                        <option selected>--Seleccione--</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select></div>
+                                <div class="col-6">
+                                    <label f class="form-label">Rol(es) Habilitados</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>--Seleccione--</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select></div>
+                                <div class="col-6"> <label f class="form-label">EPS(s) Habilitadas</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>--Seleccione--</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select></div>
+
+                                <div class="col-6"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-sm">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!--  fin modal crear editar cups -->
             <div v-if="cups && cups.length > 0" style="overflow-x: auto; width: 100%;">
                 <table class="table table-bordered table-sm" style="min-width: 900px;">
                     <thead>
                         <tr>
+                            <th>Editar</th>
                             <th>ID</th>
                             <th>Descripción CUP</th>
                             <th>Grupo</th>
@@ -188,6 +255,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="cup in cups" :key="cup.id">
+                            <td>
+                            <th><button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="bi bi-pencil"></i>
+                                </button></th>
+                            </td>
                             <td>{{ cup.id }}</td>
                             <td>{{ cup.DescripcionCUP }}</td>
                             <td>{{ cup.Grupo }}</td>
@@ -204,6 +276,8 @@
             </div>
         </div>
         <div class="tab-pane fade" id="nav-pacientes" role="tabpanel" aria-labelledby="nav-pacientes-tab" tabindex="0">
+        <h5>Gestion de Pacientes</h5>
+        <hr>
             <div class="row">
 
                 <div class="col-6 col-md-3 mb-3">
@@ -228,7 +302,8 @@
                 </div>
                 <div class="col-6 col-md-2">
 
-                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i> Consultar</button>
+                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i>
+                        Consultar</button>
 
                 </div>
 
@@ -242,7 +317,8 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <th v-for="paciente in datosPaciente" :key="paciente.id">
-                                            {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}<br>
+                                            {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }}
+                                            {{ paciente.apellido2 }}<br>
                                             {{ paciente.tipodoc }}-{{ paciente.numdoc }}
                                         </th>
                                     </div>
@@ -260,27 +336,33 @@
                         <tbody>
                             <tr>
                                 <td>EPS</td>
-                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}
+                                </td>
                             </tr>
                             <tr>
                                 <td>Fecha Nac.</td>
-                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{ paciente.fechaNac }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{
+                                        paciente.fechaNac }}</td>
                             </tr>
                             <tr>
                                 <td>Sexo</td>
-                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo
+                                        }}</td>
                             </tr>
                             <tr>
                                 <td>Dirección</td>
-                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{ paciente.direccion }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{
+                                        paciente.direccion }}</td>
                             </tr>
                             <tr>
                                 <td>Comuna</td>
-                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{ paciente.barrioVeredacomuna?.comuna }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{
+                                        paciente.barrioVeredacomuna?.comuna }}</td>
                             </tr>
                             <tr>
                                 <td>Barrio</td>
-                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{ paciente.barrioVeredacomuna?.barrio }}</td>
+                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{
+                                        paciente.barrioVeredacomuna?.barrio }}</td>
                             </tr>
                             <tr v-for="(actividad, actKey) in datosPaciente[0].tipoActividad" :key="'act-' + actKey">
                                 <td>{{ actividad.nombre }}</td>
@@ -289,7 +371,8 @@
                                         <div>
                                             <strong>Profesionales:</strong>
                                             <span v-for="(prof, pidx) in paciente.tipoActividad[actKey].Profesional" :key="prof">
-                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">, </span>
+                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">,
+                                                </span>
                                             </span>
                                         </div>
                                         <div v-if="paciente.tipoActividad[actKey].cups">
@@ -298,7 +381,9 @@
                                                 <ul class="mb-0">
                                                     <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
                                                         <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
-                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps }}<span v-if="eidx < cup.Eps.length - 1">, </span></span><br>
+                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps
+                                                                }}<span v-if="eidx < cup.Eps.length - 1">,
+                                                            </span></span><br>
                                                         Grupo: {{ cup.Grupo }}<br>
                                                         Homolog: {{ cup.Homolog }}<br>
                                                         Cantidad: {{ cup.cantidad }}<br>
@@ -415,6 +500,8 @@ export default {
         this.getAllComunaBarrios();
         this.getAllEps();
         this.getAllCups();
+        /* traer  grupos, profesionales ,epsApp */
+        /* crear epsApp autorizadas en las caracterizacion */
     },
 };
 </script>

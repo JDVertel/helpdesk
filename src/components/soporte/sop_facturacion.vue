@@ -24,7 +24,7 @@
         <div class="tab-content" id="nav-tabContent">
             <div v-show="activeTab === 'pendientes'" class="tab-pane fade show active" id="nav-home" role="tabpanel" tabindex="0">
 
-                <div class="table-responsive table-scroll" ref="tablaHtml">
+                <div class="table-responsive tabla-scroll" ref="tablaHtml">
                     <table class="table table-bordered table-striped table-sm align-middle">
                         <thead class="table-light">
                             <tr>
@@ -133,7 +133,7 @@
                 </div>
                 <br />
                 <p>Registro</p>
-                <div class="table-responsive" ref="tablaHtml">
+                <div class="table-responsive tabla-scroll" ref="tablaHtml">
                     <table class="table table-bordered table-striped table-sm align-middle table-success">
                         <thead class="table-light">
                             <tr>
@@ -379,7 +379,7 @@
                         Cerrar
                     </button>
 
-                    <button v-if="allCupsWithFactura" class="btn btn-danger" @click="this.cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
+                    <button v-if="allCupsWithFactura || noProfesionalesRenderizados || noCupsRenderizados" class="btn btn-danger" @click="cerrarfact(pacienteIdModal)" data-bs-dismiss="modal">
                         <i class="bi bi-check2-circle"></i> Cerrar Paciente
                     </button>
 
@@ -484,6 +484,40 @@ export default {
             });
             return allWithFactura && anyCup;
         },
+        noProfesionalesRenderizados() {
+            // Devuelve true si no hay profesionales definidos (o están vacíos) en las actividades
+            if (!this.InfoEncuestasById || !Array.isArray(this.InfoEncuestasById)) return false;
+            let anyActividadWithProfesional = false;
+            this.InfoEncuestasById.forEach(paciente => {
+                if (!paciente.tipoActividad || typeof paciente.tipoActividad !== 'object') return;
+                Object.values(paciente.tipoActividad).forEach(actividad => {
+                    if (actividad.Profesional && Array.isArray(actividad.Profesional) && actividad.Profesional.length) {
+                        anyActividadWithProfesional = true;
+                    }
+                });
+            });
+            // Si NO hay ninguna actividad con profesionales, devolvemos true
+            return !anyActividadWithProfesional;
+        }
+        ,
+        noCupsRenderizados() {
+            // Devuelve true si no hay ningún cup renderizable en InfoEncuestasById
+            if (!this.InfoEncuestasById || !Array.isArray(this.InfoEncuestasById)) return false;
+            let anyCupRenderable = false;
+            this.InfoEncuestasById.forEach(paciente => {
+                if (!paciente.tipoActividad || typeof paciente.tipoActividad !== 'object') return;
+                Object.values(paciente.tipoActividad).forEach(actividad => {
+                    if (!actividad.cups || typeof actividad.cups !== 'object') return;
+                    Object.values(actividad.cups).forEach(profesionalObj => {
+                        if (!profesionalObj.cups || typeof profesionalObj.cups !== 'object') return;
+                        const cupsObj = profesionalObj.cups;
+                        const filtered = Object.values(cupsObj).filter(cup => cup && Object.keys(cup).length > 0);
+                        if (filtered.length > 0) anyCupRenderable = true;
+                    });
+                });
+            });
+            return !anyCupRenderable;
+        }
 
     },
     methods: {
@@ -646,14 +680,46 @@ export default {
             }
         },
 
-        cerrarfact(id) {
-            this.cerrarFacturacion(id)
-            alert("Factura cerrada");
-            this.GetRegistersbyRangeGeneralFactAprov(
-                this.userData.numDocumento
-            ).finally(() => {
+        async cerrarfact(id) {
+            try {
+                this.cargando = true;
+                // Esperar a que la acción de cerrar en el store termine si retorna promesa
+                if (this.cerrarFacturacion) {
+                    await this.cerrarFacturacion(id);
+                }
+                alert("Factura cerrada");
+                // Recargar la lista y esperar a que termine
+                if (this.GetRegistersbyRangeGeneralFactAprov) {
+                    await this.GetRegistersbyRangeGeneralFactAprov(
+                        this.userData.numDocumento
+                    );
+                }
+                // Forzar reflow / re-evaluación del DOM y restaurar desplazamiento si aplica
+                await this.$nextTick();
+                const tabla = this.$refs.tablaHtml;
+                if (tabla) {
+                    // ref puede ser array si hay múltiples elementos con el mismo ref
+                    const restoreScroll = el => {
+                        try {
+                            if (el && el.scrollTop !== undefined) el.scrollTop = 0;
+                        } catch (e) {
+                            // ignore
+                        }
+                    };
+                    if (Array.isArray(tabla)) {
+                        tabla.forEach(restoreScroll);
+                    } else {
+                        restoreScroll(tabla);
+                    }
+                }
+                // Disparar resize para que cualquier plugin o CSS recalcule
+                try { window.dispatchEvent(new Event('resize')); } catch (e) {}
+            } catch (error) {
+                console.error('[cerrarfact] Error:', error);
+                alert('Error al cerrar factura: ' + (error?.message || error));
+            } finally {
                 this.cargando = false;
-            });
+            }
         },
 
         calcularEdad(fechaNacimiento) {
@@ -705,7 +771,7 @@ export default {
 }
 
 .tabla-scroll {
-    max-height: 300px;
+    max-height: 600px;
     /* Ajusta la altura según tu necesidad */
     overflow-y: auto;
 }
