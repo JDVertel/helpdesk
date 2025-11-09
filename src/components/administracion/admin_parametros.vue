@@ -275,10 +275,13 @@
                 </table>
             </div>
         </div>
+
+<!-- ----------------------------------------------------PACIENTES--------------------------------------------------------------------------- -->
+
         <div class="tab-pane fade" id="nav-pacientes" role="tabpanel" aria-labelledby="nav-pacientes-tab" tabindex="0">
         <h5>Gestion de Pacientes</h5>
         <hr>
-            <div class="row">
+                <div class="row">
                 <div class="col-6 col-md-3 mb-3">
                     <label for="tipodoc" class="form-label">Tipo de Documento</label>
                     <select id="tipodoc" v-model="tipodoc" class="form-select" required>
@@ -300,91 +303,87 @@
                     <input type="text" id="numdoc" v-model="numdoc" class="form-control" required />
                 </div>
                 <div class="col-6 col-md-2">
-                    <button class="btn btn-primary mt-4" @click="consultarP"><i class="bi bi-search"></i>
+                    <button class="btn btn-primary mt-4" :disabled="cargandoPacientes" @click="consultarP"><i class="bi bi-search"></i>
                         Consultar</button>
                 </div>
 
             </div>
+            <!-- Spinner de consulta -->
+            <div class="mt-2">
+                <div v-if="cargandoPacientes" class="d-flex align-items-center">
+                    <div class="spinner-border text-primary me-2" role="status">
+                        <span class="visually-hidden">Consultando...</span>
+                    </div>
+                    <div>Consultando...</div>
+                </div>
+            </div>
             <div class="container-fluid">
+                <div v-if="!cargandoPacientes && searchPerformed && (!datosPaciente || datosPaciente.length === 0)" class="alert alert-warning">No hay registros para esa consulta.</div>
                 <div v-if="datosPaciente && datosPaciente.length > 0" style="overflow-x: auto; width: 100%;">
                     <table class="table table-bordered table-sm" style="min-width: 900px;">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <div class="row">
-                                    <div class="col-6"  v-for="paciente in datosPaciente" :key="paciente.id">
-                                        <tr>
-                                            {{ paciente.nombre1 }} {{ paciente.nombre2 }} {{ paciente.apellido1 }}
-                                            {{ paciente.apellido2 }}<br>
-                                            {{ paciente.tipodoc }}-{{ paciente.numdoc }}
-                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button class="btn btn-warning mt-4 btn-sm" @click="editarP" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-pencil-square"></i> Editar</button>
-                                            <button class="btn btn-danger mt-4 btn-sm" @click="eliminarPaciente" v-if="datosPaciente && datosPaciente.length > 0"><i class="bi bi-trash"></i> Eliminar</button>
-                                        </div>
-                                        </tr>
+                                <th>Campo</th>
+                                <th v-for="paciente in datosPaciente" :key="paciente.id" class="text-center">
+                                    <div>{{ paciente.nombre1 }} {{ paciente.apellido1 }} {{ paciente.apellido2 }}</div>
+                                    <div><small>{{ paciente.tipodoc }}-{{ paciente.numdoc }}</small></div>
+                                    <div class="btn-group mt-2" role="group">
+                                        <!-- <button class="btn btn-warning btn-sm" type="button" @click.stop="editarP(paciente.id)"><i class="bi bi-pencil-square"></i></button> -->
+                                        <button class="btn btn-danger btn-sm" type="button" @click.stop="eliminarPaciente(paciente.id)"><i class="bi bi-trash"></i></button>
                                     </div>
-                                 
-                                </div>
-
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>EPS</td>
-                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id">{{ paciente.eps }}
-                                </td>
+                                <th>EPS</th>
+                                <td v-for="paciente in datosPaciente" :key="'eps-' + paciente.id"><div class="cell-content">{{ paciente.eps }}</div></td>
                             </tr>
                             <tr>
-                                <td>Fecha Nac.</td>
-                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id">{{
-                                        paciente.fechaNac }}</td>
+                                <th>Fecha Nac.</th>
+                                <td v-for="paciente in datosPaciente" :key="'fnac-' + paciente.id"><div class="cell-content">{{ paciente.fechaNac }}</div></td>
                             </tr>
                             <tr>
-                                <td>Sexo</td>
-                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id">{{ paciente.sexo
-                                        }}</td>
+                                <th>Sexo</th>
+                                <td v-for="paciente in datosPaciente" :key="'sexo-' + paciente.id"><div class="cell-content">{{ paciente.sexo }}</div></td>
                             </tr>
                             <tr>
-                                <td>Dirección</td>
-                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id">{{
-                                        paciente.direccion }}</td>
+                                <th>Dirección</th>
+                                <td v-for="paciente in datosPaciente" :key="'dir-' + paciente.id"><div class="cell-content">{{ paciente.direccion }}</div></td>
                             </tr>
                             <tr>
-                                <td>Comuna</td>
-                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id">{{
-                                        paciente.barrioVeredacomuna?.comuna }}</td>
+                                <th>Comuna</th>
+                                <td v-for="paciente in datosPaciente" :key="'comuna-' + paciente.id"><div class="cell-content">{{ paciente.barrioVeredacomuna?.comuna }}</div></td>
                             </tr>
                             <tr>
-                                <td>Barrio</td>
-                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id">{{
-                                        paciente.barrioVeredacomuna?.barrio }}</td>
+                                <th>Barrio</th>
+                                <td v-for="paciente in datosPaciente" :key="'barrio-' + paciente.id"><div class="cell-content">{{ paciente.barrioVeredacomuna?.barrio }}</div></td>
                             </tr>
-                            <tr v-for="(actividad, actKey) in datosPaciente[0].tipoActividad" :key="'act-' + actKey">
-                                <td>{{ actividad.nombre }}</td>
-                                <td v-for="paciente in datosPaciente" :key="'actcell-' + paciente.id + '-' + actKey">
-                                    <div v-if="paciente.tipoActividad && paciente.tipoActividad[actKey]">
-                                        <div>
-                                            <strong>Profesionales:</strong>
-                                            <span v-for="(prof, pidx) in paciente.tipoActividad[actKey].Profesional" :key="prof">
-                                                {{ prof }}<span v-if="pidx < paciente.tipoActividad[actKey].Profesional.length - 1">,
+                            <tr v-for="item in activityKeys" :key="'act-' + item.key">
+                                <th>{{ item.actividad.nombre }}</th>
+                                <td v-for="paciente in datosPaciente" :key="'actcell-' + paciente.id + '-' + item.key">
+                                    <div class="cell-content">
+                                        <div v-if="paciente.tipoActividad && paciente.tipoActividad[item.key]">
+                                            <div>
+                                                <strong>Profesionales:</strong>
+                                                <span v-for="(prof, pidx) in paciente.tipoActividad[item.key].Profesional || []" :key="prof">
+                                                    {{ prof }}<span v-if="pidx < (paciente.tipoActividad[item.key].Profesional || []).length - 1">, </span>
                                                 </span>
-                                            </span>
-                                        </div>
-                                        <div v-if="paciente.tipoActividad[actKey].cups">
-                                            <div v-for="(cupsObj, profKey) in paciente.tipoActividad[actKey].cups" :key="profKey">
-                                                <strong>{{ profKey }}:</strong>
-                                                <ul class="mb-0">
-                                                    <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
-                                                        <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
-                                                        EPS: <span v-for="(eps, eidx) in cup.Eps" :key="eps">{{ eps
-                                                                }}<span v-if="eidx < cup.Eps.length - 1">,
-                                                            </span></span><br>
-                                                        Grupo: {{ cup.Grupo }}<br>
-                                                        Homolog: {{ cup.Homolog }}<br>
-                                                        Cantidad: {{ cup.cantidad }}<br>
-                                                        Detalle: {{ cup.detalle }}
-                                                    </li>
-                                                </ul>
+                                            </div>
+                                            <div v-if="paciente.tipoActividad[item.key].cups">
+                                                <div v-for="(cupsObj, profKey) in paciente.tipoActividad[item.key].cups" :key="profKey">
+                                                    <strong>{{ profKey }}:</strong>
+                                                    <ul class="mb-0">
+                                                        <li v-for="cup in Object.values(cupsObj.cups || {})" :key="cup.id">
+                                                            <span><strong>{{ cup.DescripcionCUP }}</strong></span><br>
+                                                            EPS: <span v-for="(eps, eidx) in cup.Eps || []" :key="eps">{{ eps }}<span v-if="eidx < (cup.Eps || []).length - 1">, </span></span><br>
+                                                            Grupo: {{ cup.Grupo }}<br>
+                                                            Homolog: {{ cup.Homolog }}<br>
+                                                            Cantidad: {{ cup.cantidad }}<br>
+                                                            Detalle: {{ cup.detalle }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -411,11 +410,21 @@ export default {
             comuna: "",
             barrio: "",
             epsname: "",
+            cargandoPacientes: false,
+            searchPerformed: false,
+            tipodoc: "",
+            numdoc: "",
 
         };
     },
     computed: {
         ...mapState(["comunasBarrios", "epss", "cups", "datosPaciente"]),
+        activityKeys() {
+            if (!this.datosPaciente || !this.datosPaciente.length) return [];
+            const first = this.datosPaciente[0];
+            if (!first.tipoActividad || typeof first.tipoActividad !== 'object') return [];
+            return Object.entries(first.tipoActividad).map(([key, actividad]) => ({ key, actividad }));
+        }
     },
     methods: {
         ...mapActions([
@@ -426,18 +435,60 @@ export default {
             "getAllEps",
             "deleteEps",
             "getAllCups",
-            "getAllByPacientesID"
+            "getAllByPacientesID",
+            "deletePaciente"
         ]),
 
-        consultarP() {
+        async consultarP() {
             if (this.tipodoc === "" || this.numdoc === "") {
                 alert("Por favor, complete todos los campos.");
                 return;
             }
-            this.getAllByPacientesID({
-                tipodoc: this.tipodoc,
-                numdoc: this.numdoc
-            });
+            this.cargandoPacientes = true;
+            this.searchPerformed = true;
+            try {
+                await this.getAllByPacientesID({
+                    tipodoc: this.tipodoc,
+                    numdoc: this.numdoc
+                });
+            } catch (error) {
+                console.error('[consultarP] Error:', error);
+                alert('Error al consultar pacientes: ' + (error?.message || error));
+            } finally {
+                this.cargandoPacientes = false;
+            }
+        },
+
+        async editarP(pacienteId) {
+            // Navega a la pantalla de registro/editado de usuarios/ pacientes si existe
+            // Actualmente la vista 'registrousuarios' existe; pasamos query param para que la puedas usar
+            try {
+                if (!pacienteId) return;
+                this.$router.push({ name: 'registrousuarios', query: { editPacienteId: pacienteId } });
+            } catch (error) {
+                console.error('[editarP] Error al navegar:', error);
+            }
+        },
+
+        async eliminarPaciente(pacienteId) {
+            if (!pacienteId) return;
+            const confirmed = confirm('¿Confirma que desea eliminar este paciente? Esta acción no se puede deshacer.');
+            if (!confirmed) return;
+            try {
+                await this.deletePaciente(pacienteId);
+                alert('Paciente eliminado correctamente.');
+                // Volver a realizar la búsqueda actual (si existe tipodoc/numdoc)
+                if (this.tipodoc && this.numdoc) {
+                    // re-ejecutar la búsqueda para refrescar datos
+                    await this.consultarP();
+                } else {
+                    // si no hay búsqueda actual, limpiar el estado local
+                    this.$store.commit('setDatosPaciente', []);
+                }
+            } catch (error) {
+                console.error('[eliminarPaciente] Error:', error);
+                alert('Error al eliminar paciente: ' + (error?.message || error));
+            }
         },
 
         saveComunaBarrio() {
@@ -500,3 +551,5 @@ export default {
     },
 };
 </script>
+
+<!-- no custom styles needed for LTR layout; keep global/app CSS -->
